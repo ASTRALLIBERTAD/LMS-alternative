@@ -660,17 +660,41 @@ class Dashboard:
                         ),
                         expand=False,
                     ),
-                    ft.ElevatedButton(
-                        "Paste a Link",
-                        on_click=self.paste_link_dialog,
-                        style=ft.ButtonStyle(
-                            padding=20,
-                            bgcolor=ft.Colors.GREY_200,
-                            color=ft.Colors.BLACK,
-                            shape=ft.RoundedRectangleBorder(radius=10),
+                    ft.PopupMenuButton(
+                        
+                        items=[
+                            ft.PopupMenuItem(
+                                content=ft.Text("New Folder"),
+                                on_click=lambda e: self.create_new_folder_dialog()
+                            ),
+                            ft.PopupMenuItem(
+                                content=ft.Text("Upload File"),
+                                on_click=lambda e: self.select_file_to_upload()
+                            ),
+                        ],
+                        content=ft.ElevatedButton(
+                            "Paste a Link",
+                            on_click=lambda e: None,
+                            style=ft.ButtonStyle(
+                                padding=20,
+                                bgcolor=ft.Colors.WHITE,
+                                color=ft.Colors.BLACK,
+                                shape=ft.RoundedRectangleBorder(radius=10),
+                            )
                         ),
                         expand=False,
                     ),
+                    # ft.ElevatedButton(
+                    #     "Paste a Link",
+                    #     on_click=self.paste_link_dialog,
+                    #     style=ft.ButtonStyle(
+                    #         padding=20,
+                    #         bgcolor=ft.Colors.GREY_200,
+                    #         color=ft.Colors.BLACK,
+                    #         shape=ft.RoundedRectangleBorder(radius=10),
+                    #     ),
+                    #     expand=False,
+                    # ),
                     ft.Container(height=20),
                     ft.ElevatedButton(
                         "SETTINGS",
