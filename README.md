@@ -1,13 +1,35 @@
-# Google Drive Folder Manager
+# LMS Alternative
+A desktop application for managing Google Drive folders and files, built with [Flet](https://flet.dev/) (Python). Designed as a lightweight Learning Management System (LMS) alternative for students and educators.
 
-A desktop application for managing Google Drive folders and files, built with [Flet](https://flet.dev/) (Python).
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Flet](https://img.shields.io/badge/Flet-UI-green.svg)
 ![Google Drive API](https://img.shields.io/badge/Google%20Drive-API%20v3-yellow.svg)
 
+## 🎯 Purpose
+
+This application serves as a **lightweight alternative to traditional Learning Management Systems (LMS)**, specifically designed to solve common student challenges:
+
+- **📚 Centralized Assignment Management** – No more hunting through countless Google Drive links for different subjects and assignments
+- **✅ To-Do List with Smart Notifications** – Track assignments with due dates and get timely reminders before and after deadlines
+- **⏰ Time Tracking** – See remaining time for each assignment at a glance
+- **🔗 Quick Link Access** – Organize and access all your course folders and assignment submission links in one place
+- **📂 Subject-Based Organization** – Keep everything organized by subject/course for easy navigation
+
+Perfect for students who need a simple, efficient way to manage their academic workload without the complexity of full-featured LMS platforms.
+
+---
+
 ## ✨ Features
 
+### 🎓 LMS Features
+- **📋 Assignment To-Do List** – Create and manage assignments with due dates
+- **🔔 Smart Notifications** – Get reminders before and after assignment due dates
+- **⏱️ Time Remaining Tracker** – Visual countdown showing time left to complete tasks
+- **📚 Subject Organization** – Organize assignments and folders by course/subject
+- **🔗 Assignment Link Management** – Store and quickly access Google Drive submission folders for each assignment
+
+### 📁 Google Drive Management
 - **🔐 Google OAuth Authentication** – Secure login using your Google account
 - **📁 Browse & Navigate** – Explore your Google Drive folders with an intuitive interface
 - **🔍 Search** – Quickly find files and folders across your Drive
@@ -17,6 +39,8 @@ A desktop application for managing Google Drive folders and files, built with [F
 - **📝 File Operations** – Create folders, upload files, rename, and delete
 - **💾 Saved Links** – Keep a list of important Drive links for quick access
 - **🔄 Caching** – Smart caching for improved performance and reduced API calls
+
+---
 
 ## 📋 Prerequisites
 
@@ -28,14 +52,14 @@ A desktop application for managing Google Drive folders and files, built with [F
 
 ### 1. Clone the Repository
 
-```
-git clone <repository-url>
+```bash
+git clone https://github.com/ASTRALLIBERTAD/LMS-alternative.git
 cd capstone
 ```
 
 ### 2. Create Virtual Environment
 
-```
+```bash
 python -m venv venv
 
 # Windows
@@ -91,7 +115,7 @@ flet main.py
 ```
 capstone/
 ├── main.py                 # Application entry point
-├── README.md               # This file
+├── README.md               # Project Overview
 ├── saved_links.json        # Saved Drive links (auto-generated)
 ├── favorites.json          # Saved favorites (auto-generated)
 ├── services/
@@ -144,7 +168,7 @@ We welcome contributions! Follow these steps to contribute to this project:
 ### 2. Clone your fork locally
 
    ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
+   git clone https://github.com/<your-username>/LMS-alternative.git 
    cd <repo-name>
    ```
 
@@ -180,7 +204,7 @@ pip install flet google-auth google-auth-oauthlib google-api-python-client
 
 ### 4. Create a feature branch
 
-   ```
+   ```bash
    git checkout -b feature/amazing-feature
    ```
 ### 5. Make your changes
@@ -188,13 +212,13 @@ pip install flet google-auth google-auth-oauthlib google-api-python-client
 
 ### 6. Commit your changes
 
-   ```
+   ```bash
    git add .
    git commit -m "Add amazing feature"
    ```
 ### 7. Push to your branch
 
-   ```
+   ```bash
    git push origin feature/amazing-feature
    ```
 ### 8. Open a Pull Request (PR)
