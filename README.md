@@ -172,7 +172,7 @@ We welcome contributions! Follow these steps to contribute to this project:
 
    ```bash
    git clone https://github.com/<your-username>/LMS-alternative.git 
-   cd <repo-name>
+   cd LMS-alternative
    ```
 
 ### 3. Setup the Workspace
