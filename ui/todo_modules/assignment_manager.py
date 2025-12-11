@@ -9,8 +9,8 @@ class AssignmentManager:
         self.todo = todo_view
         
         try:
-            from ui.todo_modules.file_preview import FilePreview
-            self.file_preview = FilePreview(todo_view.page, todo_view.drive_service)
+            from services.file_preview_service import FilePreviewService
+            self.file_preview = FilePreviewService(todo_view.page, todo_view.drive_service)
         except ImportError:
             self.file_preview = None
     
@@ -251,7 +251,7 @@ class AssignmentManager:
         )
     
     def create_student_assignment_card(self, assignment):
-        """Create assignment card for student view"""
+        
         status = self.get_status(assignment.get('deadline'), assignment['id'])
         time_remaining = self.get_time_remaining(assignment.get('deadline'))
         submission = self.get_submission_status(assignment['id'], self.todo.current_student_email)
@@ -268,7 +268,7 @@ class AssignmentManager:
         upload_btn = ft.Container()
         if drive_folder_id and self.todo.drive_service:
             upload_btn = ft.ElevatedButton(
-                "📤 Upload to Drive",
+                "Upload to Drive",
                 on_click=lambda e, a=assignment: self.todo.submission_manager.upload_to_drive_dialog(a),
                 icon=ft.Icons.CLOUD_UPLOAD,
                 bgcolor=ft.Colors.GREEN
@@ -403,7 +403,6 @@ class AssignmentManager:
             webbrowser.open(url)
     
     def _preview_submission_file(self, submission):
-        
         if self.file_preview and submission.get('file_id'):
             file_name = submission.get('file_name', 'Submission')
             self.file_preview.show_preview(file_id=submission['file_id'], file_name=file_name)
