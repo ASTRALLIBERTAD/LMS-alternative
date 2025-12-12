@@ -136,21 +136,34 @@ class SubmissionManager:
             self.todo.show_snackbar("No Drive folder linked", ft.Colors.RED)
             return
         
+        initial_folder_name = self.todo.get_folder_name_by_id(drive_folder_id)
+        
         selected_folder_id = [drive_folder_id]
-        folder_display = ft.Text("Root Folder")
+        folder_display = ft.Text(f"Target: {initial_folder_name}", size=13)
         
         def update_folder(fid):
             selected_folder_id[0] = fid
-            folder_display.value = "Selected Subfolder"
+            folder_name = self.todo.get_folder_name_by_id(fid)
+            if folder_name == "Linked Folder" and self.todo.drive_service:
+                try:
+                    info = self.todo.drive_service.get_file_info(fid)
+                    if info:
+                        folder_name = info.get('name', 'Selected Folder')
+                except:
+                    folder_name = "Selected Folder"
+            folder_display.value = f"Target: {folder_name}"
             self.todo.page.update()
         
         folder_selector = ft.Row([
-            ft.Text("Target: "),
             folder_display,
-            ft.TextButton("Change", on_click=lambda e: self.todo.storage_manager.create_browse_dialog(
-                drive_folder_id, update_folder
-            ))
-        ])
+            ft.TextButton(
+                "Change Folder",
+                icon=ft.Icons.FOLDER_OPEN,
+                on_click=lambda e: self.todo.storage_manager.create_browse_dialog(
+                    drive_folder_id, update_folder
+                )
+            )
+        ], spacing=10)
         
         upload_status = ft.Text("")
         
@@ -223,10 +236,9 @@ class SubmissionManager:
         self.todo.page.overlay.append(file_picker)
         self.todo.page.update()
         
-        folder_name = self.todo.get_folder_name_by_id(drive_folder_id)
-        
         content = ft.Column([
-            ft.Text(f"Assignment: {assignment.get('title')}"),
+            ft.Text(f"Assignment: {assignment.get('title')}", weight=ft.FontWeight.BOLD),
+            ft.Divider(),
             folder_selector,
             ft.Text("Select a file to upload to the Google Drive folder.", size=14),
             ft.ElevatedButton(
@@ -243,7 +255,7 @@ class SubmissionManager:
         
         overlay, close_overlay = self.todo.show_overlay(
             content,
-            f"Upload to: {folder_name}",
+            f"Upload to Drive",
             width=400
         )
     
