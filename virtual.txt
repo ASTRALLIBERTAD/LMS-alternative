@@ -5,3 +5,10 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 venv\Scripts\activate
 
 pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client googleapiclient flet
+
+
+git stash
+
+git switch main
+
+git stash pop

@@ -25,7 +25,7 @@ class FileManager:
                 ft.IconButton(icon=ft.Icons.MORE_VERT, on_click=lambda e, f=folder: self.show_folder_menu(f, is_shared_drive)),
             ]),
             padding=10,
-            border=ft.border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_300)),
+            border=ft.Border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_300)),
             on_click=lambda e, f=folder: self.open_folder(f, is_shared_drive),
         )
     
@@ -49,7 +49,7 @@ class FileManager:
                 ft.IconButton(icon=ft.Icons.MORE_VERT, on_click=lambda e, f=file: self.show_file_menu(f)),
             ]),
             padding=10,
-            border=ft.border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_200)),
+            border=ft.Border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_200)),
             on_click=lambda e, f=file: self.handle_file_click(f) if is_folder else self.preview_file(f),
         )
     
@@ -107,10 +107,10 @@ class FileManager:
             self.dash.page.update()
 
         menu_items = [
-            ft.PopupMenuItem(text="Preview", on_click=on_preview) if self.file_preview else None,
-            ft.PopupMenuItem(text="Info", on_click=on_info),
-            ft.PopupMenuItem(text="Rename", on_click=on_rename),
-            ft.PopupMenuItem(text="Delete", on_click=on_delete),
+            ft.PopupMenuItem(content=ft.Text("Preview"), on_click=on_preview) if self.file_preview else None,
+            ft.PopupMenuItem(content=ft.Text("Info"), on_click=on_info),
+            ft.PopupMenuItem(content=ft.Text("Rename"), on_click=on_rename),
+            ft.PopupMenuItem(content=ft.Text("Delete"), on_click=on_delete),
         ]
         
         menu_items = [item for item in menu_items if item is not None]
@@ -259,24 +259,32 @@ class FileManager:
         self.dash.page.overlay.append(dialog_container)
         self.dash.page.update()
     
-    def select_file_to_upload(self):
-        def on_result(e: ft.FilePickerResultEvent):
+    async def _pick_files_async(self):
+        """Async helper for file picking"""
+        def on_result(e: ft.FilePickerUploadEvent):
             if not e.files:
                 return
             for f in e.files:
                 self.dash.drive.upload_file(f.path, parent_id=self.dash.current_folder_id)
             self.dash.refresh_folder_contents()
 
-        file_picker = ft.FilePicker(on_result=on_result)
+        file_picker = ft.FilePicker(on_upload=on_result)
         self.dash.page.overlay.append(file_picker)
         self.dash.page.update()
-        file_picker.pick_files()
+        
+        # Await the async pick_files method
+        await file_picker.pick_files(allow_multiple=True)
+    
+    def select_file_to_upload(self):
+        """Trigger file upload using page.run_task"""
+        # Use page.run_task to properly schedule the async method
+        self.dash.page.run_task(self._pick_files_async)
     
     def show_new_menu(self, e):
         popup = ft.PopupMenuButton(
             items=[
-                ft.PopupMenuItem(text="New Folder", on_click=lambda e: self.create_new_folder_dialog()),
-                ft.PopupMenuItem(text="Upload File", on_click=lambda e: self.select_file_to_upload()),
+                ft.PopupMenuItem(content=ft.Text("New Folder"), on_click=lambda e: self.create_new_folder_dialog()),
+                ft.PopupMenuItem(content=ft.Text("Upload File"), on_click=lambda e: self.select_file_to_upload()),
             ]
         )
         self.dash.page.add(popup)

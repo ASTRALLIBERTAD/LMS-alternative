@@ -56,22 +56,57 @@ class TodoView:
             max_lines=5,
             expand=True
         )
+
+        self.selected_value = None
+        self.all_subjects = [
+            "Mathematics",
+            "Science",
+            "English",
+            "History",
+            "Computer Science",
+            "Arts",
+            "Physical Education",
+            "Other",
+        ]
         
-        self.subject_dropdown = ft.Dropdown(
-            hint_text="Select Subject",
-            options=[
-                ft.dropdown.Option("Mathematics"),
-                ft.dropdown.Option("Science"),
-                ft.dropdown.Option("English"),
-                ft.dropdown.Option("History"),
-                ft.dropdown.Option("Computer Science"),
-                ft.dropdown.Option("Arts"),
-                ft.dropdown.Option("Physical Education"),
-                ft.dropdown.Option("Other"),
-            ],
-            width=200
+        def on_subject_change(e: ft.ControlEvent):
+            self.selected_value = e.control.value
+            # Hide search field after selection
+            self.search_field.value = e.control.value
+            self.search_field.update()
+
+        def on_search_change(e: ft.ControlEvent):
+            search_text = e.control.value.lower()
+            if search_text == "":
+                # Show all options
+                filtered = self.all_subjects
+            else:
+                # Filter options
+                filtered = [s for s in self.all_subjects if search_text in s.lower()]
+            
+            self.subject_dropdown.options = [
+                ft.dropdown.Option(s) for s in filtered
+            ]
+            self.subject_dropdown.update()
+        
+        # Search field for filtering
+        self.search_field = ft.TextField(
+            hint_text="Type to filter subjects",
+            on_change=on_search_change,
+            width=200,
         )
         
+        # Dropdown
+        self.subject_dropdown = ft.Dropdown(
+            label="Subject",
+            hint_text="Select an option",
+            on_change=on_subject_change,
+            options=[
+                ft.dropdown.Option(s) for s in self.all_subjects
+            ],
+            width=200,
+        )
+
         self.max_score_field = ft.TextField(
             hint_text="Max Score (e.g., 100)",
             width=150,

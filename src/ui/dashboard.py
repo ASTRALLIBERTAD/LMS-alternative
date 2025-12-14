@@ -94,10 +94,16 @@ class Dashboard:
         self.on_logout()
 
     def handle_action(self, selected_item):
+        """Handle menu actions from the NEW button"""
+        print(f"DEBUG: handle_action called with: {selected_item}")  # Debug line
+        
         if selected_item == "Create Folder":
             self.file_manager.create_new_folder_dialog()
         elif selected_item == "Upload File":
+            print("DEBUG: Calling select_file_to_upload")  # Debug line
+            # Call the sync wrapper which handles async internally
             self.file_manager.select_file_to_upload()
+        
         self.page.update()
 
     def get_view(self):

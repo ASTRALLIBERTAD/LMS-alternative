@@ -4,10 +4,10 @@ class ButtonWithMenu(ft.PopupMenuButton):
     """Custom PopupMenuButton styled to look like an ElevatedButton"""
     
     def __init__(self, text, menu_items, on_menu_select=None, page=None, **kwargs):
-        self.page = page  # <-- IMPORTANT FIX
+        self._page_ref = page  # Store page reference with different name to avoid conflict
 
         popup_items = [
-            ft.PopupMenuItem(text=item, on_click=self._handle_menu_click)
+            ft.PopupMenuItem(content=ft.Text(item), on_click=self._handle_menu_click, data=item)
             for item in menu_items
         ]
         
@@ -63,7 +63,9 @@ class ButtonWithMenu(ft.PopupMenuButton):
         self.button_content.update()
     
     def _handle_menu_click(self, e):
-        print("MENU CLICKED:", e.control.text)
+        # Get the menu item text from the data attribute we set earlier
+        menu_text = e.control.data
+        print("MENU CLICKED:", menu_text)
         print("CALLING on_menu_select:", self.on_menu_select)
         if self.on_menu_select:
-            self.on_menu_select(e.control.text)
+            self.on_menu_select(menu_text)
