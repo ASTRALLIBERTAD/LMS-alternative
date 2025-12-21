@@ -7,6 +7,7 @@ from googleapiclient.discovery import build
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
+
 class GoogleAuth:
     def __init__(self, credentials_file=None):
         self.creds = None
@@ -19,39 +20,42 @@ class GoogleAuth:
         self.client_id = None
         self.client_secret = None
         self._load_client_info()
-        
         self._load_credentials()
 
     def _load_client_info(self):
-        if os.path.exists(self.credentials_file):
-            try:
-                with open(self.credentials_file, 'r') as f:
-                    data = json.load(f)
-                    config = data.get('web') or data.get('installed')
-                    if config:
-                        self.client_id = config.get('client_id')
-                        self.client_secret = config.get('client_secret')
-                        print(f"✓ Loaded client info from {os.path.basename(self.credentials_file)}")
-            except Exception as e:
-                print(f"❌ Error loading client info: {e}")
+        if not os.path.exists(self.credentials_file):
+            return
+            
+        try:
+            with open(self.credentials_file, 'r') as f:
+                data = json.load(f)
+                config = data.get('web') or data.get('installed')
+                if config:
+                    self.client_id = config.get('client_id')
+                    self.client_secret = config.get('client_secret')
+                    print(f"✓ Loaded client info from {os.path.basename(self.credentials_file)}")
+        except Exception as e:
+            print(f"Error loading client info: {e}")
 
     def _load_credentials(self):
-        if os.path.exists(self.token_file):
-            try:
-                with open(self.token_file, 'rb') as token:
-                    self.creds = pickle.load(token)
-                print("✓ Loaded existing credentials from token.pickle")
-            except Exception as e:
-                print(f"⚠ Error loading token: {e}")
-                self.creds = None
+        if not os.path.exists(self.token_file):
+            return
+            
+        try:
+            with open(self.token_file, 'rb') as token:
+                self.creds = pickle.load(token)
+            print("✓ Loaded existing credentials from token.pickle")
+        except Exception as e:
+            print(f"⚠ Error loading token: {e}")
+            self.creds = None
 
     def _save_credentials(self):
         try:
             with open(self.token_file, 'wb') as token:
                 pickle.dump(self.creds, token)
-            print("✓ Credentials saved to token.pickle")
+            print("Credentials saved to token.pickle")
         except Exception as e:
-            print(f"❌ Error saving token: {e}")
+            print(f"Error saving token: {e}")
 
     def login_desktop(self):
         if not os.path.exists(self.credentials_file):
@@ -61,28 +65,25 @@ class GoogleAuth:
         
         print("Starting desktop OAuth flow...")
         flow = InstalledAppFlow.from_client_secrets_file(self.credentials_file, SCOPES)
-        
         self.creds = flow.run_local_server(port=8550)
-        
         self._save_credentials()
         print("✓ Desktop login successful")
 
     def login_with_token(self, token_data):
         try:
-            print("→ Bridging OAuth token to Google credentials")
-            print(f"  Token data type: {type(token_data)}")
+            print("Bridging OAuth token to Google credentials")
+            print(f"Token data type: {type(token_data)}")
             
             if not isinstance(token_data, dict):
-                print("❌ Token data is not a dictionary")
+                print("Token data is not a dictionary")
                 return False
             
             access_token = token_data.get("access_token")
-            refresh_token = token_data.get("refresh_token")
-            
             if not access_token:
-                print("❌ No access_token in token_data")
+                print("No access_token in token_data")
                 return False
             
+            refresh_token = token_data.get("refresh_token")
             client_id = token_data.get("client_id") or self.client_id
             client_secret = token_data.get("client_secret") or self.client_secret
             
@@ -90,11 +91,7 @@ class GoogleAuth:
             if isinstance(scope, str):
                 scope = scope.split() if scope else SCOPES
             
-            print(f"  ✓ Access token: present")
-            print(f"  ✓ Refresh token: {'present' if refresh_token else 'missing'}")
-            print(f"  ✓ Client ID: {'present' if client_id else 'missing'}")
-            print(f"  ✓ Client secret: {'present' if client_secret else 'missing'}")
-            print(f"  ✓ Scopes: {', '.join(scope) if isinstance(scope, list) else scope}")
+            self._log_token_status(access_token, refresh_token, client_id, client_secret, scope)
             
             self.creds = Credentials(
                 token=access_token,
@@ -105,70 +102,84 @@ class GoogleAuth:
                 scopes=scope
             )
             
-            if not self.creds.valid:
-                print("⚠ Created credentials are not currently valid")
-                if self.creds.expired and self.creds.refresh_token:
-                    print("→ Attempting to refresh expired token...")
-                    try:
-                        self.creds.refresh(Request())
-                        print("✓ Token refreshed successfully")
-                    except Exception as refresh_error:
-                        print(f"❌ Failed to refresh token: {refresh_error}")
-                        return False
-            else:
-                print("✓ Credentials are valid")
+            if not self._validate_and_refresh_credentials():
+                return False
             
             self._save_credentials()
             return True
             
         except Exception as e:
             import traceback
-            print(f"❌ Error bridging token: {e}")
+            print(f"Error bridging token: {e}")
             print(f"Traceback:\n{traceback.format_exc()}")
+            return False
+
+    def _log_token_status(self, access_token, refresh_token, client_id, client_secret, scope):
+        print(f"Access token: present")
+        print(f"Refresh token: {'present' if refresh_token else 'missing'}")
+        print(f"Client ID: {'present' if client_id else 'missing'}")
+        print(f"Client secret: {'present' if client_secret else 'missing'}")
+        print(f"Scopes: {', '.join(scope) if isinstance(scope, list) else scope}")
+    def _validate_and_refresh_credentials(self):
+        if self.creds.valid:
+            print("Credentials are valid")
+            return True
+            
+        if not self.creds.expired or not self.creds.refresh_token:
+            print("Credentials not valid and cannot be refreshed")
+            return False
+            
+        print("Attempting to refresh expired token...")
+        try:
+            self.creds.refresh(Request())
+            print("Token refreshed successfully")
+            return True
+        except Exception as refresh_error:
+            print(f"Failed to refresh token: {refresh_error}")
             return False
 
     def is_authenticated(self):
         if self.creds is None:
             return False
         
-        if self.creds.expired:
-            if self.creds.refresh_token:
-                try:
-                    print("→ Refreshing expired credentials...")
-                    self.creds.refresh(Request())
-                    self._save_credentials()
-                    print("✓ Credentials refreshed")
-                    return True
-                except Exception as e:
-                    print(f"❌ Error refreshing token: {e}")
-                    return False
-            else:
-                print("⚠ Credentials expired and no refresh token available")
-                return False
-        
-        return self.creds.valid
+        if not self.creds.expired:
+            return self.creds.valid
+            
+        if not self.creds.refresh_token:
+            print("Credentials expired and no refresh token available")
+            return False
+            
+        try:
+            print("→ Refreshing expired credentials...")
+            self.creds.refresh(Request())
+            self._save_credentials()
+            print("✓ Credentials refreshed")
+            return True
+        except Exception as e:
+            print(f"Error refreshing token: {e}")
+            return False
 
     def logout(self):
-        print("→ Logging out...")
+        print("Logging out...")
         self.creds = None
         if os.path.exists(self.token_file):
             try:
                 os.remove(self.token_file)
-                print("✓ Token file removed")
+                print("Token file removed")
             except Exception as e:
-                print(f"❌ Error removing token file: {e}")
+                print(f"Error removing token file: {e}")
 
     def get_service(self):
         if not self.is_authenticated():
-            print("❌ Cannot get service - not authenticated")
+            print("Cannot get service - not authenticated")
             return None
         
         try:
             service = build('drive', 'v3', credentials=self.creds)
-            print("✓ Google Drive service created")
+            print("Google Drive service created")
             return service
         except Exception as e:
-            print(f"❌ Error creating service: {e}")
+            print(f"Error creating service: {e}")
             return None
 
     def get_user_info(self):
@@ -182,5 +193,5 @@ class GoogleAuth:
             print(f"✓ User info retrieved: {email}")
             return user
         except Exception as e:
-            print(f"❌ Error getting user info: {e}")
+            print(f"Error getting user info: {e}")
             return {}

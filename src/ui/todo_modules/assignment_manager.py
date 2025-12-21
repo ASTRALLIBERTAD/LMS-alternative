@@ -24,7 +24,7 @@ class AssignmentManager:
         errors = []
         
         if not title:
-            errors.append("📝 Assignment title is required")
+            errors.append("Assignment title is required")
             self.todo.assignment_title.error_text = "Required"
             self.todo.assignment_title.border_color = ft.Colors.RED
         else:
@@ -32,7 +32,7 @@ class AssignmentManager:
             self.todo.assignment_title.border_color = None
         
         if not subject:
-            errors.append("📚 Subject must be selected")
+            errors.append("Subject must be selected")
             self.todo.subject_dropdown.error_text = "Required"
             self.todo.subject_dropdown.border_color = ft.Colors.RED
         else:

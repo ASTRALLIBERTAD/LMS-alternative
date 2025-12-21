@@ -171,7 +171,7 @@ class StudentManager:
             ], alignment=ft.MainAxisAlignment.END)
         ], spacing=10)
         
-        overlay, close_overlay = self.todo.show_overlay(content, "📝 Student Registration", width=420)
+        overlay, close_overlay = self.todo.show_overlay(content, "Student Registration", width=420)
     
     def _validate_email(self, email):
         if not email:

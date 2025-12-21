@@ -1,7 +1,10 @@
 import flet as ft
+import time
+import traceback
 
-class LoginView(ft.Column):
-    def __init__(self, page, provider, auth_service, on_success=None):
+
+class LoginBase(ft.Column):
+    def __init__(self, page, auth_service, on_success=None):
         super().__init__(
             controls=[],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -9,59 +12,25 @@ class LoginView(ft.Column):
             expand=True,
             spacing=20
         )
-
         self.page = page
-        self.provider = provider
         self.auth = auth_service
         self.on_success = on_success
-        
         self._build_ui()
 
     def _build_ui(self):
-        self.controls.append(ft.Container(height=50))
-        self.controls.append(
-            ft.Icon(
-                ft.Icons.CLOUD_CIRCLE,
-                size=100,
-                color=ft.Colors.BLUE_600
-            )
-        )
+        platform_name = self._get_platform_name()
         
-        self.controls.append(
-            ft.Text(
-                "Learning Management System",
-                size=32,
-                weight=ft.FontWeight.BOLD,
-                text_align=ft.TextAlign.CENTER
-            )
-        )
+        self.controls.extend([
+            ft.Container(height=50),
+            ft.Icon(ft.Icons.CLOUD_CIRCLE, size=100, color=ft.Colors.BLUE_600),
+            ft.Text("Learning Management System", size=32, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+            ft.Text("Access your learning materials anywhere", size=16, color=ft.Colors.GREY_700, text_align=ft.TextAlign.CENTER),
+            ft.Container(height=10),
+            ft.Text(f"Platform: {platform_name}", size=12, color=ft.Colors.GREY_600, text_align=ft.TextAlign.CENTER),
+            ft.Container(height=20)
+        ])
         
-        self.controls.append(
-            ft.Text(
-                "Access your learning materials anywhere",
-                size=16,
-                color=ft.Colors.GREY_700,
-                text_align=ft.TextAlign.CENTER
-            )
-        )
-        
-        platform_name = self._get_platform_name(self.page.platform)
-        self.controls.append(ft.Container(height=10))
-        self.controls.append(
-            ft.Text(
-                f"Platform: {platform_name}",
-                size=12,
-                color=ft.Colors.GREY_600,
-                text_align=ft.TextAlign.CENTER
-            )
-        )
-        
-        self.status_text = ft.Text(
-            "Please log in to continue",
-            color=ft.Colors.GREY_700,
-            text_align=ft.TextAlign.CENTER
-        )
-        self.controls.append(ft.Container(height=20))
+        self.status_text = ft.Text("Please log in to continue", color=ft.Colors.GREY_700, text_align=ft.TextAlign.CENTER)
         self.controls.append(self.status_text)
         
         self.login_button = ft.ElevatedButton(
@@ -75,21 +44,16 @@ class LoginView(ft.Column):
             ),
             height=50
         )
-        self.controls.append(ft.Container(height=10))
-        self.controls.append(self.login_button)
         
-        self.controls.append(ft.Container(height=20))
-        self.controls.append(
-            ft.Text(
-                "Secure authentication via Google OAuth 2.0",
-                size=12,
-                color=ft.Colors.GREY_500,
-                text_align=ft.TextAlign.CENTER,
-                italic=True
-            )
-        )
+        self.controls.extend([
+            ft.Container(height=10),
+            self.login_button,
+            ft.Container(height=20),
+            ft.Text("Secure authentication via Google OAuth 2.0", size=12, color=ft.Colors.GREY_500, 
+                   text_align=ft.TextAlign.CENTER, italic=True)
+        ])
 
-    def _get_platform_name(self, platform):
+    def _get_platform_name(self):
         platform_map = {
             ft.PagePlatform.WINDOWS: "Windows",
             ft.PagePlatform.LINUX: "Linux",
@@ -97,125 +61,115 @@ class LoginView(ft.Column):
             ft.PagePlatform.ANDROID: "Android",
             ft.PagePlatform.IOS: "iOS"
         }
-        return platform_map.get(platform, str(platform))
+        return platform_map.get(self.page.platform, str(self.page.platform))
+
+    def update_status(self, message, color=ft.Colors.BLUE_600, disable_button=None):
+        self.status_text.value = message
+        self.status_text.color = color
+        if disable_button is not None:
+            self.login_button.disabled = disable_button
+        self.page.update()
+
+    def handle_success(self):
+        self.update_status("Login successful!", ft.Colors.GREEN_600)
+        print("✓ Login successful")
+        if self.on_success:
+            self.on_success()
+
+    def handle_error(self, error, context="Login"):
+        error_msg = str(error)
+        self.update_status(f"{context} failed: {error_msg[:50]}...", ft.Colors.RED_600, False)
+        print(f"{context} error: {error}")
+        print(f"Traceback:\n{traceback.format_exc()}")
 
     def handle_login(self, e):
-        platform = self.page.platform
-        print(f"\n{'='*60}")
-        print(f"Login initiated on platform: {platform}")
-        print(f"{'='*60}")
+        raise NotImplementedError("Subclasses must implement handle_login")
 
-        is_desktop = platform in [
+
+class LoginView(LoginBase):
+    def __init__(self, page, provider, auth_service, on_success=None):
+        self.provider = provider
+        super().__init__(page, auth_service, on_success)
+
+    def handle_login(self, e):
+        is_desktop = self.page.platform in [
             ft.PagePlatform.WINDOWS,
             ft.PagePlatform.LINUX,
             ft.PagePlatform.MACOS
         ]
 
-        if is_desktop:
-            self.status_text.value = "Opening browser for authentication..."
-            self.status_text.color = ft.Colors.BLUE_600
-            self.login_button.disabled = True
-            self.page.update()
-            
-            try:
-                print("→ Starting desktop OAuth flow...")
-                self.auth.login_desktop()
-                
-                if self.auth.is_authenticated():
-                    self.status_text.value = "Login successful!"
-                    self.status_text.color = ft.Colors.GREEN_600
-                    self.page.update()
-                    print("✓ Desktop login successful")
-                    
-                    if self.on_success:
-                        self.on_success()
-                else:
-                    self.status_text.value = "Login completed but authentication failed"
-                    self.status_text.color = ft.Colors.RED_600
-                    self.login_button.disabled = False
-                    self.page.update()
-                     
-            except Exception as ex:
-                import traceback
-                error_msg = str(ex)
-                self.status_text.value = f"Login failed: {error_msg[:50]}..."
-                self.status_text.color = ft.Colors.RED_600
-                self.login_button.disabled = False
-                self.page.update()
-                print(f"Desktop login error: {ex}")
-                print(f"Traceback:\n{traceback.format_exc()}")
+        print(f"\n{'='*60}")
+        print(f"Login initiated - Platform: {self.page.platform}")
+        print(f"{'='*60}")
 
+        if is_desktop:
+            self._handle_desktop_login()
         else:
-            print(f"\n{'='*60}")
-            print("MOBILE OAUTH FLOW")
-            print(f"{'='*60}")
-            print(f"Platform detected: {platform}")
+            self._handle_mobile_login()
+
+    def _handle_desktop_login(self):
+        self.update_status("Opening browser for authentication...", disable_button=True)
+        
+        try:
+            print("→ Starting desktop OAuth flow...")
+            self.auth.login_desktop()
             
-            self.status_text.value = f"Mobile OAuth Flow\nPlatform: {platform}\nChecking provider..."
-            self.status_text.color = ft.Colors.BLUE_600
-            self.login_button.disabled = True
+            if self.auth.is_authenticated():
+                self.handle_success()
+            else:
+                self.update_status("Login completed but authentication failed", ft.Colors.RED_600, False)
+                     
+        except Exception as ex:
+            self.handle_error(ex, "Desktop login")
+
+    def _handle_mobile_login(self):
+        import urllib.parse
+        
+        print("→ Mobile OAuth flow")
+        self.update_status(f"Mobile OAuth Flow\nPlatform: {self.page.platform}\nChecking provider...", disable_button=True)
+        time.sleep(1)
+        
+        try:
+            auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+            params = {
+                'client_id': self.provider.client_id,
+                'redirect_uri': self.provider.redirect_url,
+                'response_type': 'code',
+                'scope': ' '.join(self.provider.scopes),
+                'access_type': 'offline',
+                'prompt': 'consent'
+            }
+            
+            oauth_url = f"{auth_url}?{urllib.parse.urlencode(params)}"
+            
+            print(f"→ OAuth URL built")
+            print(f"  Client ID: {self.provider.client_id[:30]}...")
+            print(f"  Redirect URL: {self.provider.redirect_url}")
+            
+            self.update_status(
+                f"Opening browser...\n\nRedirect URI:\n{self.provider.redirect_url}\n\n"
+                "If you get 'redirect_uri_mismatch',\nadd this EXACT URL to Google Cloud Console",
+                ft.Colors.ORANGE
+            )
+            time.sleep(3)
+            
+            print("→ Launching browser...")
+            self.page.launch_url(oauth_url)
+            print("✓ Browser launch requested")
+            
+            self.update_status(
+                "✓ Browser should open!\n\n1. Sign in with Google\n2. You'll see 'Login Successful!'\n"
+                "3. Close browser\n4. Return to app\n\nNote: Auto-login not available on mobile",
+                ft.Colors.BLUE_600,
+                False
+            )
+            
+            self.page.snack_bar = ft.SnackBar(
+                content=ft.Text("Browser opening... Complete sign-in, then return here."),
+                action="OK"
+            )
+            self.page.snack_bar.open = True
             self.page.update()
             
-            import time
-            time.sleep(1)
-            
-            try:
-                import urllib.parse
-                
-                self.status_text.value = f"Building OAuth URL...\nRedirect: {self.provider.redirect_url}"
-                self.page.update()
-                time.sleep(1)
-                
-                print(f"→ Building OAuth URL for manual browser launch...")
-                print(f"  Client ID: {self.provider.client_id[:30] if self.provider.client_id else 'MISSING'}...")
-                print(f"  Redirect URL: {self.provider.redirect_url}")
-                print(f"  Scopes: {self.provider.scopes}")
-                
-                auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-                params = {
-                    'client_id': self.provider.client_id,
-                    'redirect_uri': self.provider.redirect_url,
-                    'response_type': 'code',
-                    'scope': ' '.join(self.provider.scopes),
-                    'access_type': 'offline',
-                    'prompt': 'consent'
-                }
-                
-                oauth_url = f"{auth_url}?{urllib.parse.urlencode(params)}"
-                
-                print(f"→ Full OAuth URL: {oauth_url}")
-                
-                self.status_text.value = f"Opening browser...\n\nRedirect URI:\n{self.provider.redirect_url}\n\nIf you get 'redirect_uri_mismatch',\nadd this EXACT URL to Google Cloud Console"
-                self.status_text.color = ft.Colors.ORANGE
-                self.page.update()
-                time.sleep(3)  
-                
-                print(f"\n→ Launching browser with OAuth URL using page.launch_url()...")
-                
-                self.page.launch_url(oauth_url)
-                
-                print("✓ Browser launch requested!")
-                
-                self.status_text.value = "✓ Browser should open!\n\n1. Sign in with Google\n2. You'll see 'Login Successful!'\n3. Close browser\n4. Return to app\n\nNote: Auto-login not available on mobile"
-                self.status_text.color = ft.Colors.BLUE_600
-                self.login_button.disabled = False  
-                self.page.update()
-                
-                self.page.snack_bar = ft.SnackBar(
-                    content=ft.Text("Browser opening... Complete sign-in, then return here."),
-                    action="OK"
-                )
-                self.page.snack_bar.open = True
-                self.page.update()
-                
-            except Exception as ex:
-                import traceback
-                error_msg = str(ex)
-                traceback_str = traceback.format_exc()
-                print(f"Browser launch error: {ex}")
-                print(f"Traceback:\n{traceback_str}")
-                
-                self.status_text.value = f"Error opening browser:\n{error_msg[:100]}"
-                self.status_text.color = ft.Colors.RED_600
-                self.login_button.disabled = False
-                self.page.update()
+        except Exception as ex:
+            self.handle_error(ex, "Browser launch")

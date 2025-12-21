@@ -92,7 +92,7 @@ class NotificationService:
     
     def notify_deadline_reminder(self, assignment: dict, student_email: str, hours_remaining: int):
         
-        title = f"⏰ Deadline Reminder: {assignment.get('title', 'Assignment')}"
+        title = f"Deadline Reminder: {assignment.get('title', 'Assignment')}"
         message = f"Only {hours_remaining} hours remaining to submit!"
         
         self.send_notification(
