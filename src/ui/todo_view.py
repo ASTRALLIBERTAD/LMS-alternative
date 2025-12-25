@@ -1,3 +1,18 @@
+"""Todo View Module.
+
+This module acts as the main container and orchestrator for the Learning Management
+System (LMS) features. It integrates various managers to handle assignments,
+student data, storage, and submissions, providing a unified UI for teachers
+and students.
+
+Classes:
+    TodoView: The primary UI view for the LMS dashboard.
+
+See Also:
+    :class:`~src.ui.dashboard.Dashboard`: The parent dashboard container.
+    :mod:`src.ui.todo_modules`: Package containing specialized logic managers.
+"""
+
 import flet as ft
 import datetime
 import json
@@ -9,8 +24,36 @@ LMS_CONFIG_FILE = "lms_config.json"
 
 
 class TodoView:
+    """Main UI Controller for the LMS / To-Do system.
+
+    Orchestrates interactions between the UI and specialized manager classes
+    (AssignmentManager, StudentManager, etc.). Handles persistent UI state
+    navigation, mode switching (Teacher/Student), and global UI logic like
+    overlays and snackbars.
+
+    Attributes:
+        page (ft.Page): Flet page instance.
+        on_back (Callable): Callback to return to the main dashboard.
+        drive_service (DriveService): Backend service for Drive operations.
+        data_manager (DataManager): Handles data persistence_
+        assignment_manager (AssignmentManager): Logic for assignments.
+        current_mode (str): 'teacher' or 'student' view mode.
+
+    Algorithm:
+        1. Initialize managers (Data, Storage, Assignment, Student, Submission).
+        2. Load initial data (assignments, students).
+        3. Build UI components (_init_ui_components).
+        4. Render layout via get_view(), switching based on current_mode.
+    """
     
     def __init__(self, page: ft.Page, on_back=None, drive_service=None):
+        """Initialize the TodoView and its dependent managers.
+
+        Args:
+            page (ft.Page): Flet page instance.
+            on_back (Callable, optional): Navigation callback.
+            drive_service (DriveService, optional): Google Drive service instance.
+        """
         self.page = page
         self.on_back = on_back
         self.drive_service = drive_service
@@ -47,6 +90,11 @@ class TodoView:
         self._init_ui_components()
         
     def _init_ui_components(self):
+        """Initialize all persistent UI controls and layouts.
+
+        Sets up text fields, dropdowns, pickers, and structural components.
+        Does NOT attach them to the page yet; that happens in get_view().
+        """
 
         self.assignment_title = ft.TextField(hint_text="Assignment Title", expand=True)
         self.assignment_description = ft.TextField(
@@ -147,6 +195,11 @@ class TodoView:
         self.manage_students_btn = None
     
     def load_saved_links(self):
+        """Load saved link shortcuts (legacy method).
+
+        Returns:
+            list: Saved links.
+        """
         if os.path.exists(SAVED_LINKS_FILE):
             try:
                 with open(SAVED_LINKS_FILE, "r", encoding="utf-8") as f:
@@ -157,6 +210,14 @@ class TodoView:
         return []
     
     def get_folder_name_by_id(self, folder_id):
+        """Resolve a folder name from its ID using local cache or API.
+
+        Args:
+            folder_id (str): Google Drive folder ID.
+
+        Returns:
+            str: Resolved name or "Linked Folder" if unknown.
+        """
         for link in self.saved_links:
             if link.get("id") == folder_id:
                 return link.get("name", folder_id)
@@ -172,6 +233,10 @@ class TodoView:
         return "Linked Folder"
     
     def on_date_selected(self, e):
+        """Handle date picker selection.
+
+        Updates internal state and opens the time picker.
+        """
         self.selected_date_value = self.date_picker.value
         self.update_deadline_display()
         self.page.close(self.date_picker)
@@ -179,12 +244,17 @@ class TodoView:
         self.page.update()
     
     def on_time_selected(self, e):
+        """Handle time picker selection.
+
+        Updates internal state and refreshes the deadline display text.
+        """
         self.selected_time_value = self.time_picker.value
         self.update_deadline_display()
         self.page.close(self.time_picker)
         self.page.update()
     
     def update_deadline_display(self):
+        """Update the UI text showing the selected deadline."""
         if self.selected_date_value and self.selected_time_value:
             self.selected_deadline_display.value = f"Deadline: {self.selected_date_value} at {self.selected_time_value}"
         elif self.selected_date_value:
@@ -193,6 +263,16 @@ class TodoView:
             self.selected_deadline_display.value = "No deadline selected"
     
     def pick_file(self, e):
+        """Open the file picker dialog to attach a local file.
+
+        Args:
+            e (ft.ControlEvent): Trigger event.
+
+        Algorithm:
+            1. Define result callback to capture file path.
+            2. Update UI text with selected filename.
+            3. Show file picker overlay.
+        """
         def on_result(e: ft.FilePickerResultEvent):
             if e.files:
                 self.selected_attachment["path"] = e.files[0].path
@@ -206,6 +286,10 @@ class TodoView:
         file_picker.pick_files()
     
     def display_assignments(self):
+        """Render the list of assignments based on current mode and filters.
+
+        Delegates rendering to assignment_manager.
+        """
         self.assignment_column.controls.clear()
         
         if self.current_mode == "teacher":
@@ -216,6 +300,10 @@ class TodoView:
         self.page.update()
     
     def switch_mode(self, e):
+        """Toggle between Teacher and Student view modes.
+
+        Updates UI visibility for role-specific controls (e.g., student selector).
+        """
         self.current_mode = "student" if self.mode_switch.value else "teacher"
         if self.current_mode == "student":
             self.mode_label.value = "👨‍🎓 Student View"
@@ -235,6 +323,10 @@ class TodoView:
         self.page.update()
     
     def on_student_selected(self, e):
+        """Handle selection change in the student dropdown.
+
+        Triggers student registration dialog if '__register__' is selected.
+        """
         if self.student_dropdown.value == "__register__":
             self.student_dropdown.value = None
             self.student_manager.register_student_dialog()
@@ -243,11 +335,28 @@ class TodoView:
         self.display_assignments()
     
     def show_snackbar(self, message, color=ft.Colors.BLUE):
+        """Display a transient message at the bottom of the screen.
+
+        Args:
+            message (str): Message text.
+            color (str): Background color (default: BLUE).
+        """
         self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=color)
         self.page.snack_bar.open = True
         self.page.update()
     
     def show_overlay(self, content, title=None, width=400, height=None):
+        """Display a modal overlay dialog.
+
+        Args:
+            content (ft.Control): The primary content widget.
+            title (str, optional): Title text for the dialog header.
+            width (int): Dialog width.
+            height (int, optional): Dialog height.
+
+        Returns:
+            tuple: (overlay_control, close_callback)
+        """
         def close_overlay(e):
             if overlay in self.page.overlay:
                 self.page.overlay.remove(overlay)
@@ -304,7 +413,14 @@ class TodoView:
         return overlay, close_overlay
 
     def get_view(self):
+        """Construct the main dashboard layout.
 
+        Builds the complete UI tree including headers, mode switches,
+        assignment forms, and the assignment list column.
+
+        Returns:
+            ft.Column: The root control of the TodoView.
+        """
         self.display_assignments()
         
         attach_btn = ft.ElevatedButton(

@@ -1,15 +1,98 @@
+"""Storage Manager Module.
+
+This module provides an interface for interacting with the Google Drive storage
+backend specific to the LMS structure. It handles folder creation, hierarchy management
+(LMS Root -> Subject -> Attachments), file uploading, and the selection of
+Drive folders via the UI.
+
+Classes:
+    StorageManager: Manages file and folder operations in Google Drive.
+"""
+
 import flet as ft
 import json
 import os
 
 
 class StorageManager:
+    """Manages Google Drive storage operations for the LMS.
+
+    Purpose / Responsibility:
+        Orchestrates folder hierarchy creation and file uploads within the LMS Google Drive structure.
+        It handles creating Subject folders, managing Attachments subfolders, and linking
+        student submissions to specific Drive locations. It maximizes efficiency by caching
+        folder IDs to reduce API calls.
+
+    Attributes:
+        todo (TodoView): Reference to the main application view for accessing shared state (like DataManager).
+        drive_service (DriveService): The service wrapper for making Google Drive API calls.
+        subject_folders_cache (dict): In-memory cache mapping subject names to Drive Folder IDs.
+
+    Interactions / Calls:
+        - Calls `src.services.drive_service.DriveService` for all cloud operations.
+        - Accesses `todo.data_manager.lms_root_id` to determine the root folder.
+        - Updates `todo.assignments` and other UI states after storage changes.
+
+    Algorithm / Pseudocode:
+        1. Initialize with `todo_view` and `drive_service`.
+        2. `get_or_create_subject_folder`: Check cache -> check Drive -> create if missing -> update cache.
+        3. `upload_assignment_attachment`: Get subject folder -> ensure 'Attachments' subfolder -> upload file.
+        4. `select_drive_folder_dialog`: List/Search Drive folders -> User selects -> Link as LMS Root.
+
+    Examples:
+        >>> storage = StorageManager(todo_view, drive_service)
+        >>> folder_id = storage.get_or_create_subject_folder_in_lms("Physics")
+        >>> storage.upload_assignment_attachment("test.pdf", "test.pdf", "Physics", "123")
+
+    See Also:
+        - :class:`~src.services.drive_service.DriveService`
+        - :class:`~src.ui.todo_modules.data_manager.DataManager`
+    """
     def __init__(self, todo_view, drive_service):
+        """Initialize the StorageManager.
+
+        Purpose:
+            Sets up the storage manager with necessary service references and initializes the cache.
+
+        Args:
+            todo_view (TodoView): Parent view instance for accessing global state.
+            drive_service (DriveService): Service instance for Drive API operations.
+
+        Interactions:
+            - Stores references to `todo_view` and `drive_service`.
+            - Initializes `subject_folders_cache` as empty dict.
+        """
         self.todo = todo_view
         self.drive_service = drive_service
         self.subject_folders_cache = {}
     
     def get_or_create_subject_folder_in_lms(self, subject):
+        """Retrieve or create a folder for a specific subject within the LMS root.
+
+        Purpose:
+            Ensures a dedicated folder exists for the given subject to organize files.
+            Utilizes caching to prevent redundant API calls for the same subject.
+
+        Args:
+            subject (str): Name of the subject (e.g., 'Mathematics').
+
+        Returns:
+            str | None: The Drive Folder ID if successful, else None.
+
+        Interactions:
+            - Reads `todo.data_manager.lms_root_id`.
+            - Calls `drive_service.list_files` (to find existing).
+            - Calls `drive_service.create_folder` (if missing).
+
+        Algorithm:
+            1. Check if Drive Service and LMS Root are configured.
+            2. Check `subject_folders_cache` for existing ID.
+            3. If cached, verify validity (optional) and return.
+            4. If not cached:
+               a. List files in LMS Root filtering by name=`subject`.
+               b. If found, update cache and return ID.
+               c. If not found, create new folder, update cache, and return ID.
+        """
         if not self.drive_service or not self.todo.data_manager.lms_root_id:
             return None
         
@@ -44,6 +127,32 @@ class StorageManager:
         return None
     
     def upload_assignment_attachment(self, file_path, file_name, subject, assignment_id):
+        """Upload an attachment file to the subject's 'Attachments' subfolder.
+
+        Purpose:
+            Organizes assignment files by placing them into a specific 'Attachments' subdirectory
+            under the relevant Subject folder.
+
+        Args:
+            file_path (str): Local path to the file to upload.
+            file_name (str): Desired filename in Drive.
+            subject (str): The subject this assignment belongs to.
+            assignment_id (str): Assignment ID used to prefix the filename for uniqueness.
+
+        Returns:
+            dict | None: The uploaded file object (metadata) from Drive API, or None.
+
+        Interactions:
+            - Calls `get_or_create_subject_folder_in_lms`.
+            - Calls `_get_or_create_attachments_folder_in_lms`.
+            - Calls `drive_service.upload_file`.
+
+        Algorithm:
+            1. Get ID for Subject folder.
+            2. Get ID for 'Attachments' subfolder within Subject folder.
+            3. Construct prefixed filename: `ATTACH_{id}_{name}`.
+            4. Upload file to 'Attachments' folder.
+        """
         if not self.drive_service or not self.todo.data_manager.lms_root_id:
             return None
         
@@ -70,6 +179,17 @@ class StorageManager:
             return None
     
     def _get_or_create_attachments_folder_in_lms(self, subject_folder_id):
+        """Find or create the 'Attachments' folder within a subject folder.
+
+        Purpose:
+            Helper method to ensure the standard 'Attachments' subdirectory exists.
+
+        Args:
+            subject_folder_id (str): The Drive ID of the parent subject folder.
+
+        Returns:
+            str | None: Folder ID of 'Attachments', or None on error.
+        """
         try:
             result = self.drive_service.list_files(folder_id=subject_folder_id, use_cache=False)
             files = result.get('files', []) if result else []
@@ -87,6 +207,29 @@ class StorageManager:
         return None
     
     def upload_submission_to_link_drive(self, file_path, file_name, subject, student_name, link_drive_id):
+        """Upload a student submission to a specific Drive folder.
+
+        Purpose:
+            Handles the upload of student work to a designated assignment folder (linked folder).
+
+        Args:
+            file_path (str): Local path to the submission file.
+            file_name (str): Original filename.
+            subject (str): Subject name (for context/logging).
+            student_name (str): Name of the student (for file prefixing).
+            link_drive_id (str): The target Drive Folder ID where submissions go.
+
+        Returns:
+            dict | None: Uploaded file metadata or None.
+
+        Interactions:
+            - Calls `drive_service.upload_file`.
+
+        Algorithm:
+            1. Verify Drive Service and Target Folder ID.
+            2. Construct filename: `{student_name}_{file_name}`.
+            3. Upload to `link_drive_id`.
+        """
         if not self.drive_service or not link_drive_id:
             return None
         
@@ -105,6 +248,24 @@ class StorageManager:
             return None
     
     def show_storage_settings(self):
+        """Show configuration dialog for LMS storage settings.
+
+        Purpose:
+            Provides a UI for the user to view the current LMS Root folder status
+            and choose to Link (select from Drive) or Unlink (use local only).
+
+        Interactions:
+            - Calls `todo.show_overlay`.
+            - Calls `select_drive_folder_dialog` (if requested).
+            - Calls `_unlink_drive_folder` (if requested).
+
+        Algorithm:
+            1. Check current `lms_root_id`.
+            2. If set, fetch its name via Drive API.
+            3. Build UI: Display current folder name.
+            4. Buttons: "Select/Change Drive Folder", "Unlink".
+            5. Helper functions bind actions to close overlay and proceed.
+        """
         if not self.drive_service:
             self.todo.show_snackbar("Drive service not available", ft.Colors.RED)
             return
@@ -139,6 +300,16 @@ class StorageManager:
         overlay, close_overlay = self.todo.show_overlay(content, "Storage Settings")
     
     def _unlink_drive_folder(self):
+        """Remove the link to the Google Drive root folder.
+
+        Purpose:
+            Resets the application to use local storage only by removing the LMS Root ID from config.
+
+        Interactions:
+            - Reads/Writes `lms_config.json`.
+            - Updates `todo.data_manager.lms_root_id`.
+            - Refreshes UI (Assignments, Students).
+        """
         config_file = "lms_config.json"
         config = {}
         
@@ -162,6 +333,24 @@ class StorageManager:
         self.todo.display_assignments()
     
     def select_drive_folder_dialog(self):
+        """Open an overlay for searching and selecting a Drive folder.
+
+        Purpose:
+            Provides a comprehensive UI to browse, search, or paste a link to select a folder
+            to serve as the LMS Root.
+
+        Interactions:
+            - Lists files via `drive_service.list_files`.
+            - Searches via `drive_service.search_files`.
+            - calls `_save_lms_root` on selection.
+
+        Algorithm:
+            1. List root folders.
+            2. Build ListView of folders.
+            3. Provide Search Bar (filters list).
+            4. Provide "Paste Link" field (extracts ID).
+            5. On Select: Save ID, Close Overlay, Reload Data.
+        """
         try:
             folders = self.drive_service.list_files(folder_id='root', use_cache=False)
         except Exception as e:
@@ -261,6 +450,18 @@ class StorageManager:
         overlay, close_overlay = self.todo.show_overlay(content, "Select Drive Folder", width=500)
     
     def _save_lms_root(self, folder_id):
+        """Update and persist the LMS root folder ID in local config.
+
+        Purpose:
+            Saves the selected folder ID to `lms_config.json` so it persists across restarts.
+
+        Args:
+            folder_id (str): The Drive folder ID.
+
+        Interactions:
+            - Writes to `lms_config.json`.
+            - Updates in-memory `todo.data_manager.lms_root_id`.
+        """
         config_file = "lms_config.json"
         config = {}
         
@@ -279,6 +480,27 @@ class StorageManager:
         self.todo.data_manager.lms_root_id = folder_id
     
     def create_browse_dialog(self, initial_parent_id, on_select):
+        """Open an overlay to browse and select a Drive folder.
+
+        Purpose:
+            A reusable file browser dialog that allows traversing the Drive folder hierarchy
+            to select a specific destination (e.g., for assignment submissions).
+
+        Args:
+            initial_parent_id (str): Starting folder ID (or 'root').
+            on_select (Callable): Callback function `fn(selected_id)` to execute on selection.
+
+        Interactions:
+            - Calls `drive_service.list_files` (recursive navigation).
+            - Updates UI dynamic list.
+
+        Algorithm:
+            1. `load_folder(id)`: Fetch children folders.
+            2. Display "Up" button if not root.
+            3. Display children as click-to-enter tiles.
+            4. "Select Current Folder" button returns current ID.
+            5. Checkmark icon on tile returns that specific folder's ID.
+        """
         current_folder = {'id': initial_parent_id, 'name': 'Root'}
         if initial_parent_id == 'root':
             current_folder['name'] = 'My Drive'
@@ -382,10 +604,34 @@ class StorageManager:
         overlay, close_func = self.todo.show_overlay(content, "Select Folder", width=400, height=500)
     
     def open_new_assignment_folder_picker(self, e):
+        """Invoke dialog to select a target Drive folder for an assignment.
+
+        Purpose:
+            Trigger handler for the "Select Linked Folder" button in the assignment form.
+
+        Args:
+            e (ft.ControlEvent): Trigger event.
+
+        Interactions:
+            - Calls `create_browse_dialog`.
+        """
         start_id = self.todo.selected_drive_folder_id or self.todo.data_manager.lms_root_id or 'root'
         self.create_browse_dialog(start_id, self.update_new_assignment_folder)
     
     def update_new_assignment_folder(self, fid):
+        """Update the UI with the selected folder's name.
+
+        Purpose:
+            Callback used by the folder picker to update the assignment form state.
+
+        Args:
+            fid (str): Selected Drive folder ID.
+
+        Interactions:
+            - Calls `drive_service.get_file_info` (to show name).
+            - Updates `todo.drive_folder_label`.
+            - Updates `todo.selected_drive_folder_id`.
+        """
         self.todo.selected_drive_folder_id = fid
         name = self.todo.get_folder_name_by_id(fid)
         

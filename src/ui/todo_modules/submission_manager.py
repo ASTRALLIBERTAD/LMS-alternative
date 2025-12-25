@@ -1,10 +1,34 @@
+"""Submission Manager Module.
+
+This module handles the student submission flow and the teacher grading interface.
+It manages file uploads for submissions, calculation of submission timing (early/late),
+and the grading/feedback loop.
+
+Classes:
+    SubmissionManager: Manages assignment submissions and grading.
+"""
+
 import flet as ft
 import datetime
 
 
 class SubmissionManager:
+    """Manages the submission and grading process.
+
+    Handles the dialogs for students to submit work (picking files, adding notes)
+    and for teachers to view, grade, and provide feedback on those submissions.
+
+    Attributes:
+        todo (TodoView): Reference to the main TodoView instance.
+        file_preview (FilePreviewService): Service for previewing submission files.
+    """
 
     def __init__(self, todo_view):
+        """Initialize the SubmissionManager.
+
+        Args:
+            todo_view (TodoView): Parent view instance.
+        """
         self.todo = todo_view
         self.temp_file_path = None
         self.temp_file_name = None
@@ -16,6 +40,15 @@ class SubmissionManager:
             self.file_preview = None
     
     def calculate_submission_timing(self, submitted_at_str, deadline_str):
+        """Determine if a submission was early or late.
+
+        Args:
+            submitted_at_str (str): ISO or formatted timestamp of submission.
+            deadline_str (str): ISO formatted deadline.
+
+        Returns:
+            tuple: (status_code ("early"|"late"), formatted_message_str)
+        """
         if not submitted_at_str or not deadline_str:
             return None, "No timing data"
         
@@ -56,6 +89,21 @@ class SubmissionManager:
             return None, "Invalid timing data"
     
     def submit_assignment_dialog(self, assignment):
+        """Show the student submission dialog.
+
+        Allows students to attach a file, add notes, and submit to the
+        assigned Drive folder.
+
+        Args:
+            assignment (dict): Assignment to submit to.
+
+        Algorithm:
+            1. Validate Drive service and folder availability.
+            2. Setup file picker and optional folder browser.
+            3. On submit, upload file to Drive (linked to student name).
+            4. Create or update submission record in DataManager.
+            5. Notify user of success/failure.
+        """
         subject = assignment.get('subject', 'Other')
         drive_folder_id = assignment.get('drive_folder_id')
         
@@ -209,6 +257,15 @@ class SubmissionManager:
         )
     
     def view_submissions_dialog(self, assignment, force_edit_email=None):
+        """Show the teacher grading interface for an assignment.
+
+        Lists all students (filtered by target type) and their submission status.
+        Allows grading, providing feedback, and editing existing grades.
+
+        Args:
+            assignment (dict): Assignment to view submissions for.
+            force_edit_email (str, optional): If set, opens the grade editor for this email immediately.
+        """
         submissions_list = ft.Column(scroll="auto", spacing=10)
         
         target = assignment.get('target_for', 'all')
@@ -467,19 +524,23 @@ class SubmissionManager:
         self.todo.page.update()
     
     def _get_submission_status(self, assignment_id, student_email):
+        """Find submission object for a given assignment and student."""
         for sub in self.todo.submissions:
             if sub['assignment_id'] == assignment_id and sub['student_email'] == student_email:
                 return sub
         return None
     
     def _preview_file(self, file_id, file_name):
+        """Launch file preview overlay."""
         if self.file_preview and file_id:
             self.file_preview.show_preview(file_id=file_id, file_name=file_name)
     
     def _open_link(self, link):
+        """Open link in browser."""
         import webbrowser
         webbrowser.open(link)
     
     def _open_drive_file(self, file_id):
+        """Open Drive file in browser."""
         import webbrowser
         webbrowser.open(f"https://drive.google.com/file/d/{file_id}/view")

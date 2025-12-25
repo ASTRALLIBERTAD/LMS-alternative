@@ -1,3 +1,16 @@
+"""File Preview Service Module.
+
+This module provides a service for previewing various file types within the app.
+It handles fetching file content (local or Drive), detecting mime types,
+and rendering appropriate preview widgets (image, text, or placeholders).
+
+Classes:
+    FilePreviewService: Manages file preview generation and display.
+
+See Also:
+    :class:`~src.services.drive_service.DriveService`: Source for Drive files.
+"""
+
 import flet as ft
 import base64
 import mimetypes
@@ -6,13 +19,91 @@ from googleapiclient.http import MediaIoBaseDownload
 
 
 class FilePreviewService:
+    """Service to generate and display file previews.
+
+    Purpose / Responsibility:
+        Manages the retrieval of file content (local or Drive) and renders a suitable
+        preview widget (Image, Text, or Placeholder) in an overlay.
+
+    Attributes:
+        page (ft.Page): The Flet page instance used for overlays.
+        drive_service (DriveService): Service to fetch Drive file content.
+        current_overlay (ft.Control): The currently active preview overlay control.
+
+    Interactions / Calls:
+        - Interacts with `src.services.drive_service.DriveService` to fetch files.
+        - Manipulates `flet.Page.overlay` to show/hide previews.
+
+    Algorithm / Pseudocode:
+        1. `show_preview` is called.
+        2. Content is fetched via `_load_from_drive` or `_load_from_path`.
+        3. File type is determined.
+        4. Specific renderer (`_create_image_preview`, etc.) builds the UI.
+        5. Overlay is added to the page.
+
+    Examples:
+        >>> preview_service = FilePreviewService(page, drive_service)
+        >>> preview_service.show_preview(file_id="12345", file_name="image.png")
+
+    See Also:
+        - :class:`src.services.drive_service.DriveService`
+    """
 
     def __init__(self, page: ft.Page, drive_service=None):
+        """Initialize the FilePreviewService.
+
+        Purpose:
+            Sets up the service with necessary dependencies.
+
+        Args:
+            page (ft.Page): The Flet page instance.
+            drive_service (DriveService, optional): Service for Drive operations.
+
+        Interactions:
+            - Stores references to `page` and `drive_service`.
+
+        Examples:
+            >>> svc = FilePreviewService(page, drive_svc)
+        """
         self.page = page
         self.drive_service = drive_service
         self.current_overlay = None
     
     def show_preview(self, file_id=None, file_path=None, file_name="File"):
+        """Display a file preview overlay.
+
+        Purpose:
+            Initiates the preview process by showing a loading state and then
+            asynchronously fetching and rendering the file.
+
+        Args:
+            file_id (str, optional): Google Drive file ID.
+            file_path (str, optional): Local file path.
+            file_name (str): Name of the file to display. Defaults to "File".
+
+        Returns:
+            None: output is visual (overlay).
+
+        Interactions:
+            - Calls `_load_from_drive` or `_load_from_path`.
+            - Modifies `self.page.overlay`.
+            - Calls `self.page.update()`.
+
+        Algorithm:
+            1. Create a loading container (ProgressRing).
+            2. Build the main overlay structure (header + close button).
+            3. Append overlay to `page.overlay` and update.
+            4. If `file_id` is present: Call `_load_from_drive`.
+            5. Else if `file_path` is present: Call `_load_from_path`.
+            6. Else: Show error message in container.
+
+        Examples:
+            >>> service.show_preview(file_path="C:/data/log.txt", file_name="log.txt")
+
+        See Also:
+            - :meth:`_load_from_drive`
+            - :meth:`_load_from_path`
+        """
         content_container = ft.Container(
             content=ft.Column([
                 ft.ProgressRing(),
@@ -76,6 +167,37 @@ class FilePreviewService:
             self.page.update()
     
     def _load_from_drive(self, file_id, file_name, container, close_callback):
+        """Fetch and load file content from Google Drive.
+
+        Purpose:
+            Retrieves file metadata and binary content from Drive API.
+
+        Args:
+            file_id (str): Drive file ID.
+            file_name (str): File name.
+            container (ft.Container): UI container to populate with content.
+            close_callback (Callable): Cleanup function for the overlay.
+
+        Returns:
+            None: Updates the container in-place.
+
+        Interactions:
+            - Calls `self.drive_service.get_file_info`.
+            - Calls `self.drive_service.service.files().get_media`.
+            - Calls `_render_preview`.
+            - Calls `_create_error_view` on failure.
+
+        Algorithm:
+            1. Get file info to determine MIME type.
+            2. Initialize `MediaIoBaseDownload` request.
+            3. Download content into `io.BytesIO` buffer.
+            4. Read buffer to bytes.
+            5. Call `_render_preview` with data.
+            6. On Exception: Render error view.
+
+        See Also:
+            - :meth:`src.services.drive_service.DriveService.get_file_info`
+        """
         
         try:
             
@@ -105,6 +227,32 @@ class FilePreviewService:
             self.page.update()
     
     def _load_from_path(self, file_path, file_name, container, close_callback):
+        """Load file content from local filesystem.
+
+        Purpose:
+            Reads local file in binary mode for previewing.
+
+        Args:
+            file_path (str): Path to local file.
+            file_name (str): File name.
+            container (ft.Container): Target container.
+            close_callback (Callable): Cleanup function.
+
+        Returns:
+            None: Updates the container in-place.
+
+        Interactions:
+            - Uses `mimetypes.guess_type`.
+            - Standard file I/O (`open`).
+            - Calls `_render_preview`.
+
+        Algorithm:
+            1. Guess MIME type from file path.
+            2. Open file in 'rb' mode.
+            3. Read content.
+            4. Call `_render_preview`.
+            5. On Exception: Render error view.
+        """
         
         try:
             mime_type, _ = mimetypes.guess_type(file_path)
@@ -119,6 +267,34 @@ class FilePreviewService:
             self.page.update()
     
     def _render_preview(self, file_data, mime_type, file_name, container, file_id=None, close_callback=None):
+        """Select and render the appropriate preview widget.
+
+        Purpose:
+            Dispatches the file data to the correct renderer method based on MIME type.
+
+        Args:
+            file_data (bytes): Raw file content.
+            mime_type (str): File MIME type.
+            file_name (str): File name.
+            container (ft.Container): Target container.
+            file_id (str, optional): Drive file ID (for download/open links).
+            close_callback (Callable, optional): Cleanup function.
+
+        Returns:
+            None: Updates the `container.content` and calls `page.update()`.
+
+        Interactions:
+            - Calls `_create_image_preview` etc. based on type.
+            - Updates `self.page`.
+
+        Algorithm:
+            1. Calculate size in MB.
+            2. Match `mime_type` against known prefixes (image/, text/, app/pdf, MS Office).
+            3. Call specific creation method (e.g., `_create_image_preview`).
+            4. Fallback to `_create_default_preview` if no match.
+            5. Set `container.content` to result.
+            6. Update page.
+        """
         
         preview_widget = None
         size_mb = len(file_data) / (1024 * 1024)
@@ -167,6 +343,26 @@ class FilePreviewService:
         self.page.update()
     
     def _create_image_preview(self, file_data, size_mb):
+        """Create a widget for image preview.
+
+        Purpose:
+            Renders an image from bytes using base64 encoding.
+
+        Args:
+            file_data (bytes): Image data.
+            size_mb (float): File size in MB.
+
+        Returns:
+            ft.Column: Widget containing the image and size info.
+
+        Interactions:
+            - Uses `base64` module.
+            - Creates `ft.Image`.
+
+        Algorithm:
+            1. Base64 encode the `file_data`.
+            2. Return `ft.Image` with `src_base64`.
+        """
         
         base64_data = base64.b64encode(file_data).decode()
         return ft.Column([
@@ -181,6 +377,29 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     
     def _create_pdf_preview(self, file_data, file_name, size_mb, file_id):
+        """Create a widget for PDF preview.
+
+        Purpose:
+            Renders a placeholder for PDFs, with options to download or open in browser.
+
+        Args:
+            file_data (bytes): PDF content.
+            file_name (str): Document name.
+            size_mb (float): Size in MB.
+            file_id (str): Drive ID.
+
+        Returns:
+            ft.Column: Placeholder UI with action buttons.
+
+        Interactions:
+            - Calls `_download_file`.
+            - Calls `_open_in_browser`.
+
+        Algorithm:
+            1. Show PDF icon and details.
+            2. Provide 'Download' button -> `_download_file`.
+            3. If `file_id` exists: Provide 'Open in Browser' button -> `_open_in_browser`.
+        """
         return ft.Column([
             ft.Icon(ft.Icons.PICTURE_AS_PDF, size=100, color=ft.Colors.RED),
             ft.Text("PDF Document", size=20, weight=ft.FontWeight.BOLD),
@@ -203,6 +422,26 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
     
     def _create_text_preview(self, file_data, size_mb):
+        """Create a scrollable text view.
+
+        Purpose:
+            Decodes and displays UTF-8 text content. It safely handles decoding errors.
+
+        Args:
+            file_data (bytes): Text content.
+            size_mb (float): Size in MB.
+
+        Returns:
+            ft.Column: Text viewer widget or Error widget if decoding fails.
+
+        Interactions:
+            - Uses `bytes.decode('utf-8')`.
+
+        Algorithm:
+            1. Attempt to decode `file_data` as UTF-8.
+            2. If successful: Return scrollable `ft.Text`.
+            3. If UnicodeDecodeError: Return error UI indicating binary/unsupported format.
+        """
         try:
             text_content = file_data.decode('utf-8')
             return ft.Column([
@@ -228,6 +467,21 @@ class FilePreviewService:
             ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     
     def _create_word_preview(self, file_data, file_name, size_mb, file_id):
+        """Create a widget for Word document preview (placeholder).
+
+        Purpose:
+            Provides a UI for Word files, directing users to download or open externally,
+            as in-app rendering is not supported.
+
+        Args:
+            file_data (bytes): File content.
+            file_name (str): File name.
+            size_mb (float): Size in MB.
+            file_id (str): Drive ID.
+
+        Returns:
+            ft.Column: Placeholder UI with download/open actions.
+        """
         return ft.Column([
             ft.Icon(ft.Icons.DESCRIPTION, size=100, color=ft.Colors.BLUE),
             ft.Text("Word Document", size=20, weight=ft.FontWeight.BOLD),
@@ -251,6 +505,21 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
     
     def _create_excel_preview(self, file_data, file_name, size_mb, file_id):
+        """Create a widget for Excel spreadsheet preview (placeholder).
+
+        Purpose:
+            Provides a UI for Excel files, directing users to download or open externally,
+            as in-app rendering is not supported.
+
+        Args:
+            file_data (bytes): File content.
+            file_name (str): File name.
+            size_mb (float): Size in MB.
+            file_id (str): Drive ID.
+
+        Returns:
+            ft.Column: Placeholder UI with download/open actions.
+        """
         return ft.Column([
             ft.Icon(ft.Icons.TABLE_CHART, size=100, color=ft.Colors.GREEN),
             ft.Text("Spreadsheet Document", size=20, weight=ft.FontWeight.BOLD),
@@ -273,6 +542,21 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
     
     def _create_powerpoint_preview(self, file_data, file_name, size_mb, file_id):
+        """Create a widget for PowerPoint preview (placeholder).
+
+        Purpose:
+            Provides a UI for PPT files, directing users to download or open externally,
+            as in-app rendering is not supported.
+
+        Args:
+            file_data (bytes): File content.
+            file_name (str): File name.
+            size_mb (float): Size in MB.
+            file_id (str): Drive ID.
+
+        Returns:
+            ft.Column: Placeholder UI with download/open actions.
+        """
         return ft.Column([
             ft.Icon(ft.Icons.SLIDESHOW, size=100, color=ft.Colors.ORANGE),
             ft.Text("Presentation Document", size=20, weight=ft.FontWeight.BOLD),
@@ -295,6 +579,29 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
     
     def _create_default_preview(self, file_data, file_name, mime_type, size_mb, file_id):
+        """Create a generic preview widget for unsupported file types.
+
+        Purpose:
+            Handles any file type not covered by specific renderers. Shows generic icon based on extension.
+
+        Args:
+            file_data (bytes): File content.
+            file_name (str): File name.
+            mime_type (str): MIME type.
+            size_mb (float): Size in MB.
+            file_id (str): Drive ID.
+
+        Returns:
+            ft.Column: Generic file info UI with download/open actions.
+
+        Interactions:
+            - Checks file extension against internal `icon_map`.
+
+        Algorithm:
+            1. Extract file extension.
+            2. Lookup icon and color in `icon_map`.
+            3. Return UI with icon, type info, and action buttons.
+        """
         ext = file_name.split('.')[-1].lower() if '.' in file_name else ''
         
         icon_map = {
@@ -335,6 +642,18 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
     
     def _create_error_view(self, error_message, file_id=None):
+        """Create an error message widget.
+
+        Purpose:
+            Displays a friendly error state when loading fails.
+
+        Args:
+            error_message (str): Text to display.
+            file_id (str, optional): Drive ID for fallback action.
+
+        Returns:
+            ft.Column: Error UI.
+        """
         return ft.Column([
             ft.Icon(ft.Icons.ERROR, size=48, color=ft.Colors.RED),
             ft.Text(error_message, color=ft.Colors.RED, text_align=ft.TextAlign.CENTER),
@@ -347,6 +666,26 @@ class FilePreviewService:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     
     def _download_file(self, file_data, file_name):
+        """Save file content to the user's Downloads folder.
+
+        Purpose:
+            Writes binary content to the local Downloads directory, handling naming conflicts.
+
+        Args:
+            file_data (bytes): Content to save.
+            file_name (str): Target filename.
+
+        Interactions:
+            - Uses `pathlib.Path` to find home directory.
+            - Calls `_show_snackbar`.
+            - File system writes.
+
+        Algorithm:
+            1. Locate Downloads folder.
+            2. Check if file exists; append counter (e.g. "file (1).txt") if so.
+            3. Write bytes to file.
+            4. Show success/failure snackbar.
+        """
         try:
             from pathlib import Path
             
@@ -367,11 +706,34 @@ class FilePreviewService:
             self._show_snackbar(f"✗ Download failed: {str(e)}", ft.Colors.RED)
     
     def _open_in_browser(self, file_id):
+        """Open the file in the default web browser using its Drive ID.
+
+        Purpose:
+            Navigates the user to the Google Drive preview URL.
+
+        Args:
+            file_id (str): Drive file ID.
+
+        Interactions:
+            - Uses `webbrowser.open`.
+        """
         if file_id:
             import webbrowser
             webbrowser.open(f"https://drive.google.com/file/d/{file_id}/view")
     
     def _show_snackbar(self, message, color):
+        """Display a feedback message to the user.
+
+        Purpose:
+            Shows ephemeral status messages (success/error).
+
+        Args:
+            message (str): Content text.
+            color (str): Background color (e.g. `ft.Colors.GREEN`).
+
+        Interactions:
+            - Modifies `self.page.snack_bar`.
+        """
         self.page.snack_bar = ft.SnackBar(
             content=ft.Text(message),
             bgcolor=color
@@ -380,6 +742,15 @@ class FilePreviewService:
         self.page.update()
     
     def close_preview(self):
+        """Close the currently open preview overlay.
+
+        Purpose:
+            Cleanly removes the overlay from the page.
+
+        Interactions:
+            - Modifies `self.page.overlay`.
+            - Calls `self.page.update()`.
+        """
         if self.current_overlay and self.current_overlay in self.page.overlay:
             self.page.overlay.remove(self.current_overlay)
             self.current_overlay = None

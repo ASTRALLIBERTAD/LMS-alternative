@@ -1,3 +1,32 @@
+"""LMS Alternative - Main Application Module.
+
+This module serves as the entry point for the Learning Management System (LMS)
+Alternative application built with Flet. It handles application initialization,
+OAuth configuration, authentication flow routing, and view management.
+
+Functions:
+    setup_paths: Configure Python path for module imports.
+    repair_filesystem: Fix malformed filenames from Android file system.
+    load_credentials: Load OAuth credentials from JSON file.
+    get_redirect_url: Get the OAuth redirect URL for desktop authentication.
+    main: Main application entry point and Flet page handler.
+
+Example:
+    Run the application directly::
+
+        $ python main.py
+
+    Or use Flet's app runner::
+
+        >>> import flet as ft
+        >>> ft.app(target=main)
+
+See Also:
+    :class:`~src.services.auth_service.GoogleAuth`: Authentication service.
+    :class:`~src.ui.dashboard.Dashboard`: Main dashboard view.
+    :class:`~src.ui.login.LoginView`: Desktop login view.
+"""
+
 import os
 import sys
 import json
@@ -5,6 +34,28 @@ import flet as ft
 
 
 def setup_paths():
+    """Configure Python path for module imports.
+
+    Adds the application directory and current working directory to sys.path
+    to enable imports of project modules regardless of execution context.
+
+    Returns:
+        tuple: A tuple containing (app_path, cwd) where:
+            - app_path (str): Absolute path to the application directory.
+            - cwd (str): Current working directory.
+
+    Algorithm (Pseudocode):
+        1. Get absolute path of this file's directory (app_path)
+        2. Get current working directory (cwd)
+        3. For each path in [cwd, app_path]:
+           - If not already in sys.path, insert at position 0
+        4. Return (app_path, cwd)
+
+    Example:
+        >>> app_path, cwd = setup_paths()
+        >>> print(app_path)
+        '/path/to/src'
+    """
     app_path = os.path.dirname(os.path.abspath(__file__))
     cwd = os.getcwd()
     
@@ -16,6 +67,28 @@ def setup_paths():
 
 
 def repair_filesystem(cwd):
+    """Repair malformed filenames from Android file system.
+
+    Fixes filenames containing backslashes that may occur when files are
+    created on Android and synced to other platforms.
+
+    Args:
+        cwd (str): Current working directory to scan for malformed filenames.
+
+    Returns:
+        None
+
+    Algorithm (Pseudocode):
+        1. Try to list files in cwd
+        2. For each filename containing backslashes:
+           a. Replace backslashes with OS-appropriate separator
+           b. Create parent directories if needed
+           c. Rename file to corrected path
+        3. Silently ignore any errors
+
+    Note:
+        This function fails silently to avoid interrupting app startup.
+    """
     try:
         files = os.listdir(cwd)
         for filename in files:
@@ -33,6 +106,35 @@ def repair_filesystem(cwd):
 
 
 def load_credentials(app_path, cwd):
+    """Load OAuth credentials from JSON configuration file.
+
+    Searches for web.json in multiple locations and extracts OAuth
+    client credentials for Google authentication.
+
+    Args:
+        app_path (str): Application source directory path.
+        cwd (str): Current working directory.
+
+    Returns:
+        dict or None: Dictionary containing credentials if found:
+            - path (str): Path to the credentials file
+            - client_id (str): OAuth client ID
+            - client_secret (str): OAuth client secret
+            - redirect_uris (list): List of authorized redirect URIs
+        Returns None if no valid credentials file is found.
+
+    Algorithm (Pseudocode):
+        1. Define search paths: [app_path/services/web.json, cwd/services/web.json,
+           app_path/web.json, cwd/web.json]
+        2. For each path that exists:
+           a. Load JSON data
+           b. Extract 'web' or 'installed' config section
+           c. If config found, return credentials dict
+        3. Return None if no valid credentials found
+
+    See Also:
+        :class:`~src.services.auth_service.GoogleAuth`: Uses these credentials.
+    """
     possible_paths = [
         os.path.join(app_path, "services", "web.json"),
         os.path.join(cwd, "services", "web.json"),
@@ -63,10 +165,57 @@ def load_credentials(app_path, cwd):
 
 
 def get_redirect_url():
+    """Get the OAuth redirect URL for desktop authentication.
+
+    Returns:
+        str: The localhost redirect URL with port 8550.
+
+    Example:
+        >>> url = get_redirect_url()
+        >>> print(url)
+        'http://localhost:8550/oauth_callback'
+    """
     return "http://localhost:8550/oauth_callback"
 
 
 def main(page: ft.Page):
+    """Main application entry point and Flet page handler.
+
+    Initializes the LMS application, configures authentication, and manages
+    the routing between login and dashboard views based on auth state.
+
+    Args:
+        page (ft.Page): The Flet page instance provided by the Flet runtime.
+
+    Returns:
+        None
+
+    Raises:
+        Exception: Displays critical errors on the page if initialization fails.
+
+    Algorithm (Pseudocode):
+        1. Configure page properties (title, theme, bgcolor, padding)
+        2. Setup paths and repair filesystem
+        3. Import required modules (GoogleAuth, Dashboard, LoginView)
+        4. Load OAuth credentials; show error if not found
+        5. Create GoogleAuth service and GoogleOAuthProvider
+        6. Define nested handler functions:
+           - handle_on_login: Process OAuth login callback
+           - show_snackbar: Display notification messages
+           - show_dashboard: Navigate to dashboard view
+           - handle_logout: Clear auth and return to login
+           - show_login: Display appropriate login view for platform
+        7. Check authentication state:
+           - If authenticated: show_dashboard()
+           - Else: show_login()
+        8. Catch and display any critical errors
+
+    See Also:
+        :class:`~src.services.auth_service.GoogleAuth`: Authentication service.
+        :class:`~src.ui.dashboard.Dashboard`: Main application dashboard.
+        :class:`~src.ui.login.LoginView`: Desktop OAuth login view.
+        :class:`~src.ui.firebase_mobile_login.FirebaseMobileLogin`: Mobile login.
+    """
     page.title = "LMS Alternative"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = ft.Colors.WHITE

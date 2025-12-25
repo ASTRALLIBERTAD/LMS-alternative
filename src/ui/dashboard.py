@@ -1,3 +1,16 @@
+"""Dashboard UI Module.
+
+This module provides the main dashboard interface for the LMS application,
+integrating file management, folder navigation, and to-do functionality.
+
+Classes:
+    Dashboard: Main application dashboard with Drive integration.
+
+See Also:
+    :class:`~src.services.drive_service.DriveService`: Drive API wrapper.
+    :class:`~src.ui.todo_view.TodoView`: Assignment management view.
+"""
+
 import flet as ft
 from services.drive_service import DriveService
 from ui.custom_control.custom_controls import ButtonWithMenu
@@ -8,7 +21,39 @@ from ui.dashboard_modules.paste_links_manager import PasteLinksManager
 
 
 class Dashboard:
+    """Main application dashboard with Google Drive integration.
+
+    Provides file browsing, folder navigation, and access to the
+    to-do/assignment management system.
+
+    Attributes:
+        page (ft.Page): The Flet page instance.
+        auth (GoogleAuth): Authentication service.
+        drive (DriveService): Google Drive service wrapper.
+        file_manager (FileManager): File operations handler.
+        folder_navigator (FolderNavigator): Navigation handler.
+        current_folder_id (str): Currently displayed folder ID.
+
+    Algorithm (Pseudocode):
+        1. Initialize with page, auth service, and logout callback
+        2. Create DriveService from auth.get_service()
+        3. Initialize module managers (file, folder, paste_links)
+        4. Build responsive layout with sidebar and main content
+        5. Load initial folder contents
+
+    See Also:
+        :class:`~src.ui.dashboard_modules.file_manager.FileManager`
+        :class:`~src.ui.dashboard_modules.folder_navigator.FolderNavigator`
+    """
+
     def __init__(self, page, auth_service, on_logout):
+        """Initialize the Dashboard.
+
+        Args:
+            page (ft.Page): The Flet page instance.
+            auth_service (GoogleAuth): Authentication service.
+            on_logout (Callable): Logout callback function.
+        """
         self.page = page
         self.auth = auth_service
         self.on_logout = on_logout
@@ -56,11 +101,13 @@ class Dashboard:
         self.folder_navigator.load_your_folders()
 
     def toggle_menu(self, e):
+        """Toggle sidebar menu visibility."""
         self.menu_open = not self.menu_open
         self.sidebar_container.visible = self.menu_open or self.page.width > 700
         self.page.update()
 
     def on_resize(self, e):
+        """Handle window resize for responsive layout."""
         if self.page.width >= 900:
             self.sidebar_container.visible = True
             self.menu_open = False
@@ -68,18 +115,21 @@ class Dashboard:
             self.sidebar_container.visible = self.menu_open
         self.page.update()
 
-
     def show_folder_contents(self, folder_id, folder_name=None, is_shared_drive=False, push_to_stack=True):
+        """Display contents of a folder. Delegates to folder_navigator."""
         self.folder_navigator.show_folder_contents(folder_id, folder_name, is_shared_drive, push_to_stack)
 
     def refresh_folder_contents(self):
+        """Refresh current folder contents."""
         self.folder_navigator.refresh_folder_contents()
 
     def close_dialog(self, dialog):
+        """Close an open dialog."""
         dialog.open = False
         self.page.update()
 
     def show_todo_view(self, e):
+        """Switch to the to-do/assignment management view."""
         self.current_view = "todo"
         self.folder_list.controls.clear()
         todo_view = TodoView(self.page, on_back=self.folder_navigator.load_your_folders, drive_service=self.drive)
@@ -87,10 +137,12 @@ class Dashboard:
         self.page.update()
 
     def handle_logout(self, e):
+        """Handle user logout."""
         self.auth.logout()
         self.on_logout()
 
     def handle_action(self, selected_item):
+        """Handle sidebar menu action selection."""
         if selected_item == "Create Folder":
             self.file_manager.create_new_folder_dialog()
         elif selected_item == "Upload File":
@@ -98,6 +150,11 @@ class Dashboard:
         self.page.update()
 
     def get_view(self):
+        """Build and return the dashboard view layout.
+
+        Returns:
+            ft.Row: The main dashboard layout.
+        """
         self.sidebar_container = ft.Container(
             width=170,
             bgcolor=ft.Colors.GREY_100,

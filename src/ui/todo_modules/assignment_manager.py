@@ -1,10 +1,62 @@
+"""Assignment Manager Module.
+
+This module handles the core logic for creating, displaying, editing, and managing
+assignments within the LMS. It controls the generation of UI cards for both
+teacher and student views and manages interaction with the Drive backend for
+file attachments.
+
+Classes:
+    AssignmentManager: Manages assignment lifecycle and UI representation.
+"""
+
 import flet as ft
 import datetime
 
 
 class AssignmentManager:
+    """Manages assignment creation, display, and modification.
+
+    Purpose / Responsibility:
+        Central controller for the assignment lifecycle. It handles user input for creating assignments,
+        validates deadlines, renders role-specific UI (teacher vs student), coordinates with
+        Drive storage, and manages notifications.
+
+    Attributes:
+        todo (TodoView): Reference to the main TodoView instance for collecting input and updating UI.
+        file_preview (FilePreviewService): Service for generating file previews (optional integration).
+
+    Interactions / Calls:
+        - Interacts with `src.ui.todo_view.TodoView` (parent).
+        - Calls `src.ui.todo_modules.data_manager.DataManager`.
+        - Calls `src.ui.todo_modules.storage_manager.StorageManager`.
+        - Calls `src.ui.todo_modules.submission_manager.SubmissionManager`.
+        - Uses `src.services.file_preview_service.FilePreviewService`.
+
+    Algorithm / Pseudocode:
+        1. Initialize with reference to parent view.
+        2. `add_assignment`: Validate form, upload file (if any), save, notify.
+        3. `display_teacher_view`: Show list with management controls.
+        4. `display_student_view`: Show list with submission status and filtering.
+        5. `edit_assignment_dialog`: Modal for updating existing assignments.
+
+    See Also:
+        - :class:`~src.ui.todo_view.TodoView`
+        - :class:`~src.ui.todo_modules.data_manager.DataManager`
+    """
     
     def __init__(self, todo_view):
+        """Initialize the AssignmentManager.
+
+        Purpose:
+            Sets up the manager with access to the parent view and initializes services.
+
+        Args:
+            todo_view (TodoView): Parent view instance for accessing shared state.
+
+        Interactions:
+            - Stores `todo_view` reference.
+            - Initializes `FilePreviewService` (conditional import).
+        """
         self.todo = todo_view
         
         try:
@@ -14,6 +66,33 @@ class AssignmentManager:
             self.file_preview = None
     
     def add_assignment(self, e):
+        """Handle the creation of a new assignment.
+
+        Purpose:
+            Validates inputs, processes file uploads, creates assignment record, saves to DB, and notifies students.
+
+        Args:
+            e (ft.ControlEvent): Trigger event (usually 'Create' button click).
+
+        Interactions:
+            - Reads inputs from `todo` fields (title, desc, subject, deadline, attachment).
+            - Calls `storage_manager.upload_assignment_attachment`.
+            - Calls `data_manager.save_assignments`.
+            - Calls `notification_service.notify_new_assignment`.
+
+        Algorithm:
+            1. Extract values from UI fields.
+            2. Validate: Title required, Subject required, Deadline must be future.
+            3. If invalid -> `show_validation_errors`, exit.
+            4. Create assignment dictionary (ID, timestamps, status).
+            5. File Handling:
+               a. If attachment selected: Call `upload_assignment_attachment`.
+               b. Update assignment dict with upload result (Drive ID, link).
+            6. Append to `todo.assignments`.
+            7. Save to persistent storage.
+            8. Send notifications to students.
+            9. Reset form and refresh display.
+        """
         title = self.todo.assignment_title.value.strip() if self.todo.assignment_title.value else ""
         description = self.todo.assignment_description.value.strip() if self.todo.assignment_description.value else ""
         subject = self.todo.subject_dropdown.value
@@ -135,6 +214,25 @@ class AssignmentManager:
         self.todo.show_snackbar("Assignment added! Students notified.", ft.Colors.GREEN)
     
     def show_past_deadline_dialog(self, deadline, current_time):
+        """Display a warning dialog if the selected deadline is in the past.
+
+        Purpose:
+            Alerts the teacher that the selected date/time is invalid for a deadline.
+
+        Args:
+            deadline (datetime): The selected deadline.
+            current_time (datetime): Current system time.
+
+        Interactions:
+            - Shows `ft.AlertDialog`.
+            - Updates `todo.page`.
+
+        Algorithm:
+            1. Format deadline and current time strings.
+            2. Build AlertDialog with red warning icon.
+            3. Display comparison of Selected vs Current time.
+            4. Set `page.dialog = dialog` and open.
+        """
         
         def close_dialog(e):
             dialog.open = False
@@ -182,6 +280,24 @@ class AssignmentManager:
         self.todo.page.update()
     
     def show_validation_errors(self, errors):
+        """Display a dialog listing form validation errors.
+
+        Purpose:
+            Provides specific feedback on why assignment creation failed.
+
+        Args:
+            errors (list[str]): List of error messages to display.
+
+        Interactions:
+            - Shows `ft.AlertDialog`.
+            - Calls `todo.show_snackbar`.
+
+        Algorithm:
+            1. Create a list of UI rows for each error message.
+            2. Build AlertDialog showing all errors.
+            3. Open dialog.
+            4. Show summary via snackbar.
+        """
         
         def close_dialog(e):
             dialog.open = False
@@ -229,6 +345,15 @@ class AssignmentManager:
         )
     
     def _reset_form(self):
+        """Clear all inputs in the 'New Assignment' form.
+
+        Purpose:
+            Resets all input fields and state variables to default values after successful creation.
+
+        Interactions:
+            - Clears `todo` input fields (title, description, score, etc.).
+            - Resets `selected_attachment` and `selected_drive_folder_id`.
+        """
         self.todo.assignment_title.value = ""
         self.todo.assignment_description.value = ""
         self.todo.subject_dropdown.value = None
@@ -243,6 +368,22 @@ class AssignmentManager:
         self.todo.drive_folder_label.value = "No folder selected"
     
     def display_teacher_view(self):
+        """Render the assignment list for the teacher mode.
+
+        Purpose:
+            Displays assignments with administrative controls (Edit, Delete, View Submissions).
+
+        Interactions:
+            - Reads `todo.assignments`.
+            - Reads `todo.filter_dropdown`.
+            - Calls `create_teacher_assignment_card`.
+
+        Algorithm:
+            1. Get current filter (All, Active, Completed, Overdue).
+            2. Filter `todo.assignments` based on deadline status.
+            3. If empty -> Show placeholder.
+            4. Else -> Loop through assignments, create cards, append to UI column.
+        """
         filtered = self.todo.assignments
         if self.todo.filter_dropdown.value != "All":
             filtered = [a for a in self.todo.assignments 
@@ -262,6 +403,25 @@ class AssignmentManager:
                 self.todo.assignment_column.controls.append(card)
     
     def display_student_view(self):
+        """Render the assignment list for the student mode.
+
+        Purpose:
+            Displays relevant assignments for the logged-in student, respecting bridging/regular status.
+
+        Interactions:
+            - Reads `todo.assignments`, `todo.students`.
+            - Calls `notification_service` for unread counts.
+            - Calls `create_student_assignment_card`.
+
+        Algorithm:
+            1. Check notifications -> show alert if unread messages exist.
+            2. Verify student selected; if not, show error.
+            3. Determine student type (Bridging vs Regular).
+            4. Filter assignments:
+               a. Match target audience (All vs Matching Type).
+               b. Apply status filter (Active, etc.).
+            5. Render cards or empty state.
+        """
         if self.todo.notification_service and self.todo.current_student_email:
             unread_count = self.todo.notification_service.get_unread_count(self.todo.current_student_email)
             if unread_count > 0:
@@ -318,6 +478,30 @@ class AssignmentManager:
                 self.todo.assignment_column.controls.append(card)
     
     def create_teacher_assignment_card(self, assignment):
+        """Build a UI card for an assignment (Teacher View).
+
+        Purpose:
+            Generates a visual card component containing assignment details and management actions.
+
+        Args:
+            assignment (dict): Assignment data object.
+
+        Returns:
+            ft.Container: The UI card component ready for display.
+
+        Interactions:
+            - Calls `view_submissions_dialog` (via button).
+            - Calls `edit_assignment_dialog` (via button).
+            - Calls `delete_assignment` (via button).
+
+        Algorithm:
+            1. Calculate statistics (status, time remaining, submission count).
+            2. Build status badge.
+            3. Build Drive folder link (if linked).
+            4. Build Attachment preview/link (if present).
+            5. Build Management Buttons (View Submissions, Edit, Delete).
+            6. Assemble into styled Container.
+        """
         status = self.get_status(assignment.get('deadline'))
         time_remaining = self.get_time_remaining(assignment.get('deadline'))
         submission_count = self.get_submission_count(assignment['id'])
@@ -444,6 +628,31 @@ class AssignmentManager:
         )
     
     def create_student_assignment_card(self, assignment):
+        """Build a UI card for an assignment (Student View).
+
+        Purpose:
+            Generates a visual card for students to view details and submit work.
+
+        Args:
+            assignment (dict): Assignment data object.
+
+        Returns:
+            ft.Container: The UI card component.
+
+        Interactions:
+            - Checks `submissions` for current student status.
+            - Calls `submission_manager.submit_assignment_dialog`.
+
+        Algorithm:
+            1. Determine status (Active/Overdue) and submission state (Submitted/Not).
+            2. Build Attachment section (Download/Preview).
+            3. Build Submission Status section (Grade, Feedback).
+            4. Build Action Buttons:
+               a. "Submit Assignment" (if active/not submitted).
+               b. "Resubmit" (if submitted).
+               c. "Preview Submission" (if file uploaded).
+            5. Assemble into styled Container.
+        """
         status = self.get_status(assignment.get('deadline'), assignment['id'])
         time_remaining = self.get_time_remaining(assignment.get('deadline'))
         submission = self.get_submission_status(assignment['id'], self.todo.current_student_email)
@@ -575,6 +784,24 @@ class AssignmentManager:
         )
     
     def get_time_remaining(self, deadline_str):
+        """Calculate and format the time remaining until a deadline.
+
+        Purpose:
+            Provides a human-readable countdown string (e.g., "2d 5h remaining").
+
+        Args:
+            deadline_str (str): ISO formatted deadline string.
+
+        Returns:
+            str: "Overdue", formatted time string, or error message.
+
+        Algorithm:
+            1. Parse ISO string to datetime.
+            2. Compare with `now`.
+            3. If past -> Return "Overdue".
+            4. Calculate delta (days, hours, minutes).
+            5. Return formatted string.
+        """
         if not deadline_str:
             return "No deadline"
         try:
@@ -601,6 +828,25 @@ class AssignmentManager:
             return "Invalid deadline"
     
     def get_status(self, deadline_str, assignment_id=None):
+        """Determine the status of an assignment.
+
+        Purpose:
+            Calculates whether an assignment is "Active", "Overdue", or "Completed".
+
+        Args:
+            deadline_str (str): ISO formatted deadline.
+            assignment_id (str, optional): Assignment ID (for checking submission status).
+
+        Returns:
+            str: Status string ("Completed", "Overdue", "Active").
+
+        Algorithm:
+            1. If student mode: Check if submitted -> Return "Completed".
+            2. If no deadline -> Return "Active".
+            3. Compare deadline with current time.
+            4. If past -> "Overdue".
+            5. Else -> "Active".
+        """
         if self.todo.current_mode == "student" and assignment_id and self.todo.current_student_email:
             submission = self.get_submission_status(assignment_id, self.todo.current_student_email)
             if submission:
@@ -621,38 +867,140 @@ class AssignmentManager:
             return "Active"
     
     def get_submission_status(self, assignment_id, student_email):
+        """Check if a specific student has submitted an assignment.
+
+        Purpose:
+            Retrieves the submission record for a given assignment/student pair.
+
+        Args:
+            assignment_id (str): Assignment ID.
+            student_email (str): Student email.
+
+        Returns:
+            dict | None: Submission dictionary if found, else None.
+
+        Interactions:
+            - Iterates `todo.submissions`.
+        """
         for sub in self.todo.submissions:
             if sub['assignment_id'] == assignment_id and sub['student_email'] == student_email:
                 return sub
         return None
     
     def get_submission_count(self, assignment_id):
+        """Count total submissions for an assignment.
+
+        Purpose:
+            Calculates how many students have submitted work for an assignment.
+
+        Args:
+            assignment_id (str): Assignment ID.
+
+        Returns:
+            int: Number of submissions.
+        """
         return sum(1 for sub in self.todo.submissions if sub['assignment_id'] == assignment_id)
     
     def open_drive_folder(self, folder_id):
+        """Open a Google Drive folder in the system's default browser.
+
+        Purpose:
+            Directs the user to the external Google Drive interface for a folder.
+
+        Args:
+            folder_id (str): Drive folder ID.
+
+        Interactions:
+            - Uses `webbrowser` module.
+        """
         if self.todo.drive_service:
             import webbrowser
             url = f"https://drive.google.com/drive/folders/{folder_id}"
             webbrowser.open(url)
     
     def _preview_submission_file(self, submission):
+        """Show preview for a submission file.
+
+        Purpose:
+            Opens the file preview service for a student's submitted file.
+
+        Args:
+            submission (dict): Submission record containing file_id.
+
+        Interactions:
+            - Calls `file_preview.show_preview`.
+        """
         if self.file_preview and submission.get('file_id'):
             file_name = submission.get('file_name', 'Submission')
             self.file_preview.show_preview(file_id=submission['file_id'], file_name=file_name)
     
     def _preview_attachment(self, file_id, file_name):
+        """Show preview for an assignment attachment.
+
+        Purpose:
+            Opens the file preview service for an assignment's attached resource.
+
+        Args:
+            file_id (str): Drive file ID.
+            file_name (str): Name of the file.
+
+        Interactions:
+            - Calls `file_preview.show_preview`.
+        """
         if self.file_preview:
             self.file_preview.show_preview(file_id=file_id, file_name=file_name)
     
     def _open_link(self, link):
+        """Open a URL in the browser.
+
+        Purpose:
+            Helper to open any external link.
+
+        Args:
+            link (str): The URL to open.
+
+        Interactions:
+            - Uses `webbrowser.open`.
+        """
         import webbrowser
         webbrowser.open(link)
     
     def _open_drive_file(self, file_id):
+        """Open a Drive file by ID in the browser.
+
+        Purpose:
+            Opens a specific Drive file's view URL.
+
+        Args:
+            file_id (str): Drive file ID.
+        """
         import webbrowser
         webbrowser.open(f"https://drive.google.com/file/d/{file_id}/view")
     
     def edit_assignment_dialog(self, assignment):
+        """Open a dialog to edit an existing assignment.
+
+        Purpose:
+            Provides a form to modify assignment details (Title, Description, Score, Attachment, Folder, Audience).
+
+        Args:
+            assignment (dict): Assignment data to edit.
+
+        Interactions:
+            - Calls `storage_manager.create_browse_dialog` (Folder picker).
+            - Calls `data_manager.save_assignments`.
+            - Calls `storage_manager.upload_assignment_attachment` (if new file picked).
+
+        Algorithm:
+            1. Pre-fill UI fields with current data.
+            2. Setup FilePicker for replacing attachment.
+            3. Setup Folder Browser for changing submission folder.
+            4. On Save:
+               a. Update simple fields (title, desc, score).
+               b. If attachment changed -> Upload new file -> Update IDs/Link.
+               c. Save to DataManager.
+               d. Refresh UI.
+        """
         title_field = ft.TextField(value=assignment['title'], label="Title", width=320)
         desc_field = ft.TextField(
             value=assignment.get('description', ''),
@@ -770,6 +1118,26 @@ class AssignmentManager:
         overlay, close_overlay = self.todo.show_overlay(content, "Edit Assignment", width=400)
     
     def delete_assignment(self, assignment):
+        """Show confirmation dialog to delete an assignment.
+
+        Purpose:
+            Permanently removes an assignment and all its associated submissions.
+
+        Args:
+            assignment (dict): Assignment to delete.
+
+        Interactions:
+            - Modifies `todo.assignments`, `todo.submissions`.
+            - Calls `data_manager.save_assignments`, `save_submissions`.
+
+        Algorithm:
+            1. Show confirmation dialog.
+            2. On Confirm:
+               a. Filter out assignment from list.
+               b. Filter out linked submissions from list.
+               c. Save updated lists.
+               d. Refresh display and show snackbar.
+        """
         def confirm(e):
             self.todo.assignments = [a for a in self.todo.assignments if a['id'] != assignment['id']]
             self.todo.submissions = [s for s in self.todo.submissions 
@@ -793,6 +1161,23 @@ class AssignmentManager:
         overlay, close_overlay = self.todo.show_overlay(content, "Confirm Delete", width=350)
     
     def show_notifications_dialog(self):
+        """Show a dialog listing recent notifications for the current student.
+
+        Purpose:
+            Displays a scrollable list of alerts/messages and allows marking them as read.
+
+        Interactions:
+            - Calls `notification_service.get_notifications_for_student`.
+            - Calls `notification_service.mark_as_read`.
+
+        Algorithm:
+            1. Fetch notifications for current email.
+            2. Render list:
+               a. Highlight unread items.
+               b. Click to mark read.
+            3. Provide "Mark All Read" button.
+            4. Show in Overlay.
+        """
         if not self.todo.notification_service:
             return
         
