@@ -14,6 +14,8 @@ See Also:
 import flet as ft
 from services.drive_service import DriveService
 from ui.custom_control.custom_controls import ButtonWithMenu
+from ui.custom_control.gmail_profile_menu import GmailProfileMenu
+from ui.custom_control.multi_account_manager import MultiAccountManager
 from ui.todo_view import TodoView
 from ui.dashboard_modules.file_manager import FileManager
 from ui.dashboard_modules.folder_navigator import FolderNavigator
@@ -195,7 +197,7 @@ class Dashboard:
         - Material Design Icons: https://fonts.google.com/icons
     """
 
-    def __init__(self, page, auth_service, on_logout):
+    def __init__(self, page, auth_service, on_logout, on_add_account=None, on_switch_account=None):
         """Initialize the Dashboard with authentication and layout setup.
 
         Constructs the main dashboard by setting up Google Drive integration,
@@ -323,9 +325,12 @@ class Dashboard:
             - Page resize handler registered for responsive behavior
             - User email extracted safely with fallback to "User"
         """
+
         self.page = page
         self.auth = auth_service
         self.on_logout = on_logout
+        self.on_add_account_callback = on_add_account
+        self.on_switch_account_callback = on_switch_account
         self.drive = DriveService(auth_service.get_service())
 
         self.current_folder_id = "root"
@@ -333,8 +338,19 @@ class Dashboard:
         self.folder_stack = []
         self.current_view = "your_folders"
 
+        self.account_manager = MultiAccountManager()
+
         user_info = self.auth.get_user_info()
         self.user_email = user_info.get("emailAddress", "User") if user_info else "User"
+        
+        if user_info and not user_info.get("name") and not user_info.get("displayName"):
+            user_info["name"] = self.user_email.split("@")[0]
+        
+        self.user_info = user_info if user_info else {
+            "name": "User",
+            "emailAddress": self.user_email,
+            "photoLink": None
+        }
 
         self.file_manager = FileManager(self)
         self.folder_navigator = FolderNavigator(self)
@@ -903,6 +919,26 @@ class Dashboard:
         self.auth.logout()
         self.on_logout()
 
+    def handle_add_account(self, e):
+        if self.on_add_account_callback:
+            self.on_add_account_callback()
+        else:
+            self.page.snack_bar = ft.SnackBar(
+                content=ft.Text("Redirecting to add another account..."),
+            )
+            self.page.snack_bar.open = True
+            self.page.update()
+
+    def handle_switch_account(self, email):
+        if self.on_switch_account_callback:
+            self.on_switch_account_callback(email)
+        else:
+            self.page.snack_bar = ft.SnackBar(
+                content=ft.Text(f"Switching to {email}..."),
+            )
+            self.page.snack_bar.open = True
+            self.page.update()
+
     def handle_action(self, selected_item):
         """Handle sidebar menu action selection.
 
@@ -1094,11 +1130,21 @@ class Dashboard:
                     on_menu_select=self.handle_action,
                     page=self.page
                 ),
-                ft.ElevatedButton("SETTINGS", on_click=lambda e: None),
                 ft.ElevatedButton("TO-DO", on_click=self.show_todo_view),
-                ft.ElevatedButton("ACCOUNT", on_click=self.handle_logout),
             ], spacing=15)
         )
+
+        saved_accounts = self.account_manager.get_all_accounts()
+        
+        profile_menu_instance = GmailProfileMenu(
+            page=self.page,
+            user_info=self.user_info,
+            on_logout=self.handle_logout,
+            on_add_account=self.handle_add_account,
+            on_switch_account=self.handle_switch_account,
+            saved_accounts=saved_accounts
+        )
+        profile_menu = profile_menu_instance.build()
 
         top_bar = ft.Container(
             padding=20,
@@ -1109,11 +1155,7 @@ class Dashboard:
                     visible=True
                 ),
                 self.search_field,
-                ft.IconButton(
-                    icon=ft.Icons.ACCOUNT_CIRCLE,
-                    icon_size=36,
-                    tooltip=self.user_email
-                ),
+                profile_menu,
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         )
 
