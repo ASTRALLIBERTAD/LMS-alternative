@@ -197,7 +197,7 @@ class Dashboard:
         - Material Design Icons: https://fonts.google.com/icons
     """
 
-    def __init__(self, page, auth_service, on_logout, on_add_account=None, on_switch_account=None):
+    def __init__(self, page, auth_service, on_logout, on_add_account=None, on_switch_account=None, on_remove_account=None):
         """Initialize the Dashboard with authentication and layout setup.
 
         Constructs the main dashboard by setting up Google Drive integration,
@@ -331,6 +331,7 @@ class Dashboard:
         self.on_logout = on_logout
         self.on_add_account_callback = on_add_account
         self.on_switch_account_callback = on_switch_account
+        self.on_remove_account_callback = on_remove_account
         self.drive = DriveService(auth_service.get_service())
 
         self.current_folder_id = "root"
@@ -939,6 +940,10 @@ class Dashboard:
             self.page.snack_bar.open = True
             self.page.update()
 
+    def handle_remove_account(self, email):
+        if self.on_remove_account_callback:
+            self.on_remove_account_callback(email)
+
     def handle_action(self, selected_item):
         """Handle sidebar menu action selection.
 
@@ -1142,7 +1147,9 @@ class Dashboard:
             on_logout=self.handle_logout,
             on_add_account=self.handle_add_account,
             on_switch_account=self.handle_switch_account,
-            saved_accounts=saved_accounts
+            on_remove_account=self.handle_remove_account,
+            saved_accounts=saved_accounts,
+            account_manager=self.account_manager
         )
         profile_menu = profile_menu_instance.build()
 
