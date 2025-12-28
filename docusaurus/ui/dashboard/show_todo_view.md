@@ -29,35 +29,35 @@ and loads the TodoView component with full assignment functionality.
 
 ## Algorithm
 
-1. **Update View State**:
-      - a. Set self.current_view to "todo"
-      - b. Marks dashboard as displaying assignment view
-      - c. Used by other methods to check active view
+- 1. **Update View State**:
+    - a. Set self.current_view to "todo"
+    - b. Marks dashboard as displaying assignment view
+    - c. Used by other methods to check active view
 
-    - 2. **Clear Current Content**:
-      - a. Access self.folder_list.controls
-      - b. Call clear() to remove all folder/file cards
-      - c. Prepares container for TodoView
+  - 2. **Clear Current Content**:
+    - a. Access self.folder_list.controls
+    - b. Call clear() to remove all folder/file cards
+    - c. Prepares container for TodoView
 
-    - 3. **Create TodoView Instance**:
-      - a. Instantiate TodoView with three parameters:
-      - i. self.page: for UI rendering and updates
-      - ii. on_back: callback set to folder_navigator.load_your_folders
-      - - Provides back button functionality
-      - - Returns user to folder view when clicked
-      - iii. drive_service: self.drive for file operations
-      - - Enables assignment file uploads/downloads
-      - b. TodoView initializes with assignment data loading
+  - 3. **Create TodoView Instance**:
+    - a. Instantiate TodoView with three parameters:
+    - i. self.page: for UI rendering and updates
+    - ii. on_back: callback set to folder_navigator.load_your_folders
+    - - Provides back button functionality
+    - - Returns user to folder view when clicked
+    - iii. drive_service: self.drive for file operations
+    - - Enables assignment file uploads/downloads
+    - b. TodoView initializes with assignment data loading
 
-    - 4. **Display TodoView**:
-      - a. Call todo_view.get_view() to build UI component
-      - b. Returns ft.Column or ft.Container with TodoView UI
-      - c. Append returned component to folder_list.controls
+  - 4. **Display TodoView**:
+    - a. Call todo_view.get_view() to build UI component
+    - b. Returns ft.Column or ft.Container with TodoView UI
+    - c. Append returned component to folder_list.controls
 
-    - 5. **Refresh UI**:
-      - a. Call self.page.update()
-      - b. Renders TodoView in main content area
-      - c. Folder view replaced with assignment interface
+  - 5. **Refresh UI**:
+    - a. Call self.page.update()
+    - b. Renders TodoView in main content area
+    - c. Folder view replaced with assignment interface
 
 ## Interactions
 

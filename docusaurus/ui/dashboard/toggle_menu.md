@@ -30,21 +30,21 @@ remains permanently visible.
 
 ## Algorithm
 
-1. **Toggle State**:
-      - a. Read current value of self.menu_open boolean
-      - b. Invert value: self.menu_open = not self.menu_open
-      - c. Store new state (True becomes False, False becomes True)
+- 1. **Toggle State**:
+    - a. Read current value of self.menu_open boolean
+    - b. Invert value: self.menu_open = not self.menu_open
+    - c. Store new state (True becomes False, False becomes True)
 
-    - 2. **Update Sidebar Visibility**:
-      - a. Calculate visibility condition:
-      - - visible = self.menu_open OR self.page.width > 700
-      - b. Assign result to self.sidebar_container.visible property
-      - c. Sidebar shows if: menu toggled on OR window is wide
+  - 2. **Update Sidebar Visibility**:
+    - a. Calculate visibility condition:
+    - - visible = self.menu_open OR self.page.width > 700
+    - b. Assign result to self.sidebar_container.visible property
+    - c. Sidebar shows if: menu toggled on OR window is wide
 
-    - 3. **Refresh UI**:
-      - a. Call self.page.update()
-      - b. Triggers Flet to re-render affected components
-      - c. Sidebar appears or disappears with animation
+  - 3. **Refresh UI**:
+    - a. Call self.page.update()
+    - b. Triggers Flet to re-render affected components
+    - c. Sidebar appears or disappears with animation
 
 ## Interactions
 

@@ -30,24 +30,24 @@ authentication state and invalidates access tokens.
 
 ## Algorithm
 
-1. **Clear Authentication**:
-      - a. Call self.auth.logout()
-      - b. Auth service clears stored credentials
-      - c. Invalidates OAuth2 access and refresh tokens
-      - d. Removes cached user information
+- 1. **Clear Authentication**:
+    - a. Call self.auth.logout()
+    - b. Auth service clears stored credentials
+    - c. Invalidates OAuth2 access and refresh tokens
+    - d. Removes cached user information
 
-    - 2. **Trigger Logout Callback**:
-      - a. Call self.on_logout() (callback from __init__)
-      - b. Callback typically performs:
-      - i. Clear page contents (page.clean())
-      - ii. Reset application state
-      - iii. Navigate to login screen
-      - iv. Display logout confirmation message
+  - 2. **Trigger Logout Callback**:
+    - a. Call self.on_logout() (callback from __init__)
+    - b. Callback typically performs:
+    - i. Clear page contents (page.clean())
+    - ii. Reset application state
+    - iii. Navigate to login screen
+    - iv. Display logout confirmation message
 
-    - 3. **Session Termination**:
-      - a. User returned to unauthenticated state
-      - b. Dashboard instance effectively terminated
-      - c. New login required to access Drive features
+  - 3. **Session Termination**:
+    - a. User returned to unauthenticated state
+    - b. Dashboard instance effectively terminated
+    - c. New login required to access Drive features
 
 ## Interactions
 

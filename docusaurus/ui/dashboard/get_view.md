@@ -29,63 +29,63 @@ to different screen sizes.
 
 ## Algorithm
 
-1. **Create Sidebar Container**:
-      - a. Instantiate ft.Container with fixed width=170px
-      - b. Set bgcolor to light grey (ft.Colors.GREY_100)
-      - c. Add padding=20 for internal spacing
-      - d. Calculate visibility:
-      - i. visible = (page.width &gt;= 900) OR menu_open
-      - ii. Shows on desktop or when toggled on mobile
-      - e. Create Column content with four buttons:
-      - i. ButtonWithMenu: "+ NEW" with dropdown menu
-      - - Menu items: ["Create Folder", "Upload File"]
-      - - on_menu_select: self.handle_action
-      - ii. ElevatedButton: "SETTINGS" (no-op currently)
-      - iii. ElevatedButton: "TO-DO" with self.show_todo_view
-      - iv. ElevatedButton: "ACCOUNT" with self.handle_logout
-      - f. Set button spacing=15 in Column
-      - g. Store in self.sidebar_container
+- 1. **Create Sidebar Container**:
+    - a. Instantiate ft.Container with fixed width=170px
+    - b. Set bgcolor to light grey (ft.Colors.GREY_100)
+    - c. Add padding=20 for internal spacing
+    - d. Calculate visibility:
+    - i. visible = (page.width &gt;= 900) OR menu_open
+    - ii. Shows on desktop or when toggled on mobile
+    - e. Create Column content with four buttons:
+    - i. ButtonWithMenu: "+ NEW" with dropdown menu
+    - - Menu items: ["Create Folder", "Upload File"]
+    - - on_menu_select: self.handle_action
+    - ii. ElevatedButton: "SETTINGS" (no-op currently)
+    - iii. ElevatedButton: "TO-DO" with self.show_todo_view
+    - iv. ElevatedButton: "ACCOUNT" with self.handle_logout
+    - f. Set button spacing=15 in Column
+    - g. Store in self.sidebar_container
 
-    - 2. **Create Top Bar**:
-      - a. Instantiate ft.Container with padding=20
-      - b. Create Row content with three elements:
-      - i. IconButton: hamburger menu (ft.Icons.MENU)
-      - - on_click: self.toggle_menu
-      - - visible: True (always shown)
-      - ii. self.search_field: search TextField (expands)
-      - iii. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
-      - - icon_size: 36
-      - - tooltip: self.user_email
-      - c. Set Row alignment to SPACE_BETWEEN
-      - d. Store in top_bar variable
+  - 2. **Create Top Bar**:
+    - a. Instantiate ft.Container with padding=20
+    - b. Create Row content with three elements:
+    - i. IconButton: hamburger menu (ft.Icons.MENU)
+    - - on_click: self.toggle_menu
+    - - visible: True (always shown)
+    - ii. self.search_field: search TextField (expands)
+    - iii. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
+    - - icon_size: 36
+    - - tooltip: self.user_email
+    - c. Set Row alignment to SPACE_BETWEEN
+    - d. Store in top_bar variable
 
-    - 3. **Create Tab Navigation**:
-      - a. Instantiate ft.Container with padding=10
-      - b. Create Row content with three tab buttons:
-      - i. ElevatedButton: "YOUR FOLDERS"
-      - - on_click: folder_navigator.reset_to_root()
-      - ii. ElevatedButton: "PASTE LINKS"
-      - - on_click: paste_links_manager.load_paste_links_view()
-      - iii. ElevatedButton: "SHARED DRIVES"
-      - - on_click: folder_navigator.load_shared_drives()
-      - c. Set Row spacing=10, alignment=CENTER
-      - d. Store in tabs variable
+  - 3. **Create Tab Navigation**:
+    - a. Instantiate ft.Container with padding=10
+    - b. Create Row content with three tab buttons:
+    - i. ElevatedButton: "YOUR FOLDERS"
+    - - on_click: folder_navigator.reset_to_root()
+    - ii. ElevatedButton: "PASTE LINKS"
+    - - on_click: paste_links_manager.load_paste_links_view()
+    - iii. ElevatedButton: "SHARED DRIVES"
+    - - on_click: folder_navigator.load_shared_drives()
+    - c. Set Row spacing=10, alignment=CENTER
+    - d. Store in tabs variable
 
-    - 4. **Create Main Content Area**:
-      - a. Instantiate ft.Column with three components:
-      - i. top_bar: search and account controls
-      - ii. tabs: view switching buttons
-      - iii. Container with folder_list (expand=True)
-      - b. Set Column expand=True to fill vertical space
-      - c. Store in main_content variable
+  - 4. **Create Main Content Area**:
+    - a. Instantiate ft.Column with three components:
+    - i. top_bar: search and account controls
+    - ii. tabs: view switching buttons
+    - iii. Container with folder_list (expand=True)
+    - b. Set Column expand=True to fill vertical space
+    - c. Store in main_content variable
 
-    - 5. **Assemble Final Layout**:
-      - a. Create ft.Row with three components:
-      - i. self.sidebar_container: navigation sidebar
-      - ii. ft.VerticalDivider(width=1): separator line
-      - iii. main_content: main display area
-      - b. Set Row expand=True to fill available space
-      - c. Return assembled Row component
+  - 5. **Assemble Final Layout**:
+    - a. Create ft.Row with three components:
+    - i. self.sidebar_container: navigation sidebar
+    - ii. ft.VerticalDivider(width=1): separator line
+    - iii. main_content: main display area
+    - b. Set Row expand=True to fill available space
+    - c. Return assembled Row component
 
 ## Interactions
 

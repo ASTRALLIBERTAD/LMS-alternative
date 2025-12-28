@@ -29,20 +29,20 @@ and uploading files through the file_manager module.
 
 ## Algorithm
 
-1. **Action Routing**:
-      - a. Check if selected_item == "Create Folder"
-      - i. If True, call file_manager.create_new_folder_dialog()
-      - ii. Opens dialog for entering new folder name
-      - iii. Dialog handles folder creation on confirm
-      - b. Check elif selected_item == "Upload File"
-      - i. If True, call file_manager.select_file_to_upload()
-      - ii. Opens system file picker dialog
-      - iii. Handles file selection and upload process
+- 1. **Action Routing**:
+    - a. Check if selected_item == "Create Folder"
+    - i. If True, call file_manager.create_new_folder_dialog()
+    - ii. Opens dialog for entering new folder name
+    - iii. Dialog handles folder creation on confirm
+    - b. Check elif selected_item == "Upload File"
+    - i. If True, call file_manager.select_file_to_upload()
+    - ii. Opens system file picker dialog
+    - iii. Handles file selection and upload process
 
-    - 2. **Update UI**:
-      - a. Call self.page.update()
-      - b. Ensures any dialog or state changes are rendered
-      - c. Maintains UI responsiveness
+  - 2. **Update UI**:
+    - a. Call self.page.update()
+    - b. Ensures any dialog or state changes are rendered
+    - c. Maintains UI responsiveness
 
 ## Interactions
 

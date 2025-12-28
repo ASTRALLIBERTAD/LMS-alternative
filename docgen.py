@@ -460,16 +460,17 @@ class MarkdownFormatter:
             indent = len(line) - len(line.lstrip())
             text = self.escape_mdx(line.strip())
             
+            # Map indentation levels to markdown list depth
+            # Phase headers (0-11 spaces): no indentation
+            # Numbered items (12-14 spaces): 2-space indentation  
+            # Sub-items (15+ spaces): 4-space indentation
             if indent >= 15:
-                lines.append('      - {}'.format(text))
-            elif indent >= 12:
                 lines.append('    - {}'.format(text))
-            elif indent >= 8:
+            elif indent >= 12:
                 lines.append('  - {}'.format(text))
-            elif indent >= 4:
-                lines.append('- {}'.format(text))
             else:
-                lines.append(text)
+                # Phase headers with 0-11 spaces get no indentation
+                lines.append('- {}'.format(text))
         
         return lines
     

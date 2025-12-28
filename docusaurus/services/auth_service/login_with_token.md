@@ -34,11 +34,11 @@ credential system. Validates and refreshes tokens as needed.
 
 ## Algorithm
 
-1. Validate token_data structure
-    - 2. Extract tokens and client credentials
-    - 3. Create Credentials object
-    - 4. Validate and refresh if needed
-    - 5. Persist credentials
+- 1. Validate token_data structure
+  - 2. Extract tokens and client credentials
+  - 3. Create Credentials object
+  - 4. Validate and refresh if needed
+  - 5. Persist credentials
 
 ## Example
 
