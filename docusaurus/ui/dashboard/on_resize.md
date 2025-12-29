@@ -9,7 +9,7 @@ title: "on_resize"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 495
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 467
 :::
 
 Handle window resize events for responsive sidebar layout.

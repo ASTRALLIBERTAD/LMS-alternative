@@ -9,7 +9,7 @@ title: "close_dialog"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 731
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 703
 :::
 
 Close an open modal dialog.

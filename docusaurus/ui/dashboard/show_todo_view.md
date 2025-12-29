@@ -9,7 +9,7 @@ title: "show_todo_view"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 795
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 767
 :::
 
 Switch to the to-do/assignment management view.

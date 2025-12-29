@@ -888,7 +888,7 @@ class LoginView(LoginBase):
         - Mobile uses authorization code flow with external callback
         - Both flows require OAuth 2.0 client credentials
         - Provider must be configured with correct redirect URLs
-        - Desktop redirect: typically http://localhost:PORT/callback
+        - Desktop redirect: typically http://localhost:{PORT}/callback
         - Mobile redirect: must match OAuth client configuration
         - Error handling consistent across both flows
         - Success callback shared between desktop and mobile flows

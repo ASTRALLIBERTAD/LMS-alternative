@@ -380,11 +380,6 @@ def get_redirect_url():
     desktop platforms. This URL must match the authorized redirect URIs
     configured in Google Cloud Console for the OAuth client.
 
-    Purpose:
-        - Provide OAuth callback URL for desktop authentication
-        - Ensure consistency with Google Console configuration
-        - Support local HTTP server for OAuth code exchange
-
     Returns:
         str: The localhost redirect URL with port 8550. Format:
             "http://localhost:8550/oauth_callback". Port 8550 chosen to
@@ -411,7 +406,7 @@ def get_redirect_url():
         ... )
 
     See Also:
-        - :func:`main`: Uses this for OAuth provider configuration
+        - :meth:`main`: Uses this for OAuth provider configuration
         - :class:`~services.auth_service.GoogleAuth`: Implements OAuth flow
         - :class:`~flet.auth.providers.GoogleOAuthProvider`: OAuth provider
 
@@ -420,7 +415,7 @@ def get_redirect_url():
         - Must be authorized in Google Cloud Console
         - Desktop authentication only (not mobile)
         - Local HTTP server listens on this port during auth
-        - URL format must be exact: http://localhost:PORT/PATH
+        - URL format must be exact: `http://localhost:{PORT}/{PATH}`
         - No HTTPS for localhost (not required by Google)
     """
     return "http://localhost:8550/oauth_callback"

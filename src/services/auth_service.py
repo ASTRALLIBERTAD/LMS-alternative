@@ -1,23 +1,23 @@
 """Google Authentication Service Module.
 
-This module provides OAuth 2.0 authentication services for Google APIs,
-specifically for Google Drive access. It handles credential storage,
-token refresh, and service creation.
+Provides OAuth 2.0 authentication for Google Drive API with credential
+management, token refresh, and session persistence.
 
 Classes:
-    GoogleAuth: Manages Google OAuth authentication and Drive API access.
+    GoogleAuth: OAuth 2.0 authentication manager for Drive API.
 
-Attributes:
-    SCOPES (list): OAuth 2.0 scopes required for Google Drive access.
+Module Attributes:
+    SCOPES (list[str]): Required OAuth scopes for Drive access.
 
 Example:
-    >>> auth = GoogleAuth(credentials_file='path/to/web.json')
-    >>> if auth.is_authenticated():
-    ...     service = auth.get_service()
-    ...     # Use service to access Google Drive
+    >>> from services.auth_service import GoogleAuth
+    >>> auth = GoogleAuth('web.json')
+    >>> auth.login_desktop()
+    >>> service = auth.get_service()
 
 See Also:
-    :class:`~src.services.drive_service.DriveService`: Uses GoogleAuth for API access.
+    - :class:`DriveService`: Uses GoogleAuth for authenticated API access
+    - :mod:`ui.login`: Desktop authentication interface
 """
 
 import os
@@ -31,242 +31,94 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 
 class GoogleAuth:
-    """Google OAuth 2.0 authentication manager for Drive API access.
+    """OAuth 2.0 authentication manager for Google Drive API.
 
-    GoogleAuth manages the complete OAuth 2.0 authentication lifecycle for Google
-    Drive API access, including credential storage, token refresh, session
-    persistence, and service creation. It supports both desktop authentication
-    (local server with browser) and token-based authentication (from external
-    OAuth providers), with automatic token refresh using refresh tokens.
-    
-    This class implements a persistent authentication system where credentials
-    are cached locally in a pickle file, enabling session persistence across
-    application restarts. It handles token expiration automatically by refreshing
-    tokens when needed, and provides a clean interface for checking authentication
-    status and obtaining Drive API service objects.
+    Manages complete authentication lifecycle including credential storage,
+    automatic token refresh, and session persistence. Supports both desktop
+    OAuth flow (browser-based) and token bridging from external providers.
 
     Purpose:
-        - Manage Google OAuth 2.0 authentication flow
-        - Store and retrieve OAuth credentials securely
-        - Handle automatic token refresh on expiration
-        - Provide authenticated Google Drive API service
-        - Support both desktop and token-based authentication
-        - Persist authentication sessions across app restarts
+        - Handle OAuth 2.0 authentication flows
+        - Persist credentials across sessions
+        - Automatically refresh expired tokens
+        - Provide authenticated Drive API service
 
     Attributes:
-        creds (google.oauth2.credentials.Credentials or None): Google OAuth
-            credentials object containing access token, refresh token, and
-            expiration info. None if not authenticated.
-        credentials_file (str): Absolute path to OAuth client secrets JSON
-            file (web.json). Contains client_id, client_secret, and authorized
-            redirect URIs from Google Cloud Console.
-        token_file (str): Absolute path to token.pickle file where OAuth
-            credentials are persisted. Located in same directory as module.
-        client_id (str or None): OAuth 2.0 client ID extracted from credentials
-            file. Used for token operations. None if file not loaded.
-        client_secret (str or None): OAuth 2.0 client secret extracted from
-            credentials file. Used for token refresh. None if file not loaded.
+        creds (Credentials or None): OAuth credentials with access/refresh tokens.
+            None when not authenticated.
+        credentials_file (str): Path to OAuth client secrets JSON (web.json).
+        token_file (str): Path to pickled credentials (token.pickle).
+        client_id (str or None): OAuth client ID from credentials file.
+        client_secret (str or None): OAuth client secret from credentials file.
 
-    Interactions:
-        - **google.oauth2.credentials.Credentials**: OAuth credential management
-        - **google.auth.transport.requests.Request**: HTTP transport for token refresh
-        - **google_auth_oauthlib.flow.InstalledAppFlow**: Desktop OAuth flow
-        - **googleapiclient.discovery.build**: Creates Drive API service
-        - **pickle**: Serializes/deserializes credentials to file
-        - **json**: Parses OAuth credentials configuration file
-
-    Algorithm (High-Level Workflow):
-        **Phase 1: Initialization**
-            1. Set credentials_file path (provided or default web.json)
-            2. Set token_file path (token.pickle in module directory)
-            3. Call _load_client_info() to extract client_id and client_secret
-            4. Call _load_credentials() to restore saved session if exists
+    Algorithm:
+        **Initialization Flow**:
+            1. Set file paths for credentials and token storage
+            2. Load client_id and client_secret from credentials JSON
+            3. Restore existing session from token.pickle if available
         
-        **Phase 2: Authentication** (Desktop Flow)
-            1. Verify credentials file exists
-            2. Create InstalledAppFlow from client secrets
-            3. Launch local server on port 8550
-            4. Open browser to Google OAuth consent screen
-            5. User authorizes application
-            6. Receive authorization code via callback
-            7. Exchange code for access and refresh tokens
-            8. Store credentials and save to pickle file
+        **Desktop Authentication**:
+            1. Launch local server on port 8550
+            2. Open browser for user consent
+            3. Receive authorization code via callback
+            4. Exchange code for tokens
+            5. Persist credentials to token.pickle
         
-        **Phase 3: Authentication** (Token Flow)
-            1. Receive token_data from external OAuth provider
-            2. Extract access_token, refresh_token, client credentials
-            3. Create Credentials object with token data
-            4. Validate credentials (check validity)
-            5. Refresh if expired and refresh_token available
-            6. Save credentials to pickle file
-        
-        **Phase 4: Session Persistence**
-            1. On app startup, check for token.pickle
-            2. If exists, unpickle credentials
-            3. Validate credentials (may be expired)
-            4. Attempt refresh if expired but has refresh_token
-            5. Use restored session or prompt re-authentication
-        
-        **Phase 5: Service Creation**
-            1. Check authentication status
-            2. Validate and refresh credentials if needed
-            3. Build Google Drive API v3 service with credentials
-            4. Return service object for API operations
-        
-        **Phase 6: Logout**
-            1. Clear credentials object (set to None)
-            2. Delete token.pickle file from filesystem
-            3. User must re-authenticate on next login
+        **Token-Based Authentication**:
+            1. Validate incoming token structure
+            2. Create Credentials object from token data
+            3. Refresh if expired
+            4. Save to token.pickle
 
     Example:
-        >>> # Initialize with default credentials file
-        >>> auth = GoogleAuth()
+        >>> # Desktop authentication
+        >>> auth = GoogleAuth('web.json')
+        >>> auth.login_desktop()
         >>> 
-        >>> # Or specify custom credentials file
-        >>> auth = GoogleAuth('path/to/web.json')
-        >>> 
-        >>> # Desktop authentication flow
-        >>> if not auth.is_authenticated():
-        ...     auth.login_desktop()  # Opens browser
-        >>> 
-        >>> # Check authentication status
-        >>> if auth.is_authenticated():
-        ...     print("User authenticated!")
-        ...     service = auth.get_service()
-        ...     # Use service for Drive API calls
-        >>> 
-        >>> # Token-based authentication (from Flet OAuth)
+        >>> # Token-based authentication
         >>> token_data = {
-        ...     'access_token': 'ya29.a0...',
+        ...     'access_token': 'ya29...',
         ...     'refresh_token': '1//0g...',
         ...     'client_id': 'xxx.apps.googleusercontent.com',
         ...     'client_secret': 'secret'
         ... }
-        >>> success = auth.login_with_token(token_data)
+        >>> auth.login_with_token(token_data)
         >>> 
-        >>> # Get user information
-        >>> user_info = auth.get_user_info()
-        >>> print(f"Logged in as: {user_info.get('emailAddress')}")
-        >>> 
-        >>> # Logout and clear session
-        >>> auth.logout()
+        >>> # Use authenticated service
+        >>> if auth.is_authenticated():
+        ...     service = auth.get_service()
+        ...     user = auth.get_user_info()
 
     See Also:
-        - :class:`~services.drive_service.DriveService`: Uses GoogleAuth for API access
-        - :class:`~ui.login.LoginView`: Desktop OAuth login interface
-        - :class:`~ui.firebase_mobile_login.FirebaseMobileLogin`: Mobile OAuth interface
-        - `Google OAuth 2.0 <https://developers.google.com/identity/protocols/oauth2>`_
-        - `Google Drive API <https://developers.google.com/drive/api/v3/reference>`_
+        - :class:`DriveService`: Wraps GoogleAuth for Drive operations
+        - :class:`ui.login.LoginView`: Desktop OAuth UI
+        - :meth:`login_desktop`: Browser-based authentication
+        - :meth:`login_with_token`: External token integration
 
     Notes:
-        - Credentials persisted in token.pickle (binary format)
-        - Token automatically refreshed when expired (if refresh_token present)
-        - Desktop flow uses port 8550 for OAuth callback
-        - Requires Google Drive API scope for Drive operations
-        - Client secrets (web.json) must be from Google Cloud Console
-        - Token.pickle should be in .gitignore (contains credentials)
-        - Session persists across app restarts until logout
-        - Refresh token may not be provided in all OAuth flows
+        - Credentials stored in token.pickle (binary format)
+        - Tokens auto-refresh when expired
+        - Desktop OAuth uses port 8550
+        - Add token.pickle to .gitignore
 
     Security Considerations:
-        - Never commit web.json or token.pickle to version control
-        - Credentials file contains client_secret (sensitive)
-        - Token file contains access tokens (user credentials)
-        - Use appropriate file permissions for credential files
-        - Refresh tokens have long lifetime (handle revocation)
-
-    References:
-        - OAuth 2.0 Specification: https://oauth.net/2/
-        - Google OAuth 2.0: https://developers.google.com/identity/protocols/oauth2
-        - Google Drive API v3: https://developers.google.com/drive/api/v3/reference
+        - Never commit web.json or token.pickle
+        - Credentials file contains client_secret
+        - Token file contains user access tokens
+        - Use appropriate file permissions (chmod 600)
+        - Refresh tokens have long lifetime
     """
 
     def __init__(self, credentials_file=None):
-        """Initialize GoogleAuth with OAuth credentials configuration.
-
-        Sets up the authentication service by loading OAuth client configuration
-        from the credentials file and attempting to restore any existing session
-        from the token pickle file. Prepares the service for authentication.
+        """Initialize authentication manager.
 
         Args:
-            credentials_file (str, optional): Path to OAuth client secrets JSON
-                file containing client_id, client_secret, and redirect_uris.
-                Must be obtained from Google Cloud Console with Drive API enabled.
-                If None, defaults to 'web.json' in the same directory as this
-                module. Defaults to None.
-
-        Algorithm:
-            1. **Initialize Credentials**:
-               a. Set self.creds = None (no authentication yet)
-            
-            2. **Set Credentials File Path**:
-               a. If credentials_file parameter provided:
-                  i. Use provided path
-               b. If credentials_file is None:
-                  i. Get directory of current module (__file__)
-                  ii. Join with 'web.json' filename
-                  iii. Create default path
-               c. Store in self.credentials_file
-            
-            3. **Set Token File Path**:
-               a. Get directory of current module
-               b. Join with 'token.pickle' filename
-               c. Store in self.token_file
-               d. This is where credentials will be persisted
-            
-            4. **Initialize Client Credentials**:
-               a. Set self.client_id = None
-               b. Set self.client_secret = None
-               c. Will be loaded from credentials file
-            
-            5. **Load Client Information**:
-               a. Call self._load_client_info()
-               b. Reads credentials_file and extracts client_id/client_secret
-               c. Stores in instance attributes
-            
-            6. **Load Existing Session**:
-               a. Call self._load_credentials()
-               b. Attempts to unpickle token.pickle
-               c. Restores previous session if file exists
-               d. Sets self.creds if session found
-
-        Interactions:
-            - **os.path.join()**: Constructs file paths
-            - **os.path.dirname()**: Gets module directory
-            - **_load_client_info()**: Loads OAuth client configuration
-            - **_load_credentials()**: Restores saved session
+            credentials_file (str, optional): Path to OAuth client secrets JSON.
+                Defaults to 'web.json' in module directory.
 
         Example:
-            >>> # Use default credentials file (web.json)
-            >>> auth = GoogleAuth()
-            >>> print(auth.credentials_file)
-            /path/to/services/web.json
-            >>> print(auth.token_file)
-            /path/to/services/token.pickle
-            >>> 
-            >>> # Use custom credentials file
-            >>> auth = GoogleAuth('/custom/path/credentials.json')
-            >>> print(auth.credentials_file)
-            /custom/path/credentials.json
-            >>> 
-            >>> # Check if session restored
-            >>> if auth.creds:
-            ...     print("Existing session found")
-            ... else:
-            ...     print("No existing session")
-
-        See Also:
-            - :meth:`_load_client_info`: Loads OAuth client configuration
-            - :meth:`_load_credentials`: Restores saved session
-            - :meth:`login_desktop`: Desktop authentication flow
-            - :meth:`login_with_token`: Token-based authentication
-
-        Notes:
-            - credentials_file must exist before authentication
-            - token_file may not exist (created after first login)
-            - Default web.json must be in same directory as module
-            - Client info and credentials loaded automatically
-            - No authentication performed during initialization
+            >>> auth = GoogleAuth()  # Uses default web.json
+            >>> auth = GoogleAuth('/path/to/credentials.json')
         """
         self.creds = None
         self.credentials_file = credentials_file or os.path.join(
@@ -293,33 +145,33 @@ class GoogleAuth:
 
         Algorithm:
             1. **Check File Existence**:
-               a. Check if self.credentials_file exists
-               b. If not, return early (no error, silent failure)
+               1. Check if self.credentials_file exists
+               2. If not, return early (no error, silent failure)
             
             2. **Try Loading File**:
-               a. Enter try block for error handling
-               b. Open credentials_file in read mode
-               c. Parse JSON content with json.load()
-               d. Store in data variable
-            
+               1. Enter try block for error handling
+               2. Open credentials_file in read mode
+               3. Parse JSON content with json.load()
+               4. Store in data variable
+
             3. **Extract Configuration Section**:
-               a. Try to get 'web' section: data.get('web')
-               b. If 'web' is None, try 'installed': data.get('installed')
-               c. Store result in config variable
-               d. Supports both application types
+               1. Try to get 'web' section: data.get('web')
+               2. If 'web' is None, try 'installed': data.get('installed')
+               3. Store result in config variable
+               4. Supports both application types
             
             4. **Extract Client Credentials**:
-               a. If config found (not None):
-                  i. Extract client_id: config.get('client_id')
-                  ii. Store in self.client_id
-                  iii. Extract client_secret: config.get('client_secret')
-                  iv. Store in self.client_secret
-                  v. Print success message with filename
+               1. If config found (not None):
+                  a. Extract client_id: config.get('client_id')
+                  b. Store in self.client_id
+                  c. Extract client_secret: config.get('client_secret')
+                  d. Store in self.client_secret
+                  e. Print success message with filename
             
             5. **Handle Errors**:
-               a. Catch any Exception during file read/parse
-               b. Print error message to console
-               c. Client_id and client_secret remain None
+               1. Catch any Exception during file read/parse
+               2. Print error message to console
+               3. Client_id and client_secret remain None
 
         Interactions:
             - **os.path.exists()**: Checks file existence

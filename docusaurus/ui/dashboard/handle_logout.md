@@ -9,7 +9,7 @@ title: "handle_logout"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 882
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 854
 :::
 
 Handle user logout process.

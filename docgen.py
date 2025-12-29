@@ -228,16 +228,51 @@ class MarkdownFormatter:
         return text
     
     @staticmethod
+    def convert_urls_to_links(text: str) -> str:
+        """Convert plain URLs to markdown links.
+        
+        Converts bare URLs (http://, https://, ftp://) to clickable markdown links.
+        URLs with placeholders like {PORT}, {PATH} are formatted as code instead.
+        
+        Args:
+            text: Text containing URLs
+            
+        Returns:
+            Text with URLs converted to markdown links or code blocks
+        """
+        import re
+        
+        # Pattern to match URLs (http, https, ftp)
+        url_pattern = r'(?<!\()(https?://[^\s\)<]+|ftp://[^\s\)<]+)'
+        
+        def replace_url(match):
+            url = match.group(0)
+            # Check if URL contains placeholders like {PORT}, {PATH}, etc.
+            if '{' in url and '}' in url:
+                # Format as inline code instead of a link
+                return f'`{url}`'
+            else:
+                # Create markdown link with the URL as both text and destination
+                return f'[{url}]({url})'
+        
+        # Only replace URLs that are not already part of markdown links
+        text = re.sub(url_pattern, replace_url, text)
+        
+        return text
+    
+    @staticmethod
     def escape_mdx(text: str) -> str:
         """Escape characters that conflict with MDX/JSX syntax.
         
-        MDX interprets < followed by letters/numbers as JSX tags. This causes
-        errors with comparisons like <900px or expressions like >=900px.
+        MDX interprets certain characters as JSX:
+        - < followed by letters/numbers as JSX tags
+        - {} as JSX expressions
         
         We need to escape:
         - < when followed by a digit (e.g., <900px, <100, <5)
         - > when followed by = (e.g., >=900px)
         - < when followed by = (e.g., <=100)
+        - { and } to prevent JSX expression parsing
         
         Args:
             text: Text that may contain MDX-problematic characters
@@ -246,6 +281,10 @@ class MarkdownFormatter:
             Text with problematic patterns escaped using HTML entities
         """
         import re
+        
+        # Escape curly braces to prevent JSX expression interpretation
+        text = text.replace('{', '&#123;')
+        text = text.replace('}', '&#125;')
         
         # Escape < followed by a digit (e.g., <900px, <5, <100)
         text = re.sub(r'<(\d)', r'&lt;\1', text)
@@ -322,18 +361,23 @@ class MarkdownFormatter:
         md.append(':::')
         md.append('')
         
-        # Summary and description (with MDX escaping)
+        # Summary and description (with URL conversion and MDX escaping)
         if doc['summary']:
-            md.append(self.escape_mdx(doc['summary']))
+            summary = self.convert_urls_to_links(doc['summary'])
+            summary = self.escape_mdx(summary)
+            md.append(summary)
             md.append('')
         
         if doc['description']:
-            md.append(self.escape_mdx(doc['description']))
+            description = self.convert_urls_to_links(doc['description'])
+            description = self.escape_mdx(description)
+            md.append(description)
             md.append('')
         
         # Process sections in priority order
         section_configs = {
             'Purpose': {'title': '## Purpose', 'formatter': self._format_text},
+            'Functions': {'title': '## Functions', 'formatter': self._format_list},
             'Attributes': {'title': '## Attributes', 'formatter': self._format_params},
             'Args': {'title': '## Parameters', 'formatter': self._format_params},
             'Parameters': {'title': '## Parameters', 'formatter': self._format_params},
@@ -362,11 +406,18 @@ class MarkdownFormatter:
         return '\n'.join(md)
     
     def _format_text(self, content: str) -> List[str]:
-        """Format plain text with MDX escaping."""
-        return [self.escape_mdx(line) for line in content.split('\n')]
+        """Format plain text with URL conversion and MDX escaping."""
+        lines = []
+        for line in content.split('\n'):
+            # First convert URLs to markdown links
+            line = self.convert_urls_to_links(line)
+            # Then apply MDX escaping
+            line = self.escape_mdx(line)
+            lines.append(line)
+        return lines
     
     def _format_params(self, content: str) -> List[str]:
-        """Format parameters/attributes with MDX escaping."""
+        """Format parameters/attributes with URL conversion and MDX escaping."""
         result = []
         lines = content.split('\n')
         
@@ -378,7 +429,9 @@ class MarkdownFormatter:
             if param_match:
                 # Save previous parameter
                 if current_param:
-                    desc_text = self.escape_mdx(' '.join(param_desc))
+                    desc_text = ' '.join(param_desc)
+                    desc_text = self.convert_urls_to_links(desc_text)
+                    desc_text = self.escape_mdx(desc_text)
                     result.append('- **`{}`** ({}): {}'.format(
                         current_param[0],
                         current_param[1],
@@ -394,7 +447,9 @@ class MarkdownFormatter:
         
         # Save last parameter
         if current_param:
-            desc_text = self.escape_mdx(' '.join(param_desc))
+            desc_text = ' '.join(param_desc)
+            desc_text = self.convert_urls_to_links(desc_text)
+            desc_text = self.escape_mdx(desc_text)
             result.append('- **`{}`** ({}): {}'.format(
                 current_param[0],
                 current_param[1],
@@ -475,13 +530,15 @@ class MarkdownFormatter:
         return lines
     
     def _format_list(self, content: str) -> List[str]:
-        """Format bullet lists with MDX escaping and Sphinx reference conversion."""
+        """Format bullet lists with URL conversion, Sphinx references, and MDX escaping."""
         lines = []
         for line in content.split('\n'):
             stripped = line.strip()
             if stripped:
                 # Remove existing list markers
                 text = re.sub(r'^[-*]\s*', '', stripped)
+                # Convert URLs to markdown links
+                text = self.convert_urls_to_links(text)
                 # Convert Sphinx references to markdown
                 text = self.convert_sphinx_refs(text)
                 # Escape MDX problematic characters

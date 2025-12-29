@@ -9,7 +9,7 @@ title: "refresh_folder_contents"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 677
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 649
 :::
 
 Refresh the currently displayed folder contents.

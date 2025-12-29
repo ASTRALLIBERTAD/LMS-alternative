@@ -6,10 +6,10 @@ title: "Dashboard"
 
 # 📦 Dashboard
 
-![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
+![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 55
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 26
 :::
 
 Main application dashboard with Google Drive integration and file management.
@@ -53,59 +53,6 @@ Drive folder browsing and paste-link-based access.
 - **`paste_link_field`** (ft.TextField): Input field for pasting Google Drive share links. Processes links on Enter key via paste_links_manager.
 - **`folder_list`** (ft.Column): Main content container displaying folder contents, search results, or to-do view. Scrollable with dynamic content updates.
 
-## Algorithm
-
-- **Phase 1: Initialization**
-  - 1. Store references to page, auth service, and logout callback
-  - 2. Create DriveService instance from auth.get_service()
-  - 3. Initialize folder navigation state (root folder, empty stack)
-  - 4. Set default view mode to "your_folders"
-  - 5. Retrieve user email from auth service for display
-  - 6. Instantiate manager modules (FileManager, FolderNavigator, PasteLinksManager)
-  - 7. Create search field with submit handler
-  - 8. Create paste link field for shared link processing
-  - 9. Create scrollable folder list container
-  - 10. Register resize event handler for responsive layout
-  - 11. Set page title and alignment properties
-  - 12. Trigger initial folder load (your_folders view)
-
-- **Phase 2: View Management**
-  - 1. Monitor current_view state variable
-  - 2. When view changes:
-    - a. Clear folder_list contents
-    - b. If "your_folders": load Drive root folder contents
-    - c. If "todo": instantiate TodoView and display
-    - d. If "paste_links": show paste link input interface
-    - e. If "shared_drives": load team drives list
-  - 3. Update page to render new view
-
-- **Phase 3: Responsive Layout Handling**
-  - 1. Listen for window resize events via page.on_resize
-  - 2. Check page.width against breakpoints
-  - 3. If width &gt;= 900px (desktop):
-    - a. Show sidebar permanently
-    - b. Set menu_open to False (disable toggle state)
-  - 4. If width &lt;900px (mobile/tablet):
-    - a. Show sidebar only if menu_open is True
-    - b. Enable hamburger menu toggle functionality
-  - 5. Update page to apply visibility changes
-
-- **Phase 4: Navigation Flow**
-  - 1. User clicks folder in folder_list
-  - 2. Delegate to folder_navigator.show_folder_contents()
-  - 3. Push current folder to folder_stack for back navigation
-  - 4. Update current_folder_id and current_folder_name
-  - 5. Load and display new folder contents
-  - 6. Update breadcrumb trail in UI
-
-- **Phase 5: Action Handling**
-  - 1. User clicks action button (+ NEW, TO-DO, SETTINGS, etc.)
-  - 2. Route to appropriate handler method
-  - 3. For file operations: delegate to file_manager
-  - 4. For navigation: delegate to folder_navigator
-  - 5. For view switches: update current_view and rebuild UI
-  - 6. Update page to reflect changes
-
 ## Interactions
 
 - **GoogleAuth**: Authenticates user and provides Drive API service
@@ -116,6 +63,53 @@ Drive folder browsing and paste-link-based access.
 - **TodoView**: Assignment management interface accessible from sidebar
 - **ButtonWithMenu**: Custom dropdown button component for action menu
 - **ft.Page**: Flet page for UI updates and responsive layout handling
+- Algorithm (High-Level Workflow):
+- *Phase 1: Initialization**
+- 1. Store references to page, auth service, and logout callback
+- 2. Create DriveService instance from auth.get_service()
+- 3. Initialize folder navigation state (root folder, empty stack)
+- 4. Set default view mode to "your_folders"
+- 5. Retrieve user email from auth service for display
+- 6. Instantiate manager modules (FileManager, FolderNavigator, PasteLinksManager)
+- 7. Create search field with submit handler
+- 8. Create paste link field for shared link processing
+- 9. Create scrollable folder list container
+- 10. Register resize event handler for responsive layout
+- 11. Set page title and alignment properties
+- 12. Trigger initial folder load (your_folders view)
+- *Phase 2: View Management**
+- 1. Monitor current_view state variable
+- 2. When view changes:
+- a. Clear folder_list contents
+- b. If "your_folders": load Drive root folder contents
+- c. If "todo": instantiate TodoView and display
+- d. If "paste_links": show paste link input interface
+- e. If "shared_drives": load team drives list
+- 3. Update page to render new view
+- *Phase 3: Responsive Layout Handling**
+- 1. Listen for window resize events via page.on_resize
+- 2. Check page.width against breakpoints
+- 3. If width &gt;= 900px (desktop):
+- a. Show sidebar permanently
+- b. Set menu_open to False (disable toggle state)
+- 4. If width < 900px (mobile/tablet):
+- a. Show sidebar only if menu_open is True
+- b. Enable hamburger menu toggle functionality
+- 5. Update page to apply visibility changes
+- *Phase 4: Navigation Flow**
+- 1. User clicks folder in folder_list
+- 2. Delegate to folder_navigator.show_folder_contents()
+- 3. Push current folder to folder_stack for back navigation
+- 4. Update current_folder_id and current_folder_name
+- 5. Load and display new folder contents
+- 6. Update breadcrumb trail in UI
+- *Phase 5: Action Handling**
+- 1. User clicks action button (+ NEW, TO-DO, SETTINGS, etc.)
+- 2. Route to appropriate handler method
+- 3. For file operations: delegate to file_manager
+- 4. For navigation: delegate to folder_navigator
+- 5. For view switches: update current_view and rebuild UI
+- 6. Update page to reflect changes
 
 ## Example
 
@@ -170,6 +164,6 @@ page.add(layout)
 
 ## References
 
-- Google Drive API v3: https://developers.google.com/drive/api/v3/reference
-- Flet Framework: https://flet.dev/docs/
-- Material Design Icons: https://fonts.google.com/icons
+- Google Drive API v3: [https://developers.google.com/drive/api/v3/reference](https://developers.google.com/drive/api/v3/reference)
+- Flet Framework: [https://flet.dev/docs/](https://flet.dev/docs/)
+- Material Design Icons: [https://fonts.google.com/icons](https://fonts.google.com/icons)
