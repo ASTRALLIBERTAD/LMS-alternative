@@ -233,7 +233,7 @@ class PasteLinksManager:
                         icon=ft.Icons.VISIBILITY,
                         tooltip="Preview" if not is_folder else "Open",
                         on_click=lambda e, it=item: self.open_saved_link(it)
-                    ) if self.file_preview or is_folder else ft.Container(),
+                    ) if not is_folder else ft.Container(),
                     ft.IconButton(
                         icon=ft.Icons.DELETE,
                         tooltip="Delete",

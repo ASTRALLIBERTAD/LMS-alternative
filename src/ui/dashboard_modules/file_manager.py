@@ -40,22 +40,24 @@ class FileManager:
         folder_name = folder.get("name", "Untitled")
         display_name = folder_name if len(folder_name) < 40 else folder_name[:37] + "..."
         
-        menu_items = self.show_menu(folder, is_folder=True, is_shared_drive=is_shared_drive)
+        # menu_items = self.show_menu(folder, is_folder=True, is_shared_drive=is_shared_drive)
 
         return ft.Container(
-            content=ft.Row([
-                ft.Icon(ft.Icons.FOLDER, size=24),
-                ft.Column([
-                    ft.Text(display_name, size=14),
-                    ft.Text(f"{subfolder_count} folders", size=12, color=ft.Colors.GREY_600),
-                ], expand=True),
-
-                ft.PopupMenuButton(items=menu_items),
-            ]),
-            padding=10,
-            border=ft.border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_300)),
-            on_click=lambda e, f=folder: self.open_folder(f, is_shared_drive),
-        )
+                content=ft.Row([
+                    ft.Icon(ft.Icons.FOLDER, size=24),
+                    ft.Column([
+                        ft.Text(display_name, size=14),
+                        ft.Text(f"{subfolder_count} folders", size=12, color=ft.Colors.GREY_600),
+                    ], expand=True),
+                ]),
+                padding=8,
+                ink=True,
+                on_click=lambda e, f=folder: self.open_folder(f, is_shared_drive),
+                border=ft.border.all(1, ft.Colors.GREY_300),
+                border_radius=8,
+                margin=ft.margin.only(bottom=10)
+            )
+        
     
     def create_file_item(self, file):
         is_folder = file.get("mimeType") == "application/vnd.google-apps.folder"
@@ -83,8 +85,11 @@ class FileManager:
                 *action_buttons
             ]),
             padding=10,
-            border=ft.border.only(bottom=ft.BorderSide(1, ft.Colors.GREY_200)),
+            ink=True,
             on_click=lambda e, f=file: self.handle_file_click(f) if is_folder else self.preview_file(f),
+            border=ft.border.all(1, ft.Colors.GREY_300),
+            border_radius=8,
+            margin=ft.margin.only(bottom=10),
         )
     
     def preview_file(self, file):
