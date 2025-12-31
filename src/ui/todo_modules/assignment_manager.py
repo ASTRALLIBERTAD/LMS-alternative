@@ -752,7 +752,7 @@ class AssignmentManager:
             ], alignment=ft.MainAxisAlignment.END)
         ], spacing=10)
         
-        close_overlay = self.todo.show_overlay(content, "Edit Assignment", width=400)
+        overlay, close_overlay = self.todo.show_overlay(content, "Edit Assignment", width=400)
     
     def delete_assignment(self, assignment):
         def confirm(e):
@@ -775,7 +775,7 @@ class AssignmentManager:
             ], alignment=ft.MainAxisAlignment.END)
         ], tight=True, spacing=10)
         
-        close_overlay = self.todo.show_overlay(content, "Confirm Delete", width=350)
+        overlay, close_overlay = self.todo.show_overlay(content, "Confirm Delete", width=350)
     
     def show_notifications_dialog(self):
         if not self.todo.notification_service:
