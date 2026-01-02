@@ -36,7 +36,7 @@ def get_platform_info():
 
 
 class NotificationService:
-    def __init__(self, data_dir: Path = None, drive_service=None, lms_root_id=None):
+    def __init__(self, data_dir: Path = None, drive_service=None, lms_root_id=None, fcm_service=None):
         self.data_dir = data_dir or Path("lms_data")
         self.data_dir.mkdir(exist_ok=True)
         self.notifications_file = self.data_dir / "notifications.json"
@@ -47,20 +47,30 @@ class NotificationService:
         self.drive_file_id = None
         self.platform_info = get_platform_info()
         
+        self.fcm_service = fcm_service
+        self.fcm_enabled = fcm_service is not None and hasattr(fcm_service, 'fcm_enabled') and fcm_service.fcm_enabled
+        
         if self.platform_info['is_mobile']:
             print(f"✓ Running on mobile platform: {self.platform_info['system']}")
         else:
             print(f"✓ Running on desktop platform: {self.platform_info['system']}")
+        
+        if self.fcm_enabled:
+            print("✓ FCM notifications enabled")
+        else:
+            print("⚠ FCM notifications disabled")
     
     def get_notification_status(self):
         return {
             "os_available": PLYER_AVAILABLE,
             "in_app_enabled": True,
+            "fcm_enabled": self.fcm_enabled,
             "total_notifications": len(self.notifications),
             "drive_sync": self.drive_service is not None and self.lms_root_id is not None,
             "platform": self.platform_info['system'],
             "is_mobile": self.platform_info['is_mobile'],
-            "message": "OS notifications enabled" if PLYER_AVAILABLE else "OS notifications unavailable - install plyer"
+            "fcm_registered_users": len(self.fcm_service.load_tokens()) if self.fcm_service else 0,
+            "message": "All notification systems active" if (PLYER_AVAILABLE or self.fcm_enabled) else "No notification systems available"
         }
     
     def _get_drive_notifications_file_id(self):
@@ -234,6 +244,32 @@ class NotificationService:
             print(f"OS notification failed: {e}")
             return False
     
+    def _send_fcm_notification(self, title: str, message: str, student_email: str, notification_type: str = "info", data: dict = None):
+        if not self.fcm_enabled or not self.fcm_service:
+            return False
+        
+        try:
+            fcm_data = data or {}
+            fcm_data["notification_type"] = notification_type
+            
+            success = self.fcm_service.send_to_user(
+                user_id=student_email,
+                title=title,
+                body=message,
+                data=fcm_data,
+                notification_type=notification_type
+            )
+            
+            if success:
+                print(f"✓ FCM notification sent to {student_email}")
+            else:
+                print(f"⚠ FCM notification failed for {student_email}")
+            
+            return success
+        except Exception as e:
+            print(f"Error sending FCM notification: {e}")
+            return False
+    
     def send_notification(self, title: str, message: str, student_email: str = None, assignment_id: str = None, notification_type: str = "info", show_os_notification: bool = False):
         notification_record = {
             "id": str(time.time()),
@@ -248,13 +284,22 @@ class NotificationService:
         self.notifications.append(notification_record)
         self.save_notifications()
         
+        os_sent = False
         if show_os_notification:
-            return self._send_os_notification(title, message)
+            os_sent = self._send_os_notification(title, message)
         
-        return False
+        fcm_sent = False
+        if student_email and self.fcm_enabled:
+            fcm_data = {
+                "assignment_id": assignment_id or "",
+                "notification_id": notification_record["id"]
+            }
+            fcm_sent = self._send_fcm_notification(title, message, student_email, notification_type, fcm_data)
+        
+        return os_sent or fcm_sent
     
     def notify_new_assignment(self, assignment: dict, students: list):
-        title = f"New Assignment: {assignment.get('title', 'Untitled')}"
+        title = f"📝 New Assignment: {assignment.get('title', 'Untitled')}"
         deadline = assignment.get('deadline', 'No deadline')
         if deadline and deadline != 'No deadline':
             try:
@@ -262,11 +307,14 @@ class NotificationService:
                 deadline = deadline_dt.strftime('%B %d, %Y at %I:%M %p')
             except:
                 pass
-        message = f"Subject: {assignment.get('subject', 'N/A')}\nDeadline: {deadline}"
+        
+        subject = assignment.get('subject', 'N/A')
+        message = f"Subject: {subject}\nDeadline: {deadline}"
         
         for i, student in enumerate(students):
             student_email = student.get('email')
-            show_os = (i == 0)
+            show_os = (i == 0) 
+            
             self.send_notification(
                 title=title,
                 message=message,
@@ -279,9 +327,11 @@ class NotificationService:
         if len(students) > 0:
             summary_message = f"{message}\nAssigned to {len(students)} student{'s' if len(students) != 1 else ''}"
             self._send_os_notification(title, summary_message)
+        
+        print(f"✓ New assignment notifications sent to {len(students)} students")
     
     def notify_deadline_reminder(self, assignment: dict, student_email: str, hours_remaining: int):
-        title = f"Deadline Reminder: {assignment.get('title', 'Assignment')}"
+        title = f"⏰ Deadline Reminder: {assignment.get('title', 'Assignment')}"
         message = f"Only {hours_remaining} hours remaining to submit!"
         
         self.send_notification(
@@ -293,20 +343,21 @@ class NotificationService:
             show_os_notification=True
         )
     
-    def notify_submission_received(self, assignment: dict, student_name: str):
-        title = f"Submission Received"
+    def notify_submission_received(self, assignment: dict, student_name: str, student_email: str = None):
+        title = f"📤 Submission Received"
         message = f"{student_name} submitted: {assignment.get('title', 'Assignment')}"
         
         self.send_notification(
             title=title,
             message=message,
+            student_email=student_email,
             assignment_id=assignment.get('id'),
             notification_type="submission_received",
             show_os_notification=True
         )
     
     def notify_grade_posted(self, assignment: dict, student_email: str, grade: str):
-        title = f"Grade Posted: {assignment.get('title', 'Assignment')}"
+        title = f"✅ Grade Posted: {assignment.get('title', 'Assignment')}"
         message = f"Your grade: {grade}"
         
         self.send_notification(
