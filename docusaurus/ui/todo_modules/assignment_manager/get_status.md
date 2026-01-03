@@ -9,7 +9,7 @@ title: "get_status"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 833
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 857
 :::
 
 Determine the status of an assignment.
@@ -30,7 +30,7 @@ Calculates whether an assignment is "Active", "Overdue", or "Completed".
 
 ## Algorithm
 
-- 1. If student mode: Check if submitted -> Return "Completed".
+  - 1. If student mode: Check if submitted -> Return "Completed".
   - 2. If no deadline -> Return "Active".
   - 3. Compare deadline with current time.
   - 4. If past -> "Overdue".

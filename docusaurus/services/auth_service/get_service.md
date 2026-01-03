@@ -9,7 +9,7 @@ title: "get_service"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 951
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 975
 :::
 
 Create and return authenticated Google Drive API v3 service.
@@ -27,27 +27,27 @@ tokens before creating service.
 
 ## Algorithm
 
-- 1. **Check Authentication**:
-    - a. Call self.is_authenticated()
-    - b. If False:
-    - i. Print "Cannot get service - not authenticated"
-    - ii. Return None immediately
+- **Phase 1: Check Authentication**
+  - 1. Call self.is_authenticated()
+  - 2. If False:
+  - 3. Print "Cannot get service - not authenticated"
+    - a. Return None immediately
 
-  - 2. **Try Service Creation**:
-    - a. Enter try block for error handling
-    - b. Call build('drive', 'v3', credentials=self.creds)
-    - i. 'drive': Google Drive API
-    - ii. 'v3': API version 3
-    - iii. credentials: OAuth credentials object
-    - c. Returns Resource object for API calls
-    - d. Store in service variable
-    - e. Print "Google Drive service created"
-    - f. Return service object
+- **Phase 2: Try Service Creation**
+  - 1. Enter try block for error handling
+  - 2. Call build('drive', 'v3', credentials=self.creds)
+  - 3. 'drive': Google Drive API
+    - a. 'v3': API version 3
+    - b. credentials: OAuth credentials object
+  - 4. Returns Resource object for API calls
+  - 5. Store in service variable
+  - 6. Print "Google Drive service created"
+  - 7. Return service object
 
-  - 3. **Handle Errors**:
-    - a. Catch any Exception during service creation
-    - b. Print error message with exception details
-    - c. Return None (service creation failed)
+- **Phase 3: Handle Errors**
+  - 1. Catch any Exception during service creation
+  - 2. Print error message with exception details
+  - 3. Return None (service creation failed)
 
 ## Interactions
 

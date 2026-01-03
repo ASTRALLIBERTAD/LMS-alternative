@@ -31,7 +31,7 @@ retry logic and automatic cache invalidation to maintain consistency.
 
 ## Algorithm
 
-- 1. **Execute with Retry**:
+  - 1. **Execute with Retry**:
     - a. Call _retry_request(request_func, operation_name)
     - b. Returns result or None on failure
 

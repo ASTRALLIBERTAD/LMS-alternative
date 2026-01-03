@@ -9,7 +9,7 @@ title: "_load_lms_root_id"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 81
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 86
 :::
 
 Read the LMS root folder ID from local config.

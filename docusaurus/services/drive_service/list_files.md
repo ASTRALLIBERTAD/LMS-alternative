@@ -34,7 +34,7 @@ to reduce API calls. Supports pagination for large folders.
 
 ## Algorithm
 
-- 1. **Generate Cache Key**:
+  - 1. **Generate Cache Key**:
     - a. Format: "files_&#123;folder_id&#125;_&#123;page_size&#125;_&#123;page_token&#125;"
     - b. Example: "files_root_100_None"
 

@@ -25,7 +25,7 @@ This reduces API calls for frequently accessed file metadata.
 
 ## Algorithm
 
-- 1. **Define Cached Wrapper**:
+  - 1. **Define Cached Wrapper**:
     - a. Create inner function cached_get_file_info(file_id)
     - b. Function calls self.get_file_info(file_id, use_cache=False)
     - c. Bypasses time-based cache to avoid double-caching

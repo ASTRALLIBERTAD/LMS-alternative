@@ -36,7 +36,7 @@ formats for backward compatibility.
 
 ## Algorithm
 
-- 1. **Input Validation Phase**:
+  - 1. **Input Validation Phase**:
     - a. Check if submitted_at_str parameter is provided and not empty
     - b. Check if deadline_str parameter is provided and not empty
     - c. If either is missing, return tuple (None, "No timing data")

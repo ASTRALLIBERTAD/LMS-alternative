@@ -29,7 +29,7 @@ loading and displaying its contents. Updates breadcrumb navigation.
 
 ## Algorithm
 
-- 1. **Extract Folder Info**:
+  - 1. **Extract Folder Info**:
     - a. Get folder ID: folder["id"]
     - b. Get folder name: folder.get("name", folder["id"])
     - c. Use ID as fallback if name missing

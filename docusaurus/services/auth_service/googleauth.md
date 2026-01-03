@@ -35,19 +35,19 @@ OAuth flow (browser-based) and token bridging from external providers.
 
 ## Algorithm
 
-- **Initialization Flow**:
+- **Initialization Flow**
   - 1. Set file paths for credentials and token storage
   - 2. Load client_id and client_secret from credentials JSON
   - 3. Restore existing session from token.pickle if available
 
-- **Desktop Authentication**:
+- **Desktop Authentication**
   - 1. Launch local server on port 8550
   - 2. Open browser for user consent
   - 3. Receive authorization code via callback
   - 4. Exchange code for tokens
   - 5. Persist credentials to token.pickle
 
-- **Token-Based Authentication**:
+- **Token-Based Authentication**
   - 1. Validate incoming token structure
   - 2. Create Credentials object from token data
   - 3. Refresh if expired

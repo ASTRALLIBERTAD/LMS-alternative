@@ -29,7 +29,7 @@ Fetches full metadata if needed.
 
 ## Algorithm
 
-- 1. **Fetch Full Metadata** (if needed):
+  - 1. **Fetch Full Metadata** (if needed):
     - a. Check if file is dict with 'id' key
     - b. If yes:
     - i. Call dash.drive.get_file_info(file["id"])

@@ -9,7 +9,7 @@ title: "delete_file"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1930
+**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1945
 :::
 
 Permanently delete file or folder from Drive.
@@ -27,7 +27,7 @@ Deletes file and invalidates all related caches. Cannot be undone.
 
 ## Algorithm
 
-- 1. **Get File Info First**:
+  - 1. **Get File Info First**:
     - a. Call get_file_info(file_id, use_cache=False)
     - b. Need parent info for cache invalidation
     - c. Store in file_info

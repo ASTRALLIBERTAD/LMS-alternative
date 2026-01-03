@@ -32,7 +32,7 @@ Shows file header with close button and preview content area.
 
 ## Algorithm
 
-- 1. **Create Loading Container**:
+  - 1. **Create Loading Container**:
     - a. Build ft.Container with centered Column
     - b. Add ProgressRing for loading animation
     - c. Add "Loading preview..." text

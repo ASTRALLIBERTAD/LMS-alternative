@@ -1,15 +1,15 @@
 ---
-id: "_validate_and_refresh_credentials"
+id: "validate_and_refresh_credentials"
 sidebar_position: 10
-title: "_validate_and_refresh_credentials"
+title: "validate_and_refresh_credentials"
 ---
 
-# ⚙️ _validate_and_refresh_credentials
+# ⚙️ validate_and_refresh_credentials
 
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 676
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 691
 :::
 
 Validate OAuth credentials and refresh if expired.
@@ -26,31 +26,34 @@ active sessions and ensuring API calls succeed.
 
 ## Algorithm
 
-- 1. **Check Validity**:
-    - a. If self.creds.valid is True:
-    - i. Print "Credentials are valid"
-    - ii. Return True immediately
+- **Phase 1: Check Validity**
+  - 1. If self.creds.valid is True:
+  - 2. Print "Credentials are valid"
+    - a. Return True immediately
 
-  - 2. **Check Refresh Possibility**:
-    - a. If not self.creds.expired OR not self.creds.refresh_token:
-    - i. Credentials either not expired or no refresh token
-    - ii. Print "Credentials not valid and cannot be refreshed"
-    - iii. Return False
 
-  - 3. **Attempt Refresh**:
-    - a. Print "Attempting to refresh expired token..."
-    - b. Enter try block for error handling
-    - c. Call self.creds.refresh(Request())
-    - i. Creates HTTP request to token endpoint
-    - ii. Exchanges refresh_token for new access_token
-    - iii. Updates self.creds with new tokens
-    - d. Print "Token refreshed successfully"
-    - e. Return True
+- **Phase 2: Check Refresh Possibility**
+  - 1. If not self.creds.expired OR not self.creds.refresh_token:
+  - 2. Credentials either not expired or no refresh token
+    - a. Print "Credentials not valid and cannot be refreshed"
+    - b. Return False
 
-  - 4. **Handle Refresh Errors**:
-    - a. Catch any Exception during refresh
-    - b. Print error message with exception details
-    - c. Return False (refresh failed)
+
+- **Phase 3: Attempt Refresh**
+  - 1. Print "Attempting to refresh expired token..."
+  - 2. Enter try block for error handling
+  - 3. Call self.creds.refresh(Request())
+  - 4. Creates HTTP request to token endpoint
+    - a. Exchanges refresh_token for new access_token
+    - b. Updates self.creds with new tokens
+  - 5. Print "Token refreshed successfully"
+  - 6. Return True
+
+
+- **Phase 4: Handle Refresh Errors**
+  - 1. Catch any Exception during refresh
+  - 2. Print error message with exception details
+  - 3. Return False (refresh failed)
 
 ## Interactions
 

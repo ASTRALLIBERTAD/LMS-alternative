@@ -9,7 +9,7 @@ title: "update_deadline_display"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 936
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 994
 :::
 
 Update the UI text showing the selected deadline.
@@ -24,7 +24,7 @@ date and time values. Shows partial deadline if only date selected.
 
 ## Algorithm
 
-- 1. **Check Both Values Available**:
+  - 1. **Check Both Values Available**:
     - a. If selected_date_value AND selected_time_value:
     - i. Format: "Deadline: &#123;date&#125; at &#123;time&#125;"
     - ii. Update selected_deadline_display.value

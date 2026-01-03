@@ -24,7 +24,7 @@ Safe to call even if no preview is active.
 
 ## Algorithm
 
-- 1. **Check Overlay Exists**:
+  - 1. **Check Overlay Exists**:
     - a. If current_overlay is None, return early
     - b. If current_overlay not in page.overlay, return early
 

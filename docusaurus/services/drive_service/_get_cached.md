@@ -30,7 +30,7 @@ Checks if cached data exists and is still valid based on TTL
 
 ## Algorithm
 
-- 1. **Check Key Existence**:
+  - 1. **Check Key Existence**:
     - a. If key in self._cache dictionary:
     - i. Proceed to validation
     - b. If key not in cache:

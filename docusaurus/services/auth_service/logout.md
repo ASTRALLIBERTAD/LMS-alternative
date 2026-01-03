@@ -9,7 +9,7 @@ title: "logout"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 877
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 901
 :::
 
 Log out user and clear all stored authentication data.
@@ -24,22 +24,22 @@ ending the current session. User must re-authenticate after logout.
 
 ## Algorithm
 
-- 1. **Log Action**:
-    - a. Print "Logging out..." to console
+- **Phase 1: Log Action**
+  - 1. Print "Logging out..." to console
 
-  - 2. **Clear Credentials**:
-    - a. Set self.creds = None
-    - b. Removes credentials from memory
+- **Phase 2: Clear Credentials**
+  - 1. Set self.creds = None
+  - 2. Removes credentials from memory
 
-  - 3. **Delete Token File**:
-    - a. Check if self.token_file exists
-    - b. If exists:
-    - i. Enter try block for error handling
-    - ii. Call os.remove(self.token_file)
-    - iii. Print "Token file removed"
-    - c. If exception:
-    - i. Print error message with details
-    - ii. File may be locked or permission denied
+- **Phase 3: Delete Token File**
+  - 1. Check if self.token_file exists
+  - 2. If exists:
+  - 3. Enter try block for error handling
+    - a. Call os.remove(self.token_file)
+    - b. Print "Token file removed"
+  - 4. If exception:
+  - 5. Print error message with details
+    - a. File may be locked or permission denied
 
 ## Interactions
 

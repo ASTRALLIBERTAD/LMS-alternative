@@ -24,7 +24,7 @@ Prepares for displaying previews without creating any UI elements yet.
 
 ## Algorithm
 
-- 1. **Store Page Reference**:
+  - 1. **Store Page Reference**:
     - a. Assign page parameter to self.page
     - b. Used for overlay management and UI updates
 

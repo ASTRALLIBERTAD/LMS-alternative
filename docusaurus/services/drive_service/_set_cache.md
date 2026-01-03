@@ -29,7 +29,7 @@ Cache entries automatically expire based on age.
 
 ## Algorithm
 
-- 1. **Create Cache Entry**:
+  - 1. **Create Cache Entry**:
     - a. Get current timestamp: datetime.now()
     - b. Create tuple: (data, timestamp)
 

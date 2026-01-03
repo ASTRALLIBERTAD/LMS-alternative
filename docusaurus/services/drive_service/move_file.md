@@ -9,7 +9,7 @@ title: "move_file"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1742
+**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1757
 :::
 
 Move file or folder to different parent folder.
@@ -32,7 +32,7 @@ Invalidates cache for both old and new parent folders.
 
 ## Algorithm
 
-- 1. **Define Request Function**:
+  - 1. **Define Request Function**:
     - a. Create make_request() closure
     - b. Get current parents:
     - i. Call service.files().get(fileId, fields='parents')

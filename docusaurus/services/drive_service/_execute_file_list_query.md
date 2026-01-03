@@ -34,7 +34,7 @@ and automatic retry handling. Used by list and search operations.
 
 ## Algorithm
 
-- 1. **Define Request Function**:
+  - 1. **Define Request Function**:
     - a. Create make_request() closure
     - b. Calls self.service.files().list() with parameters:
     - i. q=query (filter condition)

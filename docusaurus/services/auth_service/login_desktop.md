@@ -9,7 +9,7 @@ title: "login_desktop"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 350
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 360
 :::
 
 Perform desktop OAuth 2.0 authentication flow with browser.
@@ -34,42 +34,45 @@ FileNotFoundError: If credentials_file doesn't exist at specified path.
 
 ## Algorithm
 
-- 1. **Verify Credentials File**:
-    - a. Check if self.credentials_file exists
-    - b. If not, raise FileNotFoundError with path
+- **Phase 1: Verify Credentials File**
+  - 1. Check if self.credentials_file exists
+  - 2. If not, raise FileNotFoundError with path
 
-  - 2. **Import OAuth Flow**:
-    - a. Import InstalledAppFlow from google_auth_oauthlib.flow
-    - b. Lazy import (only when needed)
 
-  - 3. **Start OAuth Flow**:
-    - a. Print status message: "Starting desktop OAuth flow..."
-    - b. Create flow: InstalledAppFlow.from_client_secrets_file()
-    - i. Pass self.credentials_file (web.json path)
-    - ii. Pass SCOPES (Drive API scope)
-    - c. Flow configured with client credentials
+- **Phase 2: Import OAuth Flow**
+  - 1. Import InstalledAppFlow from google_auth_oauthlib.flow
+  - 2. Lazy import (only when needed)
 
-  - 4. **Run Local Server**:
-    - a. Call flow.run_local_server(port=8550)
-    - b. Starts HTTP server on localhost:8550
-    - c. Opens default browser to OAuth consent URL
-    - d. User sees Google sign-in and consent screen
-    - e. User authorizes application
-    - f. Browser redirects to localhost:8550/oauth_callback
-    - g. Server receives authorization code
-    - h. Flow exchanges code for tokens
-    - i. Returns Credentials object with tokens
 
-  - 5. **Store Credentials**:
-    - a. Assign returned credentials to self.creds
-    - b. Contains access_token and refresh_token
+- **Phase 3: Start OAuth Flow**
+  - 1. Print status message: "Starting desktop OAuth flow..."
+  - 2. Create flow: InstalledAppFlow.from_client_secrets_file()
+  - 3. Pass self.credentials_file (web.json path)
+    - a. Pass SCOPES (Drive API scope)
+  - 4. Flow configured with client credentials
 
-  - 6. **Save to Pickle**:
-    - a. Call self._save_credentials()
-    - b. Persists session to token.pickle
 
-  - 7. **Log Success**:
-    - a. Print success message: "✓ Desktop login successful"
+- **Phase 4: Run Local Server**
+  - 1. Call flow.run_local_server(port=8550)
+  - 2. Starts HTTP server on localhost:8550
+  - 3. Opens default browser to OAuth consent URL
+  - 4. User sees Google sign-in and consent screen
+  - 5. User authorizes application
+  - 6. Browser redirects to localhost:8550/oauth_callback
+  - 7. Server receives authorization code
+  - 8. Flow exchanges code for tokens
+  - 9. Returns Credentials object with tokens
+
+- **Phase 5: Store Credentials**
+  - 1. Assign returned credentials to self.creds
+  - 2. Contains access_token and refresh_token
+
+- **Phase 6: Save to Pickle**
+  - 1. Call self._save_credentials()
+  - 2. Persists session to token.pickle
+
+- **Phase 7: Log Success**
+  - 1. Print success message: "✓ Desktop login successful"
 
 ## Interactions
 

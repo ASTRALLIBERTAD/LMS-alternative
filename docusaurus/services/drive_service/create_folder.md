@@ -32,7 +32,7 @@ Automatically invalidates parent folder cache.
 
 ## Algorithm
 
-- 1. **Define Request Function**:
+  - 1. **Define Request Function**:
     - a. Create make_request() closure
     - b. Build file_metadata dictionary:
     - i. name: folder_name

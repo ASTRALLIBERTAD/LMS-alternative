@@ -25,7 +25,7 @@ and LRU cache initialization for optimized API operations.
 
 ## Algorithm
 
-- 1. **Store Service Reference**:
+  - 1. **Store Service Reference**:
     - a. Assign service parameter to self.service
     - b. Service provides access to all Drive API endpoints
 

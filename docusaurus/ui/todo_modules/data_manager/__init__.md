@@ -9,7 +9,7 @@ title: "__init__"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 59
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 60
 :::
 
 Initialize the DataManager.

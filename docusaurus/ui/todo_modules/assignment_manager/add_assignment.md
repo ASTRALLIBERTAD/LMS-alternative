@@ -24,7 +24,7 @@ Validates inputs, processes file uploads, creates assignment record, saves to DB
 
 ## Algorithm
 
-- 1. Extract values from UI fields.
+  - 1. Extract values from UI fields.
   - 2. Validate: Title required, Subject required, Deadline must be future.
   - 3. If invalid -> `show_validation_errors`, exit.
   - 4. Create assignment dictionary (ID, timestamps, status).

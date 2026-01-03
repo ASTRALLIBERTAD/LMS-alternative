@@ -9,7 +9,7 @@ title: "get_redirect_url"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`main.py`](./main.py) | **Line:** 377
+**File:** [`main.py`](./main.py) | **Line:** 384
 :::
 
 Get the OAuth 2.0 redirect URL for desktop authentication.
@@ -27,10 +27,10 @@ configured in Google Cloud Console for the OAuth client.
 
 ## Algorithm
 
-- 1. **Return Static URL**:
-- a. Return hardcoded string: "http://localhost:8550/oauth_callback"
-- b. No computation or configuration needed
-- c. Must match Google Console settings
+- **Phase 1: Return Static URL**:
+  - 1. Return hardcoded string: "http://localhost:8550/oauth_callback"
+  - 2. No computation or configuration needed
+  - 3. Must match Google Console settings
 
 ## Interactions
 

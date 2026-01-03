@@ -25,18 +25,18 @@ syncing with changes made in other clients or by other users.
 
 ## Algorithm
 
-- 1. **Delegate to FolderNavigator**:
-    - a. Access self.folder_navigator instance
-    - b. Call refresh_folder_contents() method
+- **Delegate to FolderNavigator**:
+  - 1. Access self.folder_navigator instance
+  - 2. Call refresh_folder_contents() method
 
-  - 2. **Navigator Refresh Process** (handled internally):
-    - a. Read current_folder_id from dashboard state
-    - b. Query Drive API for latest folder contents
-    - c. Clear existing folder_list.controls
-    - d. Rebuild UI cards for current files and subfolders
-    - e. Preserve current breadcrumb navigation
-    - f. Call page.update() to render changes
-    - g. Maintain scroll position if possible
+- **Navigator Refresh Process** (handled internally):
+  - 1. Read current_folder_id from dashboard state
+  - 2. Query Drive API for latest folder contents
+  - 3. Clear existing folder_list.controls
+  - 4. Rebuild UI cards for current files and subfolders
+  - 5. Preserve current breadcrumb navigation
+  - 6. Call page.update() to render changes
+  - 7. Maintain scroll position if possible
 
 ## Interactions
 

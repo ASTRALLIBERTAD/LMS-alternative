@@ -29,7 +29,7 @@ Suitable for text files, code, JSON, etc.
 
 ## Algorithm
 
-- 1. **Try Download Process**:
+  - 1. **Try Download Process**:
     - a. Enter try block for error handling
 
   - 2. **Create Download Request**:

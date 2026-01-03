@@ -29,7 +29,7 @@ full cache invalidation.
 
 ## Algorithm
 
-- 1. **Check Invalidation Scope**:
+  - 1. **Check Invalidation Scope**:
     - a. If folder_id provided:
     - i. Selective invalidation (folder-specific)
     - b. If folder_id is None:

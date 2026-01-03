@@ -31,7 +31,7 @@ decoding and shows error for binary files.
 
 ## Algorithm
 
-- 1. **Try Text Decoding**:
+  - 1. **Try Text Decoding**:
     - a. Enter try block for UTF-8 decode
     - b. Call file_data.decode('utf-8')
     - c. Store in text_content string

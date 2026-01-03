@@ -9,7 +9,7 @@ title: "show_validation_errors"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 285
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 309
 :::
 
 Display a dialog listing form validation errors.
@@ -24,7 +24,7 @@ Provides specific feedback on why assignment creation failed.
 
 ## Algorithm
 
-- 1. Create a list of UI rows for each error message.
+  - 1. Create a list of UI rows for each error message.
   - 2. Build AlertDialog showing all errors.
   - 3. Open dialog.
   - 4. Show summary via snackbar.

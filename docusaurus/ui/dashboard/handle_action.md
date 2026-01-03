@@ -9,7 +9,7 @@ title: "handle_action"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 938
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 937
 :::
 
 Handle sidebar menu action selection.
@@ -29,20 +29,20 @@ and uploading files through the file_manager module.
 
 ## Algorithm
 
-- 1. **Action Routing**:
-    - a. Check if selected_item == "Create Folder"
-    - i. If True, call file_manager.create_new_folder_dialog()
-    - ii. Opens dialog for entering new folder name
-    - iii. Dialog handles folder creation on confirm
-    - b. Check elif selected_item == "Upload File"
-    - i. If True, call file_manager.select_file_to_upload()
-    - ii. Opens system file picker dialog
-    - iii. Handles file selection and upload process
+- **Phase 1: Action Routing**:
+  - 1. Check if selected_item == "Create Folder"
+    - a. If True, call file_manager.create_new_folder_dialog()
+    - b. Opens dialog for entering new folder name
+    - c. Dialog handles folder creation on confirm
+  - 2. Check elif selected_item == "Upload File"
+    - a. If True, call file_manager.select_file_to_upload()
+    - b. Opens system file picker dialog
+    - c. Handles file selection and upload process
 
-  - 2. **Update UI**:
-    - a. Call self.page.update()
-    - b. Ensures any dialog or state changes are rendered
-    - c. Maintains UI responsiveness
+- **Phase 2: Update UI**:
+  - 1. Call self.page.update()
+  - 2. Ensures any dialog or state changes are rendered
+  - 3. Maintains UI responsiveness
 
 ## Interactions
 

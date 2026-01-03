@@ -30,16 +30,16 @@ form modals.
 
 ## Algorithm
 
-- 1. **Set Dialog State**:
-    - a. Access dialog.open property
-    - b. Set value to False
-    - c. Marks dialog as closed in Flet's state system
+- **Set Dialog State**:
+  - 1. Access dialog.open property
+  - 2. Set value to False
+  - 3. Marks dialog as closed in Flet's state system
 
-  - 2. **Update UI**:
-    - a. Call self.page.update()
-    - b. Flet removes dialog from screen
-    - c. Restores focus to main content
-    - d. Re-enables underlying UI interaction
+- **Update UI**:
+  - 1. Call self.page.update()
+  - 2. Flet removes dialog from screen
+  - 3. Restores focus to main content
+  - 4. Re-enables underlying UI interaction
 
 ## Interactions
 

@@ -9,7 +9,7 @@ title: "notify_new_assignment"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 122
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 361
 :::
 
 Notify students of a newly created assignment.
@@ -21,6 +21,6 @@ Notify students of a newly created assignment.
 
 ## Algorithm
 
-- 1. Create notification message.
+  - 1. Create notification message.
   - 2. Send individual notifications to each student.
   - 3. Send single OS summary notification to instructor.

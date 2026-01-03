@@ -9,7 +9,7 @@ title: "DataManager"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 17
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 18
 :::
 
 Manages data persistence for the LMS application.

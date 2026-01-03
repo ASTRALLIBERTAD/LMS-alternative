@@ -38,7 +38,7 @@ Supports progress callbacks for UI updates.
 
 ## Algorithm
 
-- 1. **Try Upload Process**:
+  - 1. **Try Upload Process**:
     - a. Enter try block for error handling
 
   - 2. **Determine File Name**:

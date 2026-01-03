@@ -9,7 +9,7 @@ title: "get_notifications_for_student"
 ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 216
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 467
 :::
 
 Retrieve notifications relevant to a specific student.

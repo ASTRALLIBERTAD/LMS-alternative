@@ -30,7 +30,7 @@ transient failures. Handles rate limits, timeouts, and server errors.
 
 ## Algorithm
 
-- 1. **Retry Loop**:
+  - 1. **Retry Loop**:
     - a. For attempt in range(max_retries):
     - i. Attempt index: 0 to max_retries-1
 

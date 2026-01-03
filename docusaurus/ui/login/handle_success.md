@@ -25,7 +25,7 @@ implementations after successful OAuth token retrieval and validation.
 
 ## Algorithm
 
-- 1. **Update Status Display**:
+  - 1. **Update Status Display**:
     - a. Call update_status() with success message
     - b. Message: "Login successful!"
     - c. Color: ft.Colors.GREEN_600 (success color)

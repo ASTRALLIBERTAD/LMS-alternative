@@ -30,29 +30,29 @@ always visible on desktop but collapsible on smaller screens.
 
 ## Algorithm
 
-- 1. **Check Window Width**:
-    - a. Read self.page.width (current window width in pixels)
-    - b. Compare against desktop breakpoint (900px)
+- **Check Window Width**:
+  - 1. Read self.page.width (current window width in pixels)
+  - 2. Compare against desktop breakpoint (900px)
 
-  - 2. **Desktop Layout** (width &gt;= 900px):
-    - a. If self.page.width &gt;= 900:
-    - i. Set self.sidebar_container.visible = True
-    - ii. Sidebar permanently visible on desktop
-    - iii. Set self.menu_open = False
-    - iv. Disable mobile toggle state
-    - b. Desktop users see sidebar without toggle button
+- **Desktop Layout** (width &gt;= 900px):
+  - 1. If self.page.width &gt;= 900:
+    - a. Set self.sidebar_container.visible = True
+    - b. Sidebar permanently visible on desktop
+    - c. Set self.menu_open = False
+    - d. Disable mobile toggle state
+  - 2. Desktop users see sidebar without toggle button
 
-  - 3. **Mobile/Tablet Layout** (width < 900px):
-    - a. If self.page.width < 900:
-    - i. Set sidebar_container.visible = self.menu_open
-    - ii. Sidebar shows only if toggle is active
-    - iii. Hamburger menu button controls visibility
-    - b. Mobile users can toggle sidebar on/off
+- **Mobile/Tablet Layout** (width < 900px):
+  - 1. If self.page.width < 900:
+    - a. Set sidebar_container.visible = self.menu_open
+    - b. Sidebar shows only if toggle is active
+    - c. Hamburger menu button controls visibility
+  - 2. Mobile users can toggle sidebar on/off
 
-  - 4. **Refresh UI**:
-    - a. Call self.page.update()
-    - b. Apply visibility changes with smooth transition
-    - c. Re-render affected layout components
+- **Refresh UI**:
+  - 1. Call self.page.update()
+  - 2. Apply visibility changes with smooth transition
+  - 3. Re-render affected layout components
 
 ## Interactions
 

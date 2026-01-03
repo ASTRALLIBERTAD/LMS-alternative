@@ -9,7 +9,7 @@ title: "mark_as_read"
 ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 243
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 496
 :::
 
 Mark a single notification as read.

@@ -40,7 +40,7 @@ frequently accessed files.
 
 ## Algorithm
 
-- 1. **Try LRU Cache** (if use_cache=True):
+  - 1. **Try LRU Cache** (if use_cache=True):
     - a. Check if _cached_get_file_info exists
     - b. Try calling _cached_get_file_info(file_id)
     - c. If successful, return cached result

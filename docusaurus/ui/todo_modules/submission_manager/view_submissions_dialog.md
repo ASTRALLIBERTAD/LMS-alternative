@@ -39,7 +39,7 @@ No direct exceptions raised. All errors handled gracefully with:
 
 ## Algorithm
 
-- 1. **Dialog Container Initialization**:
+  - 1. **Dialog Container Initialization**:
     - a. Create submissions_list Column with scroll="auto" and spacing=10
     - b. Initialize submitted_count counter to 0
     - c. Extract deadline from assignment dictionary

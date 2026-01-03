@@ -504,28 +504,44 @@ class MarkdownFormatter:
         return ['```python', '\n'.join(formatted_lines).strip(), '```']
     
     def _format_algorithm(self, content: str) -> List[str]:
-        """Format algorithm steps with proper indentation and MDX escaping."""
+        """Format algorithm steps with proper indentation and MDX escaping.
+        
+        This handles different indentation patterns by detecting the structure:
+        - Lines starting with ** (bold headers) are treated as top-level items
+        - Lines with numbered items (1., 2., etc.) get 2-space indent
+        - Lines with lettered sub-items (a., b., etc.) get 4-space indent
+        """
         lines = []
         for line in content.split('\n'):
             if not line.strip():
                 lines.append('')
                 continue
                 
-            # Convert indentation to markdown lists
+            # Get indentation and text
             indent = len(line) - len(line.lstrip())
             text = self.escape_mdx(line.strip())
             
-            # Map indentation levels to markdown list depth
-            # Phase headers (0-11 spaces): no indentation
-            # Numbered items (12-14 spaces): 2-space indentation  
-            # Sub-items (15+ spaces): 4-space indentation
-            if indent >= 15:
+            # Detect line type by content, not just indentation
+            # This makes it work with different indentation patterns
+            
+            # Bold headers (phase headers) - always root level
+            if text.startswith('**'):
+                lines.append('- {}'.format(text))
+            # Lettered sub-items (a., b., c., etc.) - 4-space indent
+            elif re.match(r'^[a-z]\.\s', text):
                 lines.append('    - {}'.format(text))
-            elif indent >= 12:
+            # Numbered items (1., 2., 3., etc.) - 2-space indent
+            elif re.match(r'^\d+\.\s', text):
                 lines.append('  - {}'.format(text))
             else:
-                # Phase headers with 0-11 spaces get no indentation
-                lines.append('- {}'.format(text))
+                # Fallback: use indentation levels
+                # For content that doesn't match above patterns
+                if indent >= 15:
+                    lines.append('    - {}'.format(text))
+                elif indent >= 12:
+                    lines.append('  - {}'.format(text))
+                else:
+                    lines.append('- {}'.format(text))
         
         return lines
     

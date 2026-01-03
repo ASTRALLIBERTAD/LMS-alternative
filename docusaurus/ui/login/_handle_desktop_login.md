@@ -26,7 +26,7 @@ callback with authorization code.
 
 ## Algorithm
 
-- 1. **Update UI for Processing**:
+  - 1. **Update UI for Processing**:
     - a. Call update_status() with message
     - b. Message: "Opening browser for authentication..."
     - c. Color: default (blue)

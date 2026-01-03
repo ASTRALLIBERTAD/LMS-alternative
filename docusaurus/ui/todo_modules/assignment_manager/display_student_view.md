@@ -9,7 +9,7 @@ title: "display_student_view"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-0%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 408
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 432
 :::
 
 Render the assignment list for the student mode.
@@ -20,7 +20,7 @@ Displays relevant assignments for the logged-in student, respecting bridging/reg
 
 ## Algorithm
 
-- 1. Check notifications -> show alert if unread messages exist.
+  - 1. Check notifications -> show alert if unread messages exist.
   - 2. Verify student selected; if not, show error.
   - 3. Determine student type (Bridging vs Regular).
   - 4. Filter assignments:

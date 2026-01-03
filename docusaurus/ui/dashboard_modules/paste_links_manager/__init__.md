@@ -23,7 +23,7 @@ and initializing FilePreviewService. Handles import failure gracefully.
 
 ## Algorithm
 
-- 1. **Store Dashboard Reference**:
+  - 1. **Store Dashboard Reference**:
     - a. Assign dashboard parameter to self.dash
     - b. All Dashboard services accessed via dash
 

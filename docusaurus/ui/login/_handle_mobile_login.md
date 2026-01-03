@@ -26,7 +26,7 @@ deep link handler.
 
 ## Algorithm
 
-- 1. **Import URL Encoding Module**:
+  - 1. **Import URL Encoding Module**:
     - a. Import urllib.parse for URL parameter encoding
     - b. Used to safely encode OAuth parameters
 

@@ -38,15 +38,15 @@ and optional color. Provides consistent button styling across the application.
 
 ## Algorithm
 
-- 1. **Create Button**:
-- a. Instantiate ft.IconButton
-- b. Set icon parameter to specified icon
-- c. Set tooltip parameter to tooltip text
-- d. Set on_click parameter to click handler
-- e. Set icon_color parameter to specified color (or None)
+  - 1. **Create Button**:
+    - a. Instantiate ft.IconButton
+    - b. Set icon parameter to specified icon
+    - c. Set tooltip parameter to tooltip text
+    - d. Set on_click parameter to click handler
+    - e. Set icon_color parameter to specified color (or None)
 
-- 2. **Return Button**:
-- a. Return configured IconButton instance
+  - 2. **Return Button**:
+    - a. Return configured IconButton instance
 
 ## Interactions
 

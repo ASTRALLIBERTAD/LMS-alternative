@@ -25,7 +25,7 @@ Provides an administrative interface to list all students, manually add new ones
 
 ## Algorithm
 
-- 1. Define internal `refresh_list` function to rebuild UI list.
+  - 1. Define internal `refresh_list` function to rebuild UI list.
   - 2. Define `add_student` handler:
     - a. Validate inputs.
     - b. Append new student dict.

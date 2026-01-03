@@ -9,7 +9,7 @@ title: "clear_old_notifications"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 270
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 530
 :::
 
 Delete notifications older than a specified duration.

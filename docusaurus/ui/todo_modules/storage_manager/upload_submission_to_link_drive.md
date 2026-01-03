@@ -33,7 +33,7 @@ Handles the upload of student work to a designated assignment folder (linked fol
 
 ## Algorithm
 
-- 1. Verify Drive Service and Target Folder ID.
+  - 1. Verify Drive Service and Target Folder ID.
   - 2. Construct filename: `&#123;student_name&#125;_&#123;file_name&#125;`.
   - 3. Upload to `link_drive_id`.
 

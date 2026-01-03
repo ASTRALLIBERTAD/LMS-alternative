@@ -9,7 +9,7 @@ title: "edit_assignment_dialog"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 920
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 944
 :::
 
 Open a dialog to edit an existing assignment.
@@ -24,7 +24,7 @@ Provides a form to modify assignment details (Title, Description, Score, Attachm
 
 ## Algorithm
 
-- 1. Pre-fill UI fields with current data.
+  - 1. Pre-fill UI fields with current data.
   - 2. Setup FilePicker for replacing attachment.
   - 3. Setup Folder Browser for changing submission folder.
   - 4. On Save:

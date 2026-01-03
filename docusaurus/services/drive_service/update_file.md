@@ -35,7 +35,7 @@ rename file in single operation.
 
 ## Algorithm
 
-- 1. **Try Update Process**:
+  - 1. **Try Update Process**:
     - a. Enter try block for error handling
 
   - 2. **Build Metadata**:

@@ -26,7 +26,7 @@ components. Prepares the complete application state for rendering.
 
 ## Algorithm
 
-- 1. **Store Core References**:
+  - 1. **Store Core References**:
     - a. Assign page to self.page
     - b. Assign on_back to self.on_back
     - c. Assign drive_service to self.drive_service

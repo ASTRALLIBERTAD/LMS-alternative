@@ -9,7 +9,7 @@ title: "register_student_dialog"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`student_manager.py`](./student_manager.py) | **Line:** 188
+**File:** [`student_manager.py`](./student_manager.py) | **Line:** 206
 :::
 
 Show student registration dialog.
@@ -25,7 +25,7 @@ Handles the self-registration flow for new students, ensuring unique emails
 
 ## Algorithm
 
-- 1. Display form (Name, Email, ID, Bridging Switch).
+  - 1. Display form (Name, Email, ID, Bridging Switch).
   - 2. On Register:
     - a. Validate inputs (required fields, gmail format, uniqueness).
     - b. Create student dictionary.

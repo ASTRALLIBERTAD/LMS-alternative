@@ -9,7 +9,7 @@ title: "get_folder_tree"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`drive_service.py`](./drive_service.py) | **Line:** 2024
+**File:** [`drive_service.py`](./drive_service.py) | **Line:** 2039
 :::
 
 Recursively retrieve nested folder structure.
@@ -30,7 +30,7 @@ Useful for folder navigation UI components.
 
 ## Algorithm
 
-- 1. **Check Depth Limit**:
+  - 1. **Check Depth Limit**:
     - a. If current_depth &gt;= max_depth:
     - i. Return None (depth limit reached)
 

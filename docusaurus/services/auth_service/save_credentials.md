@@ -1,15 +1,15 @@
 ---
-id: "_save_credentials"
+id: "save_credentials"
 sidebar_position: 6
-title: "_save_credentials"
+title: "save_credentials"
 ---
 
-# ⚙️ _save_credentials
+# ⚙️ save_credentials
 
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 286
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 296
 :::
 
 Persist current OAuth credentials to pickle file.
@@ -25,18 +25,18 @@ authentication or token refresh.
 
 ## Algorithm
 
-- 1. **Try Saving Credentials**:
-    - a. Enter try block for error handling
-    - b. Open self.token_file in binary write mode ('wb')
-    - c. Use context manager for automatic closing
-    - d. Call pickle.dump(self.creds, token)
-    - e. Serializes credentials object to file
-    - f. Print success message
+- **Phase 1: Try Saving Credentials**
+  - 1. Enter try block for error handling
+  - 2. Open self.token_file in binary write mode ('wb')
+  - 3. Use context manager for automatic closing
+  - 4. Call pickle.dump(self.creds, token)
+  - 5. Serializes credentials object to file
+  - 6. Print success message
 
-  - 2. **Handle Errors**:
-    - a. Catch any Exception during pickling
-    - b. Print error message with exception details
-    - c. File may not be created if error occurs
+- **Phase 2: Handle Errors**
+  - 1. Catch any Exception during pickling
+  - 2. Print error message with exception details
+  - 3. File may not be created if error occurs
 
 ## Interactions
 

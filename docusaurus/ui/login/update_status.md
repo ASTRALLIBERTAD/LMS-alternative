@@ -32,7 +32,7 @@ flow to provide real-time feedback.
 
 ## Algorithm
 
-- 1. **Update Status Text**:
+  - 1. **Update Status Text**:
     - a. Access self.status_text.value property
     - b. Assign message parameter to value
     - c. Text content updated in component state

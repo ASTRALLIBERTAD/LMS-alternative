@@ -1,6 +1,6 @@
 ---
 id: "handle_search"
-sidebar_position: 10
+sidebar_position: 9
 title: "handle_search"
 ---
 
@@ -9,7 +9,7 @@ title: "handle_search"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 878
+**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 768
 :::
 
 Execute search query and display results across entire Drive.
@@ -29,7 +29,7 @@ Empty query resets to My Drive root view.
 
 ## Algorithm
 
-- 1. **Get Search Query**:
+  - 1. **Get Search Query**:
     - a. Read dash.search_field.value
     - b. Call .strip() to remove whitespace
     - c. Store in query variable

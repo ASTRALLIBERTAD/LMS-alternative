@@ -9,7 +9,7 @@ title: "get_user_info"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 1037
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 1061
 :::
 
 Retrieve authenticated user's Google account information.
@@ -29,32 +29,32 @@ display name, and profile information. Requires valid authentication.
 
 ## Algorithm
 
-- 1. **Try Getting User Info**:
-    - a. Enter try block for error handling
-    - b. Call self.get_service() to get Drive service
-    - c. If service is None:
-    - i. Not authenticated
-    - ii. Return empty dict &#123;&#125;
+- **Phase 1: Try Getting User Info**
+  - 1. Enter try block for error handling
+  - 2. Call self.get_service() to get Drive service
+  - 3. If service is None:
+  - 4. Not authenticated
+    - a. Return empty dict &#123;&#125;
 
-  - 2. **Make API Call**:
-    - a. Call service.about().get(fields="user").execute()
-    - i. about(): Endpoint for account info
-    - ii. get(): Retrieve information
-    - iii. fields="user": Request only user fields
-    - iv. execute(): Perform API request
-    - b. Store response in about variable
+- **Phase 2: Make API Call**
+  - 1. Call service.about().get(fields="user").execute()
+  - 2. about(): Endpoint for account info
+    - a. get(): Retrieve information
+    - b. fields="user": Request only user fields
+    - c. execute(): Perform API request
+  - 3. Store response in about variable
 
-  - 3. **Extract User Data**:
-    - a. Get 'user' field from response: about.get('user', &#123;&#125;)
-    - b. Store in user variable
-    - c. Extract email: user.get('emailAddress', 'unknown')
-    - d. Print success message with email
-    - e. Return user dictionary
+- **Phase 3: Extract User Data**
+  - 1. Get 'user' field from response: about.get('user', &#123;&#125;)
+  - 2. Store in user variable
+  - 3. Extract email: user.get('emailAddress', 'unknown')
+  - 4. Print success message with email
+  - 5. Return user dictionary
 
-  - 4. **Handle Errors**:
-    - a. Catch any Exception during API call
-    - b. Print error message with exception details
-    - c. Return empty dict &#123;&#125; (API call failed)
+- **Phase 4: Handle Errors**
+  - 1. Catch any Exception during API call
+  - 2. Print error message with exception details
+  - 3. Return empty dict &#123;&#125; (API call failed)
 
 ## Interactions
 

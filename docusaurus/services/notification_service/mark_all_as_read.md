@@ -9,7 +9,7 @@ title: "mark_all_as_read"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 259
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 514
 :::
 
 Mark all notifications (filtered by student) as read.

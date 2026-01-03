@@ -32,7 +32,7 @@ Can search globally or within a specific folder.
 
 ## Algorithm
 
-- 1. **Generate Cache Key**:
+  - 1. **Generate Cache Key**:
     - a. Format: "search_&#123;query_text&#125;_&#123;folder_id&#125;"
     - b. Example: "search_assignment_None"
 

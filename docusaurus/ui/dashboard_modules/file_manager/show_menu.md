@@ -37,7 +37,7 @@ and preview service availability.
 
 ## Algorithm
 
-- 1. **Define Action Handlers** (local closures):
+  - 1. **Define Action Handlers** (local closures):
     - a. on_preview(e):
     - i. Check if not folder
     - ii. Call self.preview_file(item)

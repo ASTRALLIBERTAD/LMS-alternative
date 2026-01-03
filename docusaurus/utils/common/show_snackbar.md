@@ -38,22 +38,22 @@ feedback that auto-dismisses after a few seconds.
 
 ## Algorithm
 
-- 1. **Create Snackbar**:
-- a. Instantiate ft.SnackBar
-- b. Set content to ft.Text(message)
-- c. Set bgcolor to specified color
+  - 1. **Create Snackbar**:
+    - a. Instantiate ft.SnackBar
+    - b. Set content to ft.Text(message)
+    - c. Set bgcolor to specified color
 
-- 2. **Attach to Page**:
-- a. Assign snackbar to page.snack_bar
-- b. Replaces any existing snackbar
+  - 2. **Attach to Page**:
+    - a. Assign snackbar to page.snack_bar
+    - b. Replaces any existing snackbar
 
-- 3. **Show Snackbar**:
-- a. Set page.snack_bar.open = True
-- b. Makes snackbar visible
+  - 3. **Show Snackbar**:
+    - a. Set page.snack_bar.open = True
+    - b. Makes snackbar visible
 
-- 4. **Update Page**:
-- a. Call page.update()
-- b. Renders snackbar at bottom of screen
+  - 4. **Update Page**:
+    - a. Call page.update()
+    - b. Renders snackbar at bottom of screen
 
 ## Interactions
 

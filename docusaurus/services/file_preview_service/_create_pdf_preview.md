@@ -31,7 +31,7 @@ Shows PDF icon and metadata with action buttons. No inline PDF viewer
 
 ## Algorithm
 
-- 1. **Build Info Display**:
+  - 1. **Build Info Display**:
     - a. Create RED PDF icon (PICTURE_AS_PDF, size 100)
     - b. Create title: "PDF Document" (size 20, bold)
     - c. Create size text: f"Size: &#123;size_mb:.2f&#125; MB" (size 14)

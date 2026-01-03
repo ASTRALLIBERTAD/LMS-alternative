@@ -29,7 +29,7 @@ Shows feedback via snackbars throughout process.
 
 ## Algorithm
 
-- 1. **Get and Validate Input**:
+  - 1. **Get and Validate Input**:
     - a. Read dash.paste_link_field.value
     - b. Call .strip() to remove whitespace
     - c. Print debug message with link

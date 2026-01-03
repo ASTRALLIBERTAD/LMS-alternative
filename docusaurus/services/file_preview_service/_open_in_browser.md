@@ -27,7 +27,7 @@ Launches browser to Drive file viewer. Only works for Drive-hosted files.
 
 ## Algorithm
 
-- 1. **Check File ID**:
+  - 1. **Check File ID**:
     - a. If file_id is None, return early
 
   - 2. **Open Browser**:

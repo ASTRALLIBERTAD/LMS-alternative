@@ -9,7 +9,7 @@ title: "switch_mode"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1154
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1212
 :::
 
 Toggle between Teacher and Student view modes.
@@ -29,7 +29,7 @@ refreshes the assignment display.
 
 ## Algorithm
 
-- 1. **Update Mode State**:
+  - 1. **Update Mode State**:
     - a. Check self.mode_switch.value (True/False)
     - b. If True:
     - i. Set self.current_mode = "student"

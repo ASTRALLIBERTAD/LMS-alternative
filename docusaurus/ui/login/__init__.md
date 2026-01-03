@@ -26,7 +26,7 @@ and delegating UI construction to the parent LoginBase class.
 
 ## Algorithm
 
-- 1. **Store OAuth Provider**:
+  - 1. **Store OAuth Provider**:
     - a. Assign provider parameter to self.provider
     - b. Makes provider available to authentication methods
 

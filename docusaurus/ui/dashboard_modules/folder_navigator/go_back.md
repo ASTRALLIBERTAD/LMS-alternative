@@ -1,6 +1,6 @@
 ---
 id: "go_back"
-sidebar_position: 8
+sidebar_position: 7
 title: "go_back"
 ---
 
@@ -9,7 +9,7 @@ title: "go_back"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 726
+**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 618
 :::
 
 Navigate to previous folder using history stack.
@@ -25,7 +25,7 @@ Mimics browser back button behavior.
 
 ## Algorithm
 
-- 1. **Check History**:
+  - 1. **Check History**:
     - a. If dash.folder_stack is empty:
     - i. No history to go back to
     - ii. Return early (no-op)

@@ -1,6 +1,6 @@
 ---
 id: "reset_to_root"
-sidebar_position: 9
+sidebar_position: 8
 title: "reset_to_root"
 ---
 
@@ -9,7 +9,7 @@ title: "reset_to_root"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 825
+**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 715
 :::
 
 Reset navigation to My Drive root, clearing all history.
@@ -24,7 +24,7 @@ Useful for "home" button or resetting navigation state.
 
 ## Algorithm
 
-- 1. **Clear History**:
+  - 1. **Clear History**:
     - a. Set dash.folder_stack = [] (empty list)
     - b. Removes all back navigation
 

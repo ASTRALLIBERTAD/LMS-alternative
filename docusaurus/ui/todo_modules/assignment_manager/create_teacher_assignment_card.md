@@ -9,7 +9,7 @@ title: "create_teacher_assignment_card"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 483
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 507
 :::
 
 Build a UI card for an assignment (Teacher View).
@@ -29,7 +29,7 @@ Generates a visual card component containing assignment details and management a
 
 ## Algorithm
 
-- 1. Calculate statistics (status, time remaining, submission count).
+  - 1. Calculate statistics (status, time remaining, submission count).
   - 2. Build status badge.
   - 3. Build Drive folder link (if linked).
   - 4. Build Attachment preview/link (if present).

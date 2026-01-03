@@ -29,7 +29,7 @@ file via Drive API and refreshes Dashboard.
 
 ## Algorithm
 
-- 1. **Create Input Field**:
+  - 1. **Create Input Field**:
     - a. Create ft.TextField with:
     - i. value: file["name"] (pre-filled)
     - ii. autofocus: True (cursor ready)

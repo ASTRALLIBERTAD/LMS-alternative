@@ -9,7 +9,7 @@ title: "open_drive_folder"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 887
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 911
 :::
 
 Open a Google Drive folder in the system's default browser.

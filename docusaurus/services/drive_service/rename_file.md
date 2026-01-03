@@ -9,7 +9,7 @@ title: "rename_file"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1844
+**File:** [`drive_service.py`](./drive_service.py) | **Line:** 1859
 :::
 
 Rename file or folder without moving.
@@ -33,7 +33,7 @@ Invalidates parent folder cache.
 
 ## Algorithm
 
-- 1. **Define Request Function**:
+  - 1. **Define Request Function**:
     - a. Create make_request() closure
     - b. Build metadata: file_metadata = &#123;'name': new_name&#125;
     - c. Call service.files().update() with:

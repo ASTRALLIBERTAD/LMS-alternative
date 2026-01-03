@@ -38,19 +38,19 @@ appropriate unit for readability (e.g., 1500000 → "1.4 MB").
 
 ## Algorithm
 
-- 1. **Check for None**:
-- a. If size_bytes is None:
-  - i. Return "Unknown size" immediately
+  - 1. **Check for None**:
+    - a. If size_bytes is None:
+    - i. Return "Unknown size" immediately
 
-- 2. **Try Conversion and Formatting**:
-- a. Enter try block for error handling
-- b. Convert size_bytes to integer: int(size_bytes)
-- c. Store in size variable (float for division)
+  - 2. **Try Conversion and Formatting**:
+    - a. Enter try block for error handling
+    - b. Convert size_bytes to integer: int(size_bytes)
+    - c. Store in size variable (float for division)
 
-- 3. **Iterate Through Units**:
-- a. Define units list: ['B', 'KB', 'MB', 'GB', 'TB']
-- b. For each unit in list:
-  - i. Check if size < 1024.0
+  - 3. **Iterate Through Units**:
+    - a. Define units list: ['B', 'KB', 'MB', 'GB', 'TB']
+    - b. For each unit in list:
+    - i. Check if size < 1024.0
   - ii. If True:
     - - Format: f"&#123;size:.1f&#125; &#123;unit&#125;"
     - - Return formatted string immediately
@@ -58,15 +58,15 @@ appropriate unit for readability (e.g., 1500000 → "1.4 MB").
     - - Divide size by 1024.0
     - - Continue to next unit
 
-- 4. **Handle Petabytes** (very large files):
-- a. If loop completes without return:
-  - i. Size ≥ 1024 TB
+  - 4. **Handle Petabytes** (very large files):
+    - a. If loop completes without return:
+    - i. Size ≥ 1024 TB
   - ii. Format as petabytes: f"&#123;size:.1f&#125; PB"
   - iii. Return formatted string
 
-- 5. **Handle Errors**:
-- a. Catch ValueError (invalid string) or TypeError (invalid type)
-- b. Return "Unknown size"
+  - 5. **Handle Errors**:
+    - a. Catch ValueError (invalid string) or TypeError (invalid type)
+    - b. Return "Unknown size"
 
 ## Interactions
 

@@ -24,7 +24,7 @@ import failure gracefully for preview service.
 
 ## Algorithm
 
-- 1. **Store Dashboard Reference**:
+  - 1. **Store Dashboard Reference**:
     - a. Assign dashboard parameter to self.dash
     - b. Used for all Dashboard state access and updates
 

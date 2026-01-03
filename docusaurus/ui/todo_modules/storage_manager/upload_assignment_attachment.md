@@ -33,7 +33,7 @@ Organizes assignment files by placing them into a specific 'Attachments' subdire
 
 ## Algorithm
 
-- 1. Get ID for Subject folder.
+  - 1. Get ID for Subject folder.
   - 2. Get ID for 'Attachments' subfolder within Subject folder.
   - 3. Construct prefixed filename: `ATTACH_&#123;id&#125;_&#123;name&#125;`.
   - 4. Upload file to 'Attachments' folder.

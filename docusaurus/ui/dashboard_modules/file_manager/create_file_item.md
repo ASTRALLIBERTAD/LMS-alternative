@@ -34,7 +34,7 @@ menu. Click opens file preview.
 
 ## Algorithm
 
-- 1. **Determine Item Type**:
+  - 1. **Determine Item Type**:
     - a. Check mimeType: file.get("mimeType")
     - b. Set is_folder = (mimeType == "application/vnd.google-apps.folder")
     - c. Handles rare case of folder in file list

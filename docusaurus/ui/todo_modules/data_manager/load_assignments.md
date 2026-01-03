@@ -9,7 +9,7 @@ title: "load_assignments"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 174
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 272
 :::
 
 Load list of assignments.
@@ -25,7 +25,7 @@ Retrieves assignment data and ensures data integrity (assigning IDs if missing).
 
 ## Algorithm
 
-- 1. Load data via `_load_from_drive_or_local`.
+  - 1. Load data via `_load_from_drive_or_local`.
   - 2. Iterate through assignments.
   - 3. Check if 'id' exists; if not, generate one based on timestamp.
   - 4. If any IDs generated, save the repaired list.

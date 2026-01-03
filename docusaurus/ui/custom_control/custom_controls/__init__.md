@@ -27,7 +27,7 @@ menu selection handling.
 
 ## Algorithm
 
-- 1. **Store Page Reference**:
+  - 1. **Store Page Reference**:
     - a. Assign page parameter to self.page
     - b. Available for future update operations
 

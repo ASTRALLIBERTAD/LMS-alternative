@@ -11,7 +11,7 @@ Functions:
     get_redirect_url: Get the OAuth redirect URL for desktop authentication.
     main: Main application entry point and Flet page handler.
 
-Example:
+Example:    
     Run the application directly::
 
         $ python main.py
@@ -57,29 +57,29 @@ def setup_paths():
               Used for locating user data and configuration files.
 
     Algorithm:
-        1. **Determine Application Path**:
-           a. Get absolute path of current file (__file__)
-           b. Extract directory path using os.path.dirname()
-           c. Store in app_path variable
-           d. This is the src directory containing main.py
-        
-        2. **Get Current Working Directory**:
-           a. Call os.getcwd() to get current directory
-           b. Store in cwd variable
-           c. This is where user launched application
-        
-        3. **Update sys.path**:
-           a. Create list: [cwd, app_path]
-           b. For each path in list:
-              i. Check if path already in sys.path
-              ii. If not present:
-                  - Call sys.path.insert(0, path)
-                  - Adds to beginning of path (highest priority)
-           c. Enables imports from both locations
-        
-        4. **Return Paths**:
-           a. Return tuple (app_path, cwd)
-           b. Caller can use paths for resource loading
+        **Phase 1: Determine Application Path**
+            1. Get absolute path of current file (__file__)
+            2. Extract directory path using os.path.dirname()
+            3. Store in app_path variable
+            4. This is the src directory containing main.py
+
+        **Phase 2: Get Current Working Directory**
+            1. Call os.getcwd() to get current directory
+            2. Store in cwd variable
+            3. This is where user launched application
+
+        **Phase 3: Update sys.path**
+            1. Create list: [cwd, app_path]
+            2. For each path in list:
+                a. Check if path already in sys.path
+                b. If not present:
+                    - Call sys.path.insert(0, path)
+                    - Adds to beginning of path (highest priority)
+            3. Enables imports from both locations
+
+        **Phase 4: Return Paths**
+            1. Return tuple (app_path, cwd)
+            2. Caller can use paths for resource loading
 
     Interactions:
         - **os.path.abspath()**: Gets absolute file path
@@ -143,41 +143,41 @@ def repair_filesystem(cwd):
         None: Operates via side effects (renames files and creates directories).
 
     Algorithm:
-        1. **Try File System Scan**:
-           a. Enter outer try block for error handling
-           b. Call os.listdir(cwd) to get list of files
-           c. Store in files list
-        
-        2. **Process Each File**:
-           a. For each filename in files list:
-              i. Check if "\\" (backslash) in filename
-              ii. If backslash not present, skip to next file
-        
-        3. **Repair Malformed Filename**:
-           a. If backslash present:
-              i. Replace "\\" with os.sep (platform separator)
-                 - Windows: os.sep = "\\"
-                 - Unix/Mac: os.sep = "/"
-              ii. Store result in new_path variable
-        
-        4. **Create Missing Directories**:
-           a. Extract directory from new_path using os.path.dirname()
-           b. Store in dir_name variable
-           c. If dir_name not empty and doesn't exist:
-              i. Call os.makedirs(dir_name, exist_ok=True)
-              ii. Creates all intermediate directories
-        
-        5. **Rename File**:
-           a. Enter inner try block for rename operation
-           b. Call os.rename(filename, new_path)
-           c. Moves file to corrected path
-           d. If OSError occurs:
-              i. Pass silently (file may be locked or permission denied)
-        
-        6. **Handle All Errors**:
-           a. Outer except catches any Exception
-           b. Pass silently (don't interrupt app startup)
-           c. Errors include: directory not accessible, permission issues
+        **Phase 1: Try File System Scan**:
+            1. Enter outer try block for error handling
+            2. Call os.listdir(cwd) to get list of files
+            3. Store in files list
+
+        **Phase 2: Process Each File**:
+            1. For each filename in files list:
+                a. Check if "\\" (backslash) in filename
+                b. If backslash not present, skip to next file
+
+        **Phase 3: Repair Malformed Filename**:
+            1. If backslash present:
+                a. Replace "\\" with os.sep (platform separator)
+                    - Windows: os.sep = "\\"
+                    - Unix/Mac: os.sep = "/"
+                b. Store result in new_path variable
+
+        **Phase 4: Create Missing Directories**:
+            1. Extract directory from new_path using os.path.dirname()
+            2. Store in dir_name variable
+            3. If dir_name not empty and doesn't exist:
+                a. Call os.makedirs(dir_name, exist_ok=True)
+                b. Creates all intermediate directories
+
+        **Phase 5: Rename File**:
+            1. Enter inner try block for rename operation
+            2. Call os.rename(filename, new_path)
+            3. Moves file to corrected path
+            4. If OSError occurs:
+                a. Pass silently (file may be locked or permission denied)
+
+        **Phase 6: Handle All Errors**:
+            1. Outer except catches any Exception
+            2. Pass silently (don't interrupt app startup)
+            3. Errors include: directory not accessible, permission issues
 
     Interactions:
         - **os.listdir()**: Lists files in directory
@@ -267,46 +267,46 @@ def load_credentials(app_path, cwd):
             Returns None if no valid credentials file found in any location.
 
     Algorithm:
-        1. **Define Search Paths**:
-           a. Create possible_paths list with 4 locations:
-              i. app_path/services/web.json (deployed location)
-              ii. cwd/services/web.json (local development)
-              iii. app_path/web.json (root fallback)
-              iv. cwd/web.json (local root fallback)
-           b. Paths checked in order (first match wins)
-        
-        2. **Search Each Path**:
-           a. For each creds_path in possible_paths:
-              i. Check if file exists using os.path.exists()
-              ii. If file doesn't exist, continue to next path
-        
-        3. **Try Loading File**:
-           a. If file exists, enter try block
-           b. Open file in read mode
-           c. Parse JSON with json.load()
-           d. Store in data variable
-        
-        4. **Extract Configuration**:
-           a. Try to get 'web' section: data.get('web')
-           b. If 'web' is None, try 'installed': data.get('installed')
-           c. Store in config variable
-           d. If config is None (neither section found), continue to next path
-        
-        5. **Build Credentials Dict**:
-           a. If config found, create dictionary with:
-              i. 'path': creds_path (file location)
-              ii. 'client_id': config.get('client_id')
-              iii. 'client_secret': config.get('client_secret')
-              iv. 'redirect_uris': config.get('redirect_uris', [])
-           b. Return credentials dictionary immediately
-        
-        6. **Handle Errors**:
-           a. Catch any Exception during file read/parse
-           b. Continue to next path (file may be malformed)
-        
-        7. **Return None** (if no valid file found):
-           a. If all paths checked without success
-           b. Return None to indicate failure
+        **Phase 1: Define Search Paths**:
+            1. Create possible_paths list with 4 locations:
+                a. app_path/services/web.json (deployed location)
+                b. cwd/services/web.json (local development)
+                c. app_path/web.json (root fallback)
+                d. cwd/web.json (local root fallback)
+            2. Paths checked in order (first match wins)
+
+        **Phase 2: Search Each Path**:
+            1. For each creds_path in possible_paths:
+                a. Check if file exists using os.path.exists()
+                b. If file doesn't exist, continue to next path
+
+        **Phase 3: Try Loading File**:
+            1. If file exists, enter try block
+            2. Open file in read mode
+            3. Parse JSON with json.load()
+            4. Store in data variable
+
+        **Phase 4: Extract Configuration**:
+            1. Try to get 'web' section: data.get('web')
+            2. If 'web' is None, try 'installed': data.get('installed')
+            3. Store in config variable
+            4. If config is None (neither section found), continue to next path
+
+        **Phase 5: Build Credentials Dict**:
+            1. If config found, create dictionary with:
+                a. 'path': creds_path (file location)
+                b. 'client_id': config.get('client_id')
+                c. 'client_secret': config.get('client_secret')
+                d. 'redirect_uris': config.get('redirect_uris', [])
+            2. Return credentials dictionary immediately
+
+        **Phase 6: Handle Errors**:
+            1. Catch any Exception during file read/parse
+            2. Continue to next path (file may be malformed)
+
+        **Phase 7: Return None** (if no valid file found):
+            1. If all paths checked without success
+            2. Return None to indicate failure
 
     Interactions:
         - **os.path.exists()**: Checks file existence
@@ -393,10 +393,10 @@ def get_redirect_url():
             avoid conflicts with common services.
 
     Algorithm:
-        1. **Return Static URL**:
-           a. Return hardcoded string: "http://localhost:8550/oauth_callback"
-           b. No computation or configuration needed
-           c. Must match Google Console settings
+        **Phase 1: Return Static URL**:
+            1. Return hardcoded string: "http://localhost:8550/oauth_callback"
+            2. No computation or configuration needed
+            3. Must match Google Console settings
 
     Interactions:
         - **GoogleOAuthProvider**: Uses this URL for OAuth configuration
@@ -476,21 +476,21 @@ def main(page: ft.Page):
             2. Import Dashboard from ui.dashboard
             3. Import LoginView from ui.login
             4. Try to import FirebaseMobileLogin:
-               a. If ImportError, set to None (not available)
+                a. If ImportError, set to None (not available)
         
         **Phase 4: Credentials Loading**
             1. Call load_credentials(app_path, cwd)
             2. If creds is None:
-               a. Display error: "ERROR: web.json not found!"
-               b. Return early (cannot proceed without credentials)
+                a. Display error: "ERROR: web.json not found!"
+                b. Return early (cannot proceed without credentials)
         
         **Phase 5: OAuth Provider Setup**
             1. Get redirect URL via get_redirect_url()
             2. Create GoogleAuth service with credentials file
             3. Create GoogleOAuthProvider with:
-               a. client_id from credentials
-               b. client_secret from credentials
-               c. redirect_url from get_redirect_url()
+                a. client_id from credentials
+                b. client_secret from credentials
+                c. redirect_url from get_redirect_url()
             4. Set provider.scopes = ["openid", "email", "profile"]
         
         **Phase 6: Define Handler Functions**
@@ -515,9 +515,9 @@ def main(page: ft.Page):
             **show_dashboard()** - Display main application:
                 1. Clear page.controls
                 2. Create Dashboard instance with:
-                   a. page reference
-                   b. auth_service
-                   c. handle_logout callback
+                    a. page reference
+                    b. auth_service
+                    c. handle_logout callback
                 3. Get dashboard view via get_view()
                 4. Add to page
                 5. Call page.update()
@@ -531,12 +531,12 @@ def main(page: ft.Page):
                 1. Clear page.controls
                 2. Detect platform: is_mobile = platform in [ANDROID, IOS]
                 3. If mobile and FirebaseMobileLogin available:
-                   a. Load firebase_config.json if exists
-                   b. Create FirebaseMobileLogin with config
-                   c. Add to page
+                    a. Load firebase_config.json if exists
+                    b. Create FirebaseMobileLogin with config
+                    c. Add to page
                 4. Else (desktop):
-                   a. Create LoginView with provider
-                   b. Add to page
+                    a. Create LoginView with provider
+                    b. Add to page
                 5. Call page.update()
         
         **Phase 7: Register OAuth Callback**
@@ -551,11 +551,11 @@ def main(page: ft.Page):
         **Phase 9: Error Handling**
             1. Outer try-except catches all initialization errors
             2. On exception:
-               a. Import traceback
-               b. Format full stack trace
-               c. Display error message on page (red text)
-               d. Print full traceback to console
-               e. Application remains in error state
+                a. Import traceback
+                b. Format full stack trace
+                c. Display error message on page (red text)
+                d. Print full traceback to console
+                e. Application remains in error state
 
     Interactions:
         - **setup_paths()**: Configures import paths

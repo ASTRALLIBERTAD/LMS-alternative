@@ -31,7 +31,7 @@ Handles multiple URL formats (folders, files, query parameters).
 
 ## Algorithm
 
-- 1. **Extract File ID**:
+  - 1. **Extract File ID**:
     - a. Call extract_drive_id(link)
     - b. Handles URL parsing with regex patterns
     - c. Returns file ID or None

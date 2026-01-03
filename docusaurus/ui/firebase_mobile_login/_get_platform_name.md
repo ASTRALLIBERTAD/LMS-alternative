@@ -27,7 +27,7 @@ they're on the correct device/platform.
 
 ## Algorithm
 
-- 1. **Define Platform Mapping**:
+  - 1. **Define Platform Mapping**:
     - a. Create dictionary mapping ft.PagePlatform enums to strings
     - b. Mappings:
     - - WINDOWS -> "Windows"

@@ -27,7 +27,7 @@ receipt and timeout scenarios.
 
 ## Algorithm
 
-- 1. **Set Polling Flag**:
+  - 1. **Set Polling Flag**:
     - a. Set self.polling = True
     - b. Indicates polling thread is active
     - c. Used to control loop continuation

@@ -29,7 +29,7 @@ conflicts by appending (1), (2), etc. Shows success/failure feedback.
 
 ## Algorithm
 
-- 1. **Try File Save**:
+  - 1. **Try File Save**:
     - a. Enter try block for error handling
     - b. Import Path from pathlib
 

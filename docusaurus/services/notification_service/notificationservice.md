@@ -9,7 +9,7 @@ title: "NotificationService"
 ![Completeness](https://img.shields.io/badge/Docs-0%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 28
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 52
 :::
 
 Manages application notifications and alerts.
