@@ -65,7 +65,6 @@ class Dashboard:
 
         self.page.on_resize = self.on_resize
 
-        self.page.title = "Drive Manager"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
