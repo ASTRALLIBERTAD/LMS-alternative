@@ -9,7 +9,7 @@ title: "on_student_selected"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1268
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1326
 :::
 
 Handle student selection change in student dropdown.
@@ -29,7 +29,7 @@ student and refreshing the assignment display.
 
 ## Algorithm
 
-- 1. **Check for Registration Option**:
+  - 1. **Check for Registration Option**:
     - a. If student_dropdown.value == "__register__":
     - i. Set student_dropdown.value = None (clear selection)
     - ii. Call student_manager.register_student_dialog()

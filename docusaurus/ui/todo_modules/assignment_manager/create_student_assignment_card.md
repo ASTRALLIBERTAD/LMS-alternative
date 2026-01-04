@@ -9,7 +9,7 @@ title: "create_student_assignment_card"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 633
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 657
 :::
 
 Build a UI card for an assignment (Student View).
@@ -29,7 +29,7 @@ Generates a visual card for students to view details and submit work.
 
 ## Algorithm
 
-- 1. Determine status (Active/Overdue) and submission state (Submitted/Not).
+  - 1. Determine status (Active/Overdue) and submission state (Submitted/Not).
   - 2. Build Attachment section (Download/Preview).
   - 3. Build Submission Status section (Grade, Feedback).
   - 4. Build Action Buttons:

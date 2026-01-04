@@ -31,7 +31,7 @@ file read errors and encoding issues.
 
 ## Algorithm
 
-- 1. **Try Loading File**:
+  - 1. **Try Loading File**:
     - a. Enter try block for error handling
 
   - 2. **Guess MIME Type**:

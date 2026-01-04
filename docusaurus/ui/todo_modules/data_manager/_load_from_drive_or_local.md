@@ -9,7 +9,7 @@ title: "_load_from_drive_or_local"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 97
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 119
 :::
 
 Load data from Drive if available, falling back to local file.
@@ -31,7 +31,7 @@ Ensures the most up-to-date data is loaded, preferring the cloud version
 
 ## Algorithm
 
-- 1. Check if Drive Service and Root ID are available.
+  - 1. Check if Drive Service and Root ID are available.
   - 2. If yes:
     - a. Search for file by name in LMS root folder.
     - b. If found, download content string.

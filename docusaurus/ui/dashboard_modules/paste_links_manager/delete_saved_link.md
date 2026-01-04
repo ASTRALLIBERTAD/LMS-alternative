@@ -28,7 +28,7 @@ saves updated list, and refreshes view if currently active.
 
 ## Algorithm
 
-- 1. **Load Current Links**:
+  - 1. **Load Current Links**:
     - a. Call self.load_saved_links()
     - b. Returns list of all saved links
 

@@ -9,7 +9,7 @@ title: "show_past_deadline_dialog"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 219
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 243
 :::
 
 Display a warning dialog if the selected deadline is in the past.
@@ -25,7 +25,7 @@ Alerts the teacher that the selected date/time is invalid for a deadline.
 
 ## Algorithm
 
-- 1. Format deadline and current time strings.
+  - 1. Format deadline and current time strings.
   - 2. Build AlertDialog with red warning icon.
   - 3. Display comparison of Selected vs Current time.
   - 4. Set `page.dialog = dialog` and open.

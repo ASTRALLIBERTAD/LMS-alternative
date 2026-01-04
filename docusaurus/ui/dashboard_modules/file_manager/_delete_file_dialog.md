@@ -29,7 +29,7 @@ and refreshes Dashboard.
 
 ## Algorithm
 
-- 1. **Define Delete Handler**:
+  - 1. **Define Delete Handler**:
     - a. Call API:
     - i. dash.drive.delete_file(file["id"])
     - ii. Permanently deletes from Drive

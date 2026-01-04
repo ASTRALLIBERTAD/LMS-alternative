@@ -28,7 +28,7 @@ component tree. Prepares the component for rendering and user interaction.
 
 ## Algorithm
 
-- 1. **Initialize Parent Column**:
+  - 1. **Initialize Parent Column**:
     - a. Call super().__init__() with layout configuration
     - b. Set controls to empty list (populated by _build_ui)
     - c. Set alignment to MainAxisAlignment.CENTER (vertical centering)

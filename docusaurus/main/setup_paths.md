@@ -37,29 +37,29 @@ working directories). Ensures project modules can be imported consistently.
 
 ## Algorithm
 
-- 1. **Determine Application Path**:
-- a. Get absolute path of current file (__file__)
-- b. Extract directory path using os.path.dirname()
-- c. Store in app_path variable
-- d. This is the src directory containing main.py
+- **Phase 1: Determine Application Path**
+  - 1. Get absolute path of current file (__file__)
+  - 2. Extract directory path using os.path.dirname()
+  - 3. Store in app_path variable
+  - 4. This is the src directory containing main.py
 
-- 2. **Get Current Working Directory**:
-- a. Call os.getcwd() to get current directory
-- b. Store in cwd variable
-- c. This is where user launched application
+- **Phase 2: Get Current Working Directory**
+  - 1. Call os.getcwd() to get current directory
+  - 2. Store in cwd variable
+  - 3. This is where user launched application
 
-- 3. **Update sys.path**:
-- a. Create list: [cwd, app_path]
-- b. For each path in list:
-  - i. Check if path already in sys.path
-  - ii. If not present:
+- **Phase 3: Update sys.path**
+  - 1. Create list: [cwd, app_path]
+  - 2. For each path in list:
+    - a. Check if path already in sys.path
+    - b. If not present:
     - - Call sys.path.insert(0, path)
     - - Adds to beginning of path (highest priority)
-- c. Enables imports from both locations
+  - 3. Enables imports from both locations
 
-- 4. **Return Paths**:
-- a. Return tuple (app_path, cwd)
-- b. Caller can use paths for resource loading
+- **Phase 4: Return Paths**
+  - 1. Return tuple (app_path, cwd)
+  - 2. Caller can use paths for resource loading
 
 ## Interactions
 

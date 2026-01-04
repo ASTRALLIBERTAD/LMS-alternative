@@ -31,7 +31,7 @@ application or browser).
 
 ## Algorithm
 
-- 1. **Build Info Display**:
+  - 1. **Build Info Display**:
     - a. BLUE DESCRIPTION icon (size 100)
     - b. Title: "Word Document" (size 20, bold)
     - c. Size text: f"Size: &#123;size_mb:.2f&#125; MB"

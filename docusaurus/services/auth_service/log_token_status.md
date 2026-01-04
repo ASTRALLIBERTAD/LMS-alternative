@@ -1,15 +1,15 @@
 ---
-id: "_log_token_status"
+id: "log_token_status"
 sidebar_position: 9
-title: "_log_token_status"
+title: "log_token_status"
 ---
 
-# ⚙️ _log_token_status
+# ⚙️ log_token_status
 
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 619
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 634
 :::
 
 Log OAuth token components for debugging authentication issues.
@@ -33,12 +33,12 @@ values for security.
 
 ## Algorithm
 
-- 1. **Log Token Components**:
-    - a. Print "Access token: present" (don't print actual value)
-    - b. Print refresh_token status: "present" or "missing"
-    - c. Print client_id status: "present" or "missing"
-    - d. Print client_secret status: "present" or "missing"
-    - e. Print scopes: join list or print string directly
+- **Phase 1: Log Token Components**
+  - 1. Print "Access token: present" (don't print actual value)
+  - 2. Print refresh_token status: "present" or "missing"
+  - 3. Print client_id status: "present" or "missing"
+  - 4. Print client_secret status: "present" or "missing"
+  - 5. Print scopes: join list or print string directly
 
 ## Interactions
 

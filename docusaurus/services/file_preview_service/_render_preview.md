@@ -34,7 +34,7 @@ Calculates file size and creates preview with metadata display.
 
 ## Algorithm
 
-- 1. **Calculate File Size**:
+  - 1. **Calculate File Size**:
     - a. Get length in bytes: len(file_data)
     - b. Divide by 1024 twice: / (1024 * 1024)
     - c. Store in size_mb as float

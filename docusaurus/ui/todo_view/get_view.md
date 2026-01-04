@@ -9,7 +9,7 @@ title: "get_view"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1521
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1579
 :::
 
 Construct and return the complete TodoView UI layout.
@@ -29,7 +29,7 @@ column layout.
 
 ## Algorithm
 
-- 1. **Display Initial Assignments**:
+  - 1. **Display Initial Assignments**:
     - a. Call self.display_assignments()
     - b. Populates assignment_column with cards
 

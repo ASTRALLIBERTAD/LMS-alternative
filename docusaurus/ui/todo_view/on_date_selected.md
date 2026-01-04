@@ -9,7 +9,7 @@ title: "on_date_selected"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 810
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 868
 :::
 
 Handle date picker selection event.
@@ -29,7 +29,7 @@ completing the deadline selection.
 
 ## Algorithm
 
-- 1. **Store Selected Date**:
+  - 1. **Store Selected Date**:
     - a. Access self.date_picker.value (datetime.date object)
     - b. Assign to self.selected_date_value
 

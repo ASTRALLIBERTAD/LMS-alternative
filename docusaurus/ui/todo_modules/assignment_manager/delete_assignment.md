@@ -9,7 +9,7 @@ title: "delete_assignment"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 1060
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 1084
 :::
 
 Show confirmation dialog to delete an assignment.
@@ -24,7 +24,7 @@ Permanently removes an assignment and all its associated submissions.
 
 ## Algorithm
 
-- 1. Show confirmation dialog.
+  - 1. Show confirmation dialog.
   - 2. On Confirm:
     - a. Filter out assignment from list.
     - b. Filter out linked submissions from list.

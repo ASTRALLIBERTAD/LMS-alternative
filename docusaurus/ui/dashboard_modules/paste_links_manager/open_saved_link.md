@@ -28,7 +28,7 @@ to folder contents or opens file preview/info dialog.
 
 ## Algorithm
 
-- 1. **Check Item Type**:
+  - 1. **Check Item Type**:
     - a. Get mimeType: item.get("mimeType")
     - b. Compare to folder MIME type
 

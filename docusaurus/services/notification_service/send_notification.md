@@ -9,7 +9,7 @@ title: "send_notification"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 77
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 316
 :::
 
 Create and dispatch a notification.
@@ -29,6 +29,6 @@ Create and dispatch a notification.
 
 ## Algorithm
 
-- 1. Construct notification record with timestamp.
+  - 1. Construct notification record with timestamp.
   - 2. Append to internal list and save to disk.
   - 3. Attempt to show OS notification via plyer.

@@ -27,7 +27,7 @@ implicit grant flow which returns tokens directly in URL fragment.
 
 ## Algorithm
 
-- 1. **Set Base URL**:
+  - 1. **Set Base URL**:
     - a. Define auth_url as Google OAuth 2.0 endpoint
     - b. Value: "https://accounts.google.com/o/oauth2/v2/auth"
     - c. This is Google's standard authorization endpoint

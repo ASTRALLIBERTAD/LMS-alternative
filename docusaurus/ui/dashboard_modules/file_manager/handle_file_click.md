@@ -28,7 +28,7 @@ appropriate action: navigation for folders, preview for files.
 
 ## Algorithm
 
-- 1. **Check MIME Type**:
+  - 1. **Check MIME Type**:
     - a. Get mimeType: file.get("mimeType")
     - b. Compare to folder MIME type
 

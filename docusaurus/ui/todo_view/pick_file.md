@@ -9,7 +9,7 @@ title: "pick_file"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1006
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1064
 :::
 
 Open file picker dialog for attaching a local file to assignment.
@@ -28,7 +28,7 @@ path and name, and updates the attachment display text.
 
 ## Algorithm
 
-- 1. **Define Result Callback**:
+  - 1. **Define Result Callback**:
     - a. Define inner function on_result(e: FilePickerResultEvent)
     - b. Callback executes when user selects file
     - c. Implementation:

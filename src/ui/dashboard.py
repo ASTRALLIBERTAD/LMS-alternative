@@ -94,7 +94,7 @@ class Dashboard:
         - **ButtonWithMenu**: Custom dropdown button component for action menu
         - **ft.Page**: Flet page for UI updates and responsive layout handling
 
-    Algorithm (High-Level Workflow):
+    Algorithm:
         **Phase 1: Initialization**
             1. Store references to page, auth service, and logout callback
             2. Create DriveService instance from auth.get_service()
@@ -218,70 +218,70 @@ class Dashboard:
                 navigation to login screen. Signature: () -> None.
 
         Algorithm:
-            1. **Store Core References**:
-               a. Assign page parameter to self.page
-               b. Assign auth_service to self.auth
-               c. Assign on_logout callback to self.on_logout
-            
-            2. **Initialize Drive Service**:
-               a. Call auth_service.get_service() to obtain Drive API service
-               b. Pass service to DriveService constructor
-               c. Store DriveService instance in self.drive
-            
-            3. **Setup Navigation State**:
-               a. Set self.current_folder_id to "root" (Drive root folder)
-               b. Set self.current_folder_name to "My Drive"
-               c. Initialize self.folder_stack as empty list []
-               d. Set self.current_view to "your_folders" (default view)
-            
-            4. **Retrieve User Information**:
-               a. Call auth.get_user_info() to get user profile data
-               b. Extract emailAddress from user_info dictionary
-               c. Store in self.user_email (default to "User" if unavailable)
-            
-            5. **Instantiate Manager Modules**:
-               a. Create FileManager instance: FileManager(self)
-                  - Passes self reference for access to page, drive, etc.
-               b. Create FolderNavigator instance: FolderNavigator(self)
-                  - Handles navigation and folder content display
-               c. Create PasteLinksManager instance: PasteLinksManager(self)
-                  - Processes shared Drive links
-            
-            6. **Create Search Field Component**:
-               a. Instantiate ft.TextField with hint_text "Search"
-               b. Set prefix_icon to ft.Icons.SEARCH (magnifying glass)
-               c. Bind on_submit event to folder_navigator.handle_search
-               d. Configure styling: border_color, filled=True, expand=True
-               e. Store in self.search_field
-            
-            7. **Initialize Menu State**:
-               a. Set self.menu_open to False (sidebar hidden on mobile initially)
-            
-            8. **Create Paste Link Field Component**:
-               a. Instantiate ft.TextField with paste instruction hint text
-               b. Bind on_submit to paste_links_manager.handle_paste_link
-               c. Configure styling: expand=True, blue border colors
-               d. Store in self.paste_link_field
-            
-            9. **Create Folder List Container**:
-               a. Instantiate ft.Column with spacing=0
-               b. Set scroll mode to ALWAYS for scrollable content
-               c. Set expand=True to fill available vertical space
-               d. Store in self.folder_list
-            
-            10. **Register Resize Handler**:
-                a. Bind self.on_resize to page.on_resize event
-                b. Enables responsive sidebar visibility on window resize
-            
-            11. **Configure Page Properties**:
-                a. Set page.title to "Drive Manager"
-                b. Set vertical_alignment to MainAxisAlignment.START
-                c. Set horizontal_alignment to CrossAxisAlignment.STRETCH
-            
-            12. **Load Initial View**:
-                a. Call folder_navigator.load_your_folders()
-                b. Displays root folder contents in folder_list
-                c. Dashboard now ready for user interaction
+            **Phase 1: Store Core References**:
+               1. Assign page parameter to self.page
+               2. Assign auth_service to self.auth
+               3. Assign on_logout callback to self.on_logout
+
+            **Phase 2: Initialize Drive Service**:
+               1. Call auth_service.get_service() to obtain Drive API service
+               2. Pass service to DriveService constructor
+               3. Store DriveService instance in self.drive
+
+            **Phase 3: Setup Navigation State**:
+               1. Set self.current_folder_id to "root" (Drive root folder)
+               2. Set self.current_folder_name to "My Drive"
+               3. Initialize self.folder_stack as empty list []
+               4. Set self.current_view to "your_folders" (default view)
+
+            **Phase 4: Retrieve User Information**:
+               1. Call auth.get_user_info() to get user profile data
+               2. Extract emailAddress from user_info dictionary
+               3. Store in self.user_email (default to "User" if unavailable)
+
+            **Phase 5: Instantiate Manager Modules**:
+               1. Create FileManager instance: FileManager(self)
+                    a. Passes self reference for access to page, drive, etc.
+               2. Create FolderNavigator instance: FolderNavigator(self)
+                    b. Handles navigation and folder content display
+               3. Create PasteLinksManager instance: PasteLinksManager(self)
+                    c. Processes shared Drive links
+
+            **Phase 6: Create Search Field Component**:
+               1. Instantiate ft.TextField with hint_text "Search"
+               2. Set prefix_icon to ft.Icons.SEARCH (magnifying glass)
+               3. Bind on_submit event to folder_navigator.handle_search
+               4. Configure styling: border_color, filled=True, expand=True
+               5. Store in self.search_field
+
+            **Phase 7: Initialize Menu State**:
+               1. Set self.menu_open to False (sidebar hidden on mobile initially)
+
+            **Phase 8: Create Paste Link Field Component**:
+               1. Instantiate ft.TextField with paste instruction hint text
+               2. Bind on_submit to paste_links_manager.handle_paste_link
+               3. Configure styling: expand=True, blue border colors
+               4. Store in self.paste_link_field
+
+            **Phase 9: Create Folder List Container**:
+               1. Instantiate ft.Column with spacing=0
+               2. Set scroll mode to ALWAYS for scrollable content
+               3. Set expand=True to fill available vertical space
+               4. Store in self.folder_list
+
+            **Phase 10: Register Resize Handler**:
+                1. Bind self.on_resize to page.on_resize event
+                2. Enables responsive sidebar visibility on window resize
+
+            **Phase 11: Configure Page Properties**:
+                1. Set page.title to "Drive Manager"
+                2. Set vertical_alignment to MainAxisAlignment.START
+                3. Set horizontal_alignment to CrossAxisAlignment.STRETCH
+
+            **Phase 12: Load Initial View**:
+                1. Call folder_navigator.load_your_folders()
+                2. Displays root folder contents in folder_list
+                3. Dashboard now ready for user interaction
 
         Interactions:
             - **GoogleAuth**: Retrieves Drive API service and user information
@@ -403,21 +403,21 @@ class Dashboard:
             None: Updates UI state and triggers page refresh as side effect.
 
         Algorithm:
-            1. **Toggle State**:
-               a. Read current value of self.menu_open boolean
-               b. Invert value: self.menu_open = not self.menu_open
-               c. Store new state (True becomes False, False becomes True)
-            
-            2. **Update Sidebar Visibility**:
-               a. Calculate visibility condition:
-                  - visible = self.menu_open OR self.page.width > 700
-               b. Assign result to self.sidebar_container.visible property
-               c. Sidebar shows if: menu toggled on OR window is wide
-            
-            3. **Refresh UI**:
-               a. Call self.page.update()
-               b. Triggers Flet to re-render affected components
-               c. Sidebar appears or disappears with animation
+            **Phase 1: Toggle State**:
+               1. Read current value of self.menu_open boolean
+               2. Invert value: self.menu_open = not self.menu_open
+               3. Store new state (True becomes False, False becomes True)
+
+            **Phase 2: Update Sidebar Visibility**:
+               1. Calculate visibility condition:
+                  a. visible = self.menu_open OR self.page.width > 700
+               2. Assign result to self.sidebar_container.visible property
+               3. Sidebar shows if: menu toggled on OR window is wide
+
+            **Phase 3: Refresh UI**:
+               1. Call self.page.update()
+               2. Triggers Flet to re-render affected components
+               3. Sidebar appears or disappears with animation
 
         Interactions:
             - **ft.Page**: Updates page to render visibility changes
@@ -480,29 +480,29 @@ class Dashboard:
             None: Updates UI layout and triggers page refresh as side effect.
 
         Algorithm:
-            1. **Check Window Width**:
-               a. Read self.page.width (current window width in pixels)
-               b. Compare against desktop breakpoint (900px)
+            **Check Window Width**:
+               1. Read self.page.width (current window width in pixels)
+               2. Compare against desktop breakpoint (900px)
+
+            **Desktop Layout** (width >= 900px):
+               1. If self.page.width >= 900:
+                  a. Set self.sidebar_container.visible = True
+                  b. Sidebar permanently visible on desktop
+                  c. Set self.menu_open = False
+                  d. Disable mobile toggle state
+               2. Desktop users see sidebar without toggle button
             
-            2. **Desktop Layout** (width >= 900px):
-               a. If self.page.width >= 900:
-                  i. Set self.sidebar_container.visible = True
-                  ii. Sidebar permanently visible on desktop
-                  iii. Set self.menu_open = False
-                  iv. Disable mobile toggle state
-               b. Desktop users see sidebar without toggle button
-            
-            3. **Mobile/Tablet Layout** (width < 900px):
-               a. If self.page.width < 900:
-                  i. Set sidebar_container.visible = self.menu_open
-                  ii. Sidebar shows only if toggle is active
-                  iii. Hamburger menu button controls visibility
-               b. Mobile users can toggle sidebar on/off
-            
-            4. **Refresh UI**:
-               a. Call self.page.update()
-               b. Apply visibility changes with smooth transition
-               c. Re-render affected layout components
+            **Mobile/Tablet Layout** (width < 900px):
+               1. If self.page.width < 900:
+                  a. Set sidebar_container.visible = self.menu_open
+                  b. Sidebar shows only if toggle is active
+                  c. Hamburger menu button controls visibility
+               2. Mobile users can toggle sidebar on/off
+
+            **Refresh UI**:
+               1. Call self.page.update()
+               2. Apply visibility changes with smooth transition
+               3. Re-render affected layout components
 
         Interactions:
             - **ft.Page**: Reads width property and triggers update
@@ -578,24 +578,24 @@ class Dashboard:
                 Does not return folder data directly.
 
         Algorithm:
-            1. **Delegate to FolderNavigator**:
-               a. Access self.folder_navigator instance
-               b. Call show_folder_contents() method on navigator
-               c. Pass all four parameters through unchanged:
-                  - folder_id: target folder identifier
-                  - folder_name: optional display name
-                  - is_shared_drive: team drive flag
-                  - push_to_stack: history tracking flag
-            
-            2. **FolderNavigator Processing** (handled internally):
-               a. Update current_folder_id and current_folder_name
-               b. Push previous folder to folder_stack if push_to_stack=True
-               c. Query Drive API for folder contents
-               d. Clear folder_list.controls
-               e. Build UI cards for files and subfolders
-               f. Populate folder_list with new content
-               g. Update breadcrumb navigation trail
-               h. Call page.update() to render changes
+            **Phase 1: Delegate to FolderNavigator**:
+               1. Access self.folder_navigator instance
+               2. Call show_folder_contents() method on navigator
+               3. Pass all four parameters through unchanged:
+                  a. folder_id: target folder identifier
+                  b. folder_name: optional display name
+                  c. is_shared_drive: team drive flag
+                  d. push_to_stack: history tracking flag
+
+            **Phase 2: FolderNavigator Processing** (handled internally):
+               1. Update current_folder_id and current_folder_name
+               2. Push previous folder to folder_stack if push_to_stack=True
+               3. Query Drive API for folder contents
+               4. Clear folder_list.controls
+               5. Build UI cards for files and subfolders
+               6. Populate folder_list with new content
+               7. Update breadcrumb navigation trail
+               8. Call page.update() to render changes
 
         Interactions:
             - **FolderNavigator**: Delegates all folder display logic
@@ -656,18 +656,18 @@ class Dashboard:
             None: Updates folder_list with refreshed contents as side effect.
 
         Algorithm:
-            1. **Delegate to FolderNavigator**:
-               a. Access self.folder_navigator instance
-               b. Call refresh_folder_contents() method
-            
-            2. **Navigator Refresh Process** (handled internally):
-               a. Read current_folder_id from dashboard state
-               b. Query Drive API for latest folder contents
-               c. Clear existing folder_list.controls
-               d. Rebuild UI cards for current files and subfolders
-               e. Preserve current breadcrumb navigation
-               f. Call page.update() to render changes
-               g. Maintain scroll position if possible
+            **Delegate to FolderNavigator**:
+               1. Access self.folder_navigator instance
+               2. Call refresh_folder_contents() method
+
+            **Navigator Refresh Process** (handled internally):
+               1. Read current_folder_id from dashboard state
+               2. Query Drive API for latest folder contents
+               3. Clear existing folder_list.controls
+               4. Rebuild UI cards for current files and subfolders
+               5. Preserve current breadcrumb navigation
+               6. Call page.update() to render changes
+               7. Maintain scroll position if possible
 
         Interactions:
             - **FolderNavigator**: Executes refresh logic
@@ -716,17 +716,16 @@ class Dashboard:
             None: Updates page to remove dialog as side effect.
 
         Algorithm:
-            1. **Set Dialog State**:
-               a. Access dialog.open property
-               b. Set value to False
-               c. Marks dialog as closed in Flet's state system
-            
-            2. **Update UI**:
-               a. Call self.page.update()
-               b. Flet removes dialog from screen
-               c. Restores focus to main content
-               d. Re-enables underlying UI interaction
+            **Set Dialog State**:
+               1. Access dialog.open property
+               2. Set value to False
+               3. Marks dialog as closed in Flet's state system
 
+            **Update UI**:
+               1. Call self.page.update()
+               2. Flet removes dialog from screen
+               3. Restores focus to main content
+               4. Re-enables underlying UI interaction
         Interactions:
             - **ft.AlertDialog**: Modifies open property
             - **ft.Page**: Updates to remove dialog from overlay
@@ -779,35 +778,35 @@ class Dashboard:
             None: Updates folder_list with TodoView component as side effect.
 
         Algorithm:
-            1. **Update View State**:
-               a. Set self.current_view to "todo"
-               b. Marks dashboard as displaying assignment view
-               c. Used by other methods to check active view
-            
-            2. **Clear Current Content**:
-               a. Access self.folder_list.controls
-               b. Call clear() to remove all folder/file cards
-               c. Prepares container for TodoView
-            
-            3. **Create TodoView Instance**:
-               a. Instantiate TodoView with three parameters:
-                  i. self.page: for UI rendering and updates
-                  ii. on_back: callback set to folder_navigator.load_your_folders
+            **Phase 1: Update View State**:
+               1. Set self.current_view to "todo"
+               2. Marks dashboard as displaying assignment view
+               3. Used by other methods to check active view
+
+            **Phase 2: Clear Current Content**:
+               1. Access self.folder_list.controls
+               2. Call clear() to remove all folder/file cards
+               3. Prepares container for TodoView
+
+            **Phase 3: Create TodoView Instance**:
+               1. Instantiate TodoView with three parameters:
+                  a. self.page: for UI rendering and updates
+                  b. on_back: callback set to folder_navigator.load_your_folders
                       - Provides back button functionality
                       - Returns user to folder view when clicked
-                  iii. drive_service: self.drive for file operations
+                  c. drive_service: self.drive for file operations
                        - Enables assignment file uploads/downloads
-               b. TodoView initializes with assignment data loading
-            
-            4. **Display TodoView**:
-               a. Call todo_view.get_view() to build UI component
-               b. Returns ft.Column or ft.Container with TodoView UI
-               c. Append returned component to folder_list.controls
-            
-            5. **Refresh UI**:
-               a. Call self.page.update()
-               b. Renders TodoView in main content area
-               c. Folder view replaced with assignment interface
+               2. TodoView initializes with assignment data loading
+
+            **Phase 4: Display TodoView**:
+               1. Call todo_view.get_view() to build UI component
+               2. Returns ft.Column or ft.Container with TodoView UI
+               3. Append returned component to folder_list.controls
+
+            **Phase 5: Refresh UI**:
+               1. Call self.page.update()
+               2. Renders TodoView in main content area
+               3. Folder view replaced with assignment interface
 
         Interactions:
             - **TodoView**: Instantiated with page, back callback, drive service
@@ -867,24 +866,24 @@ class Dashboard:
                 navigating to login screen or clearing session.
 
         Algorithm:
-            1. **Clear Authentication**:
-               a. Call self.auth.logout()
-               b. Auth service clears stored credentials
-               c. Invalidates OAuth2 access and refresh tokens
-               d. Removes cached user information
-            
-            2. **Trigger Logout Callback**:
-               a. Call self.on_logout() (callback from __init__)
-               b. Callback typically performs:
-                  i. Clear page contents (page.clean())
-                  ii. Reset application state
-                  iii. Navigate to login screen
-                  iv. Display logout confirmation message
-            
-            3. **Session Termination**:
-               a. User returned to unauthenticated state
-               b. Dashboard instance effectively terminated
-               c. New login required to access Drive features
+            **Phase 1: Clear Authentication**:
+               1. Call self.auth.logout()
+               2. Auth service clears stored credentials
+               3. Invalidates OAuth2 access and refresh tokens
+               4. Removes cached user information
+
+            **Phase 2: Trigger Logout Callback**:
+               1. Call self.on_logout() (callback from __init__)
+               2. Callback typically performs:
+                  a. Clear page contents (page.clean())
+                  b. Reset application state
+                  c. Navigate to login screen
+                  d. Display logout confirmation message
+
+            **Phase 3: Session Termination**:
+               1. User returned to unauthenticated state
+               2. Dashboard instance effectively terminated
+               3. New login required to access Drive features
 
         Interactions:
             - **GoogleAuth**: Calls logout() to clear credentials
@@ -950,20 +949,20 @@ class Dashboard:
             None: Delegates to appropriate handler and updates page as side effect.
 
         Algorithm:
-            1. **Action Routing**:
-               a. Check if selected_item == "Create Folder"
-                  i. If True, call file_manager.create_new_folder_dialog()
-                  ii. Opens dialog for entering new folder name
-                  iii. Dialog handles folder creation on confirm
-               b. Check elif selected_item == "Upload File"
-                  i. If True, call file_manager.select_file_to_upload()
-                  ii. Opens system file picker dialog
-                  iii. Handles file selection and upload process
-            
-            2. **Update UI**:
-               a. Call self.page.update()
-               b. Ensures any dialog or state changes are rendered
-               c. Maintains UI responsiveness
+            **Phase 1: Action Routing**:
+               1. Check if selected_item == "Create Folder"
+                  a. If True, call file_manager.create_new_folder_dialog()
+                  b. Opens dialog for entering new folder name
+                  c. Dialog handles folder creation on confirm
+               2. Check elif selected_item == "Upload File"
+                  a. If True, call file_manager.select_file_to_upload()
+                  b. Opens system file picker dialog
+                  c. Handles file selection and upload process
+
+            **Phase 2: Update UI**:
+               1. Call self.page.update()
+               2. Ensures any dialog or state changes are rendered
+               3. Maintains UI responsiveness
 
         Interactions:
             - **FileManager**: Delegates to create_new_folder_dialog() or select_file_to_upload()
@@ -1017,63 +1016,63 @@ class Dashboard:
                 Component expands to fill available space with expand=True.
 
         Algorithm:
-            1. **Create Sidebar Container**:
-               a. Instantiate ft.Container with fixed width=170px
-               b. Set bgcolor to light grey (ft.Colors.GREY_100)
-               c. Add padding=20 for internal spacing
-               d. Calculate visibility:
-                  i. visible = (page.width >= 900) OR menu_open
-                  ii. Shows on desktop or when toggled on mobile
-               e. Create Column content with four buttons:
-                  i. ButtonWithMenu: "+ NEW" with dropdown menu
+            **Phase 1: Create Sidebar Container**:
+               1. Instantiate ft.Container with fixed width=170px
+               2. Set bgcolor to light grey (ft.Colors.GREY_100)
+               3. Add padding=20 for internal spacing
+               4. Calculate visibility:
+                  a. visible = (page.width >= 900) OR menu_open
+                  b. Shows on desktop or when toggled on mobile
+               5. Create Column content with four buttons:
+                  a. ButtonWithMenu: "+ NEW" with dropdown menu
                      - Menu items: ["Create Folder", "Upload File"]
                      - on_menu_select: self.handle_action
-                  ii. ElevatedButton: "SETTINGS" (no-op currently)
-                  iii. ElevatedButton: "TO-DO" with self.show_todo_view
-                  iv. ElevatedButton: "ACCOUNT" with self.handle_logout
-               f. Set button spacing=15 in Column
-               g. Store in self.sidebar_container
+                  b. ElevatedButton: "SETTINGS" (no-op currently)
+                  c. ElevatedButton: "TO-DO" with self.show_todo_view
+                  d. ElevatedButton: "ACCOUNT" with self.handle_logout
+               6. Set button spacing=15 in Column
+               7. Store in self.sidebar_container
+
+            **Phase 2: Create Top Bar**:
+               1. Instantiate ft.Container with padding=20
+               2. Create Row content with three elements:
+                  a. IconButton: hamburger menu (ft.Icons.MENU)
+                      a. on_click: self.toggle_menu
+                      b. visible: True (always shown)
+                  b. self.search_field: search TextField (expands)
+                  c. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
+                      a. icon_size: 36
+                      b. tooltip: self.user_email
+               3. Set Row alignment to SPACE_BETWEEN
+               4. Store in top_bar variable
+
+            **Phase 3: Create Tab Navigation**:
+               1. Instantiate ft.Container with padding=10
+               2. Create Row content with three tab buttons:
+                  a. ElevatedButton: "YOUR FOLDERS"
+                    a. on_click: folder_navigator.reset_to_root()
+                  b. ElevatedButton: "PASTE LINKS"
+                    b. on_click: paste_links_manager.load_paste_links_view()
+                  c. ElevatedButton: "SHARED DRIVES"
+                    a. on_click: folder_navigator.load_shared_drives()
+               3. Set Row spacing=10, alignment=CENTER
+               4. Store in tabs variable
+
+            **Phase 4: Create Main Content Area**:
+               1. Instantiate ft.Column with three components:
+                  a. top_bar: search and account controls
+                  b. tabs: view switching buttons
+                  c. Container with folder_list (expand=True)
+               2. Set Column expand=True to fill vertical space
+               3. Store in main_content variable
             
-            2. **Create Top Bar**:
-               a. Instantiate ft.Container with padding=20
-               b. Create Row content with three elements:
-                  i. IconButton: hamburger menu (ft.Icons.MENU)
-                     - on_click: self.toggle_menu
-                     - visible: True (always shown)
-                  ii. self.search_field: search TextField (expands)
-                  iii. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
-                       - icon_size: 36
-                       - tooltip: self.user_email
-               c. Set Row alignment to SPACE_BETWEEN
-               d. Store in top_bar variable
-            
-            3. **Create Tab Navigation**:
-               a. Instantiate ft.Container with padding=10
-               b. Create Row content with three tab buttons:
-                  i. ElevatedButton: "YOUR FOLDERS"
-                     - on_click: folder_navigator.reset_to_root()
-                  ii. ElevatedButton: "PASTE LINKS"
-                      - on_click: paste_links_manager.load_paste_links_view()
-                  iii. ElevatedButton: "SHARED DRIVES"
-                       - on_click: folder_navigator.load_shared_drives()
-               c. Set Row spacing=10, alignment=CENTER
-               d. Store in tabs variable
-            
-            4. **Create Main Content Area**:
-               a. Instantiate ft.Column with three components:
-                  i. top_bar: search and account controls
-                  ii. tabs: view switching buttons
-                  iii. Container with folder_list (expand=True)
-               b. Set Column expand=True to fill vertical space
-               c. Store in main_content variable
-            
-            5. **Assemble Final Layout**:
-               a. Create ft.Row with three components:
-                  i. self.sidebar_container: navigation sidebar
-                  ii. ft.VerticalDivider(width=1): separator line
-                  iii. main_content: main display area
-               b. Set Row expand=True to fill available space
-               c. Return assembled Row component
+            **Assemble Final Layout**:
+               1. Create ft.Row with three components:
+                  a. self.sidebar_container: navigation sidebar
+                  b. ft.VerticalDivider(width=1): separator line
+                  c. main_content: main display area
+               2. Set Row expand=True to fill available space
+               3. Return assembled Row component
 
         Interactions:
             - **ButtonWithMenu**: Custom dropdown for action menu

@@ -9,7 +9,7 @@ title: "on_time_selected"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 878
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 936
 :::
 
 Handle time picker selection event.
@@ -28,7 +28,7 @@ and closes the time picker to complete the deadline selection process.
 
 ## Algorithm
 
-- 1. **Store Selected Time**:
+  - 1. **Store Selected Time**:
     - a. Access self.time_picker.value (datetime.time object)
     - b. Assign to self.selected_time_value
 

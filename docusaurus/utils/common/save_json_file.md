@@ -40,25 +40,25 @@ special types like datetime, and ensures proper Unicode encoding.
 
 ## Algorithm
 
-- 1. **Convert Path** (if needed):
-- a. Check if filepath is string type
-- b. If string, convert to Path object
-- c. Ensures consistent path handling
+  - 1. **Convert Path** (if needed):
+    - a. Check if filepath is string type
+    - b. If string, convert to Path object
+    - c. Ensures consistent path handling
 
-- 2. **Try File Writing**:
-- a. Enter try block for error handling
-- b. Open file in write mode with UTF-8 encoding
-- c. Use context manager (with) for automatic closing
-- d. Call json.dump() with configuration:
-  - i. indent=2 for readable formatting (2-space indent)
+  - 2. **Try File Writing**:
+    - a. Enter try block for error handling
+    - b. Open file in write mode with UTF-8 encoding
+    - c. Use context manager (with) for automatic closing
+    - d. Call json.dump() with configuration:
+    - i. indent=2 for readable formatting (2-space indent)
   - ii. default=str to convert non-serializable types to strings
   - iii. ensure_ascii=False to preserve Unicode characters
-- e. Return True on successful write
+    - e. Return True on successful write
 
-- 3. **Handle Errors**:
-- a. Catch any Exception during write operation
-- b. Print error message to console: f"Error saving: &#123;e&#125;"
-- c. Return False to indicate failure
+  - 3. **Handle Errors**:
+    - a. Catch any Exception during write operation
+    - b. Print error message to console: f"Error saving: &#123;e&#125;"
+    - c. Return False to indicate failure
 
 ## Interactions
 

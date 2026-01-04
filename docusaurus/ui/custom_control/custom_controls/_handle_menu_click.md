@@ -29,7 +29,7 @@ for debugging purposes.
 
 ## Algorithm
 
-- 1. **Log Selection** (debugging):
+  - 1. **Log Selection** (debugging):
     - a. Print "MENU CLICKED:" with e.control.text
     - b. Helps debug menu interaction
 

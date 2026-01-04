@@ -21,7 +21,7 @@ Provides a UI for the user to view the current LMS Root folder status
 
 ## Algorithm
 
-- 1. Check current `lms_root_id`.
+  - 1. Check current `lms_root_id`.
   - 2. If set, fetch its name via Drive API.
   - 3. Build UI: Display current folder name.
   - 4. Buttons: "Select/Change Drive Folder", "Unlink".

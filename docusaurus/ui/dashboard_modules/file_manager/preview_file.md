@@ -29,7 +29,7 @@ before attempting preview.
 
 ## Algorithm
 
-- 1. **Check Preview Service**:
+  - 1. **Check Preview Service**:
     - a. If self.file_preview is None:
     - i. Service not available
     - ii. Return early (no preview)

@@ -35,7 +35,7 @@ context menu. Click opens folder contents.
 
 ## Algorithm
 
-- 1. **Extract and Format Name**:
+  - 1. **Extract and Format Name**:
     - a. Get folder name: folder.get("name", "Untitled")
     - b. If length > 40 characters:
     - i. Truncate to 37 chars

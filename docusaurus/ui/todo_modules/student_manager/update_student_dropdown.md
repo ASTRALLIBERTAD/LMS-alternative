@@ -21,7 +21,7 @@ Updates the main UI dropdown with the current list of registered students,
 
 ## Algorithm
 
-- 1. Clear existing options.
+  - 1. Clear existing options.
   - 2. Iterate through `todo.students`.
   - 3. If bridging, prefix name with `[B]`.
   - 4. Create dropdown Option objects.

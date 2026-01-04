@@ -30,7 +30,7 @@ duplicates by file ID. Saves updated list to JSON storage.
 
 ## Algorithm
 
-- 1. **Load Current Links**:
+  - 1. **Load Current Links**:
     - a. Call self.load_saved_links()
     - b. Returns list of existing links
 

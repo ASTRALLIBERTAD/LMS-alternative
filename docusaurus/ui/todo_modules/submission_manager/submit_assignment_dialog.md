@@ -39,7 +39,7 @@ No direct exceptions raised. All errors handled gracefully with:
 
 ## Algorithm
 
-- 1. **Prerequisites Validation**:
+  - 1. **Prerequisites Validation**:
     - a. Extract subject from assignment dictionary (default to 'Other')
     - b. Extract drive_folder_id from assignment dictionary
     - c. Check if self.todo.drive_service is available and authenticated

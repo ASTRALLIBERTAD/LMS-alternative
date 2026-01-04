@@ -31,7 +31,7 @@ long error messages for UI display.
 
 ## Algorithm
 
-- 1. **Extract Error Message**:
+  - 1. **Extract Error Message**:
     - a. Convert error to string: str(error)
     - b. Store in error_msg variable
     - c. Full message preserved for logging

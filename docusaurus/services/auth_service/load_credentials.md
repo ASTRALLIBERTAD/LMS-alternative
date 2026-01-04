@@ -1,10 +1,10 @@
 ---
-id: "_load_credentials"
+id: "load_credentials"
 sidebar_position: 5
-title: "_load_credentials"
+title: "load_credentials"
 ---
 
-# ⚙️ _load_credentials
+# ⚙️ load_credentials
 
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
@@ -26,22 +26,22 @@ across application restarts.
 
 ## Algorithm
 
-- 1. **Check File Existence**:
-    - a. Check if self.token_file exists
-    - b. If not, return early (no saved session)
+- **Phase 1: Check File Existence**
+  - 1. Check if self.token_file exists
+  - 2. If not, return early (no saved session)
 
-  - 2. **Try Loading Credentials**:
-    - a. Enter try block for error handling
-    - b. Open token_file in binary read mode ('rb')
-    - c. Use context manager for automatic closing
-    - d. Call pickle.load(token) to deserialize
-    - e. Store result in self.creds
-    - f. Print success message
+- **Phase 2: Try Loading Credentials**
+  - 1. Enter try block for error handling
+  - 2. Open token_file in binary read mode ('rb')
+  - 3. Use context manager for automatic closing
+  - 4. Call pickle.load(token) to deserialize
+  - 5. Store result in self.creds
+  - 6. Print success message
 
-  - 3. **Handle Errors**:
-    - a. Catch any Exception during unpickling
-    - b. Print warning message with error details
-    - c. Set self.creds = None (invalid session)
+- **Phase 3: Handle Errors**
+  - 1. Catch any Exception during unpickling
+  - 2. Print warning message with error details
+  - 3. Set self.creds = None (invalid session)
 
 ## Interactions
 

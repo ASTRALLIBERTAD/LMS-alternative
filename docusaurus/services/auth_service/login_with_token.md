@@ -9,7 +9,7 @@ title: "login_with_token"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`auth_service.py`](./auth_service.py) | **Line:** 455
+**File:** [`auth_service.py`](./auth_service.py) | **Line:** 469
 :::
 
 Authenticate using OAuth tokens from external provider.
@@ -30,59 +30,59 @@ needed, then saves credentials for session persistence.
 
 ## Algorithm
 
-- 1. **Validate Input**:
-    - a. Print status: "Bridging OAuth token to Google credentials"
-    - b. Print token_data type for debugging
-    - c. Check if token_data is dictionary type
-    - d. If not dict, print error and return False
+- **Phase 1: Validate Input**
+  - 1. Print status: "Bridging OAuth token to Google credentials"
+  - 2. Print token_data type for debugging
+  - 3. Check if token_data is dictionary type
+  - 4. If not dict, print error and return False
 
-  - 2. **Extract Access Token** (required):
-    - a. Get access_token from token_data
-    - b. If not present, print error and return False
-    - c. Access token is required minimum
+- **Phase 2: Extract Access Token(required)**
+  - 1. Get access_token from token_data
+  - 2. If not present, print error and return False
+  - 3. Access token is required minimum
 
-  - 3. **Extract Optional Fields**:
-    - a. Get refresh_token (may be None)
-    - b. Get client_id (use from token_data or self.client_id)
-    - c. Get client_secret (use from token_data or self.client_secret)
-    - d. Get scope (from token_data or default to SCOPES)
+- **Phase 3: Extract Optional Fields**
+  - 1. Get refresh_token (may be None)
+  - 2. Get client_id (use from token_data or self.client_id)
+  - 3. Get client_secret (use from token_data or self.client_secret)
+  - 4. Get scope (from token_data or default to SCOPES)
 
-  - 4. **Process Scope**:
-    - a. If scope is string:
-    - i. Split by whitespace to create list
-    - ii. If empty, use default SCOPES
-    - b. If scope is already list, use as-is
+- **Phase 4: Process Scope**
+  - 1. If scope is string:
+  - 2. Split by whitespace to create list
+    - a. If empty, use default SCOPES
+  - 3. If scope is already list, use as-is
 
-  - 5. **Log Token Status**:
-    - a. Call _log_token_status() with extracted values
-    - b. Prints presence of each component for debugging
+- **Phase 5: Log Token Status**
+  - 1. Call _log_token_status() with extracted values
+  - 2. Prints presence of each component for debugging
 
-  - 6. **Create Credentials Object**:
-    - a. Instantiate google.oauth2.credentials.Credentials with:
-    - i. token=access_token
-    - ii. refresh_token=refresh_token (may be None)
-    - iii. token_uri="https://oauth2.googleapis.com/token"
-    - iv. client_id=client_id
-    - v. client_secret=client_secret
-    - vi. scopes=scope (as list)
-    - b. Store in self.creds
+- **Phase 6: Create Credentials Object**
+  - 1. Instantiate google.oauth2.credentials.Credentials with:
+  - 2. token=access_token
+    - a. refresh_token=refresh_token (may be None)
+    - b. token_uri="https://oauth2.googleapis.com/token"
+    - c. client_id=client_id
+  - 3. client_secret=client_secret
+    - a. scopes=scope (as list)
+  - 4. Store in self.creds
 
-  - 7. **Validate and Refresh**:
-    - a. Call _validate_and_refresh_credentials()
-    - b. Checks if credentials valid
-    - c. Attempts refresh if expired and refresh_token present
-    - d. If validation fails, return False
+- **Phase 7: Validate and Refresh**
+  - 1. Call _validate_and_refresh_credentials()
+  - 2. Checks if credentials valid
+  - 3. Attempts refresh if expired and refresh_token present
+  - 4. If validation fails, return False
 
-  - 8. **Save Credentials**:
-    - a. Call _save_credentials()
-    - b. Persists to token.pickle
-    - c. Return True (success)
+- **Phase 8: Save Credentials**
+  - 1. Call _save_credentials()
+  - 2. Persists to token.pickle
+  - 3. Return True (success)
 
-  - 9. **Handle Errors**:
-    - a. Catch any Exception
-    - b. Import traceback for detailed error info
-    - c. Print error message and full traceback
-    - d. Return False (failure)
+- **Phase 9: Handle Errors**
+  - 1. Catch any Exception
+  - 2. Import traceback for detailed error info
+  - 3. Print error message and full traceback
+  - 4. Return False (failure)
 
 ## Interactions
 

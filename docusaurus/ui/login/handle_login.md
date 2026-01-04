@@ -29,7 +29,7 @@ mobile platforms use external browser redirect.
 
 ## Algorithm
 
-- 1. **Platform Detection**:
+  - 1. **Platform Detection**:
     - a. Define desktop platforms list:
     - i. ft.PagePlatform.WINDOWS
     - ii. ft.PagePlatform.LINUX

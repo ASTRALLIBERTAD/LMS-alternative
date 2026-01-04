@@ -29,7 +29,7 @@ to default state on mouse leave. Provides visual feedback for interaction.
 
 ## Algorithm
 
-- 1. **Check Hover State**:
+  - 1. **Check Hover State**:
     - a. Access e.data property (string: "true" or "false")
     - b. Compare: if e.data == "true"
 

@@ -9,7 +9,7 @@ title: "select_drive_folder_dialog"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-0%25-red)
 
 :::info Source
-**File:** [`storage_manager.py`](./storage_manager.py) | **Line:** 338
+**File:** [`storage_manager.py`](./storage_manager.py) | **Line:** 355
 :::
 
 Open an overlay for searching and selecting a Drive folder.
@@ -21,7 +21,7 @@ Provides a comprehensive UI to browse, search, or paste a link to select a folde
 
 ## Algorithm
 
-- 1. List root folders.
+  - 1. List root folders.
   - 2. Build ListView of folders.
   - 3. Provide Search Bar (filters list).
   - 4. Provide "Paste Link" field (extracts ID).

@@ -32,7 +32,7 @@ Suitable for PNG, JPEG, GIF, WebP, and other image formats.
 
 ## Algorithm
 
-- 1. **Encode Image Data**:
+  - 1. **Encode Image Data**:
     - a. Call base64.b64encode(file_data)
     - b. Returns base64 bytes
     - c. Decode to string: .decode()

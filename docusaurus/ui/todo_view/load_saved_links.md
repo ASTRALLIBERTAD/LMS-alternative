@@ -9,7 +9,7 @@ title: "load_saved_links"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 649
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 707
 :::
 
 Load legacy saved link shortcuts from JSON file.
@@ -29,7 +29,7 @@ for backward compatibility.
 
 ## Algorithm
 
-- 1. **Check File Existence**:
+  - 1. **Check File Existence**:
     - a. Check if SAVED_LINKS_FILE ("saved_links.json") exists
     - b. Use os.path.exists() for file check
 

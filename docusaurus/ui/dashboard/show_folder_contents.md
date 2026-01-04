@@ -33,24 +33,24 @@ module while maintaining a simple interface for external callers.
 
 ## Algorithm
 
-- 1. **Delegate to FolderNavigator**:
-    - a. Access self.folder_navigator instance
-    - b. Call show_folder_contents() method on navigator
-    - c. Pass all four parameters through unchanged:
-    - - folder_id: target folder identifier
-    - - folder_name: optional display name
-    - - is_shared_drive: team drive flag
-    - - push_to_stack: history tracking flag
+- **Phase 1: Delegate to FolderNavigator**:
+  - 1. Access self.folder_navigator instance
+  - 2. Call show_folder_contents() method on navigator
+  - 3. Pass all four parameters through unchanged:
+    - a. folder_id: target folder identifier
+    - b. folder_name: optional display name
+    - c. is_shared_drive: team drive flag
+    - d. push_to_stack: history tracking flag
 
-  - 2. **FolderNavigator Processing** (handled internally):
-    - a. Update current_folder_id and current_folder_name
-    - b. Push previous folder to folder_stack if push_to_stack=True
-    - c. Query Drive API for folder contents
-    - d. Clear folder_list.controls
-    - e. Build UI cards for files and subfolders
-    - f. Populate folder_list with new content
-    - g. Update breadcrumb navigation trail
-    - h. Call page.update() to render changes
+- **Phase 2: FolderNavigator Processing** (handled internally):
+  - 1. Update current_folder_id and current_folder_name
+  - 2. Push previous folder to folder_stack if push_to_stack=True
+  - 3. Query Drive API for folder contents
+  - 4. Clear folder_list.controls
+  - 5. Build UI cards for files and subfolders
+  - 6. Populate folder_list with new content
+  - 7. Update breadcrumb navigation trail
+  - 8. Call page.update() to render changes
 
 ## Interactions
 

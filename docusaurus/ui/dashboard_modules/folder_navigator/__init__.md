@@ -23,7 +23,7 @@ Navigation state stored in Dashboard for accessibility across modules.
 
 ## Algorithm
 
-- 1. **Store Dashboard Reference**:
+  - 1. **Store Dashboard Reference**:
     - a. Assign dashboard parameter to self.dash
     - b. All navigation state accessed via dash
     - c. Services accessed via dash.drive, dash.file_manager

@@ -9,7 +9,7 @@ title: "save_assignments"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 235
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 346
 :::
 
 Persist assignment list to storage.

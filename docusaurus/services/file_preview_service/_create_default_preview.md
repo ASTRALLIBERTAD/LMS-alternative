@@ -32,7 +32,7 @@ and browser options. Fallback for all unhandled file types.
 
 ## Algorithm
 
-- 1. **Extract Extension**:
+  - 1. **Extract Extension**:
     - a. Split filename by '.'
     - b. Get last segment: file_name.split('.')[-1]
     - c. Convert to lowercase

@@ -25,7 +25,7 @@ and Dashboard refreshed to show new files.
 
 ## Algorithm
 
-- 1. **Define Result Handler**:
+  - 1. **Define Result Handler**:
     - a. Check if files selected:
     - i. If e.files is empty or None:
     - - Return early (user cancelled)

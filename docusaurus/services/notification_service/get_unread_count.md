@@ -9,7 +9,7 @@ title: "get_unread_count"
 ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`notification_service.py`](./notification_service.py) | **Line:** 228
+**File:** [`notification_service.py`](./notification_service.py) | **Line:** 481
 :::
 
 Count unread notifications.

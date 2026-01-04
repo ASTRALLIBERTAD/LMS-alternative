@@ -9,7 +9,7 @@ title: "get_folder_name_by_id"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 724
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 782
 :::
 
 Resolve a Drive folder ID to its display name.
@@ -30,7 +30,7 @@ if folder cannot be resolved.
 
 ## Algorithm
 
-- 1. **Check Saved Links Cache**:
+  - 1. **Check Saved Links Cache**:
     - a. Iterate through self.saved_links list
     - b. For each link dictionary:
     - i. Check if link.get("id") == folder_id

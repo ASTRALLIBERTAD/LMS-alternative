@@ -37,41 +37,41 @@ separators on other systems, causing path resolution failures.
 
 ## Algorithm
 
-- 1. **Try File System Scan**:
-- a. Enter outer try block for error handling
-- b. Call os.listdir(cwd) to get list of files
-- c. Store in files list
+- **Phase 1: Try File System Scan**:
+  - 1. Enter outer try block for error handling
+  - 2. Call os.listdir(cwd) to get list of files
+  - 3. Store in files list
 
-- 2. **Process Each File**:
-- a. For each filename in files list:
-  - i. Check if "\\" (backslash) in filename
-  - ii. If backslash not present, skip to next file
+- **Phase 2: Process Each File**:
+  - 1. For each filename in files list:
+    - a. Check if "\\" (backslash) in filename
+    - b. If backslash not present, skip to next file
 
-- 3. **Repair Malformed Filename**:
-- a. If backslash present:
-  - i. Replace "\\" with os.sep (platform separator)
+- **Phase 3: Repair Malformed Filename**:
+  - 1. If backslash present:
+    - a. Replace "\\" with os.sep (platform separator)
     - - Windows: os.sep = "\\"
     - - Unix/Mac: os.sep = "/"
-  - ii. Store result in new_path variable
+    - b. Store result in new_path variable
 
-- 4. **Create Missing Directories**:
-- a. Extract directory from new_path using os.path.dirname()
-- b. Store in dir_name variable
-- c. If dir_name not empty and doesn't exist:
-  - i. Call os.makedirs(dir_name, exist_ok=True)
-  - ii. Creates all intermediate directories
+- **Phase 4: Create Missing Directories**:
+  - 1. Extract directory from new_path using os.path.dirname()
+  - 2. Store in dir_name variable
+  - 3. If dir_name not empty and doesn't exist:
+    - a. Call os.makedirs(dir_name, exist_ok=True)
+    - b. Creates all intermediate directories
 
-- 5. **Rename File**:
-- a. Enter inner try block for rename operation
-- b. Call os.rename(filename, new_path)
-- c. Moves file to corrected path
-- d. If OSError occurs:
-  - i. Pass silently (file may be locked or permission denied)
+- **Phase 5: Rename File**:
+  - 1. Enter inner try block for rename operation
+  - 2. Call os.rename(filename, new_path)
+  - 3. Moves file to corrected path
+  - 4. If OSError occurs:
+    - a. Pass silently (file may be locked or permission denied)
 
-- 6. **Handle All Errors**:
-- a. Outer except catches any Exception
-- b. Pass silently (don't interrupt app startup)
-- c. Errors include: directory not accessible, permission issues
+- **Phase 6: Handle All Errors**:
+  - 1. Outer except catches any Exception
+  - 2. Pass silently (don't interrupt app startup)
+  - 3. Errors include: directory not accessible, permission issues
 
 ## Interactions
 

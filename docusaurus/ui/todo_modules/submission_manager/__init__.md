@@ -25,7 +25,7 @@ other features remain functional.
 
 ## Algorithm
 
-- 1. Receive and store reference to parent TodoView instance
+  - 1. Receive and store reference to parent TodoView instance
   - 2. Initialize temp_file_path attribute to None (used during upload operations)
   - 3. Initialize temp_file_name attribute to None (used during upload operations)
   - 4. Enter try-except block for FilePreviewService initialization

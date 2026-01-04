@@ -9,7 +9,7 @@ title: "load_submissions"
 ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
-**File:** [`data_manager.py`](./data_manager.py) | **Line:** 221
+**File:** [`data_manager.py`](./data_manager.py) | **Line:** 328
 :::
 
 Load list of submissions.

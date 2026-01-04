@@ -28,7 +28,7 @@ existing content. Creates file if doesn't exist.
 
 ## Algorithm
 
-- 1. **Try Saving File**:
+  - 1. **Try Saving File**:
     - a. Enter try block for error handling
     - b. Open SAVED_LINKS_FILE in write mode ('w')
     - c. Specify UTF-8 encoding

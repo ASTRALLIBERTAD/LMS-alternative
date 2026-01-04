@@ -25,7 +25,7 @@ and invalidates cache for consistency.
 
 ## Algorithm
 
-- 1. **Create Input Controls**:
+  - 1. **Create Input Controls**:
     - a. Create name_field (ft.TextField):
     - i. label: "Folder name"
     - ii. autofocus: True

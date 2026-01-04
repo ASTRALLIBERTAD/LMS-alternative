@@ -27,7 +27,7 @@ indicator. Arranges components in a centered, vertically-stacked layout.
 
 ## Algorithm
 
-- 1. **Detect Platform**:
+  - 1. **Detect Platform**:
     - a. Call _get_platform_name() to get human-readable platform name
     - b. Store result in platform_name variable
     - c. Used for display text (e.g., "Platform: Android")

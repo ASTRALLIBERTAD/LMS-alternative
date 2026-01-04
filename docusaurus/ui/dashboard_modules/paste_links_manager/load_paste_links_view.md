@@ -25,7 +25,7 @@ view and updates Dashboard state.
 
 ## Algorithm
 
-- 1. **Set View State**:
+  - 1. **Set View State**:
     - a. Set dash.current_view = "paste_links"
     - b. Tracks active view for refresh logic
 

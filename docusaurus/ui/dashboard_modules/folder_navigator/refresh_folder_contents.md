@@ -1,6 +1,6 @@
 ---
 id: "refresh_folder_contents"
-sidebar_position: 7
+sidebar_position: 6
 title: "refresh_folder_contents"
 ---
 
@@ -9,7 +9,7 @@ title: "refresh_folder_contents"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 674
+**File:** [`folder_navigator.py`](./folder_navigator.py) | **Line:** 566
 :::
 
 Force refresh of current folder view with cache invalidation.
@@ -25,7 +25,7 @@ from Drive API.
 
 ## Algorithm
 
-- 1. **Invalidate Cache**:
+  - 1. **Invalidate Cache**:
     - a. Call dash.drive._invalidate_cache(current_folder_id)
     - b. Removes cached data for current folder
     - c. Forces API call on next list_files

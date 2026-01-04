@@ -9,7 +9,7 @@ title: "handle_logout"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-60%25-orange)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 854
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 853
 :::
 
 Handle user logout process.
@@ -30,24 +30,24 @@ authentication state and invalidates access tokens.
 
 ## Algorithm
 
-- 1. **Clear Authentication**:
-    - a. Call self.auth.logout()
-    - b. Auth service clears stored credentials
-    - c. Invalidates OAuth2 access and refresh tokens
-    - d. Removes cached user information
+- **Phase 1: Clear Authentication**:
+  - 1. Call self.auth.logout()
+  - 2. Auth service clears stored credentials
+  - 3. Invalidates OAuth2 access and refresh tokens
+  - 4. Removes cached user information
 
-  - 2. **Trigger Logout Callback**:
-    - a. Call self.on_logout() (callback from __init__)
-    - b. Callback typically performs:
-    - i. Clear page contents (page.clean())
-    - ii. Reset application state
-    - iii. Navigate to login screen
-    - iv. Display logout confirmation message
+- **Phase 2: Trigger Logout Callback**:
+  - 1. Call self.on_logout() (callback from __init__)
+  - 2. Callback typically performs:
+    - a. Clear page contents (page.clean())
+    - b. Reset application state
+    - c. Navigate to login screen
+    - d. Display logout confirmation message
 
-  - 3. **Session Termination**:
-    - a. User returned to unauthenticated state
-    - b. Dashboard instance effectively terminated
-    - c. New login required to access Drive features
+- **Phase 3: Session Termination**:
+  - 1. User returned to unauthenticated state
+  - 2. Dashboard instance effectively terminated
+  - 3. New login required to access Drive features
 
 ## Interactions
 

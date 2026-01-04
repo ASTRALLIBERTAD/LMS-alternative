@@ -9,7 +9,7 @@ title: "get_view"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`dashboard.py`](./dashboard.py) | **Line:** 1006
+**File:** [`dashboard.py`](./dashboard.py) | **Line:** 1005
 :::
 
 Build and return the complete dashboard layout.
@@ -29,63 +29,63 @@ to different screen sizes.
 
 ## Algorithm
 
-- 1. **Create Sidebar Container**:
-    - a. Instantiate ft.Container with fixed width=170px
-    - b. Set bgcolor to light grey (ft.Colors.GREY_100)
-    - c. Add padding=20 for internal spacing
-    - d. Calculate visibility:
-    - i. visible = (page.width &gt;= 900) OR menu_open
-    - ii. Shows on desktop or when toggled on mobile
-    - e. Create Column content with four buttons:
-    - i. ButtonWithMenu: "+ NEW" with dropdown menu
+- **Phase 1: Create Sidebar Container**:
+  - 1. Instantiate ft.Container with fixed width=170px
+  - 2. Set bgcolor to light grey (ft.Colors.GREY_100)
+  - 3. Add padding=20 for internal spacing
+  - 4. Calculate visibility:
+    - a. visible = (page.width &gt;= 900) OR menu_open
+    - b. Shows on desktop or when toggled on mobile
+  - 5. Create Column content with four buttons:
+    - a. ButtonWithMenu: "+ NEW" with dropdown menu
     - - Menu items: ["Create Folder", "Upload File"]
     - - on_menu_select: self.handle_action
-    - ii. ElevatedButton: "SETTINGS" (no-op currently)
-    - iii. ElevatedButton: "TO-DO" with self.show_todo_view
-    - iv. ElevatedButton: "ACCOUNT" with self.handle_logout
-    - f. Set button spacing=15 in Column
-    - g. Store in self.sidebar_container
+    - b. ElevatedButton: "SETTINGS" (no-op currently)
+    - c. ElevatedButton: "TO-DO" with self.show_todo_view
+    - d. ElevatedButton: "ACCOUNT" with self.handle_logout
+  - 6. Set button spacing=15 in Column
+  - 7. Store in self.sidebar_container
 
-  - 2. **Create Top Bar**:
-    - a. Instantiate ft.Container with padding=20
-    - b. Create Row content with three elements:
-    - i. IconButton: hamburger menu (ft.Icons.MENU)
-    - - on_click: self.toggle_menu
-    - - visible: True (always shown)
-    - ii. self.search_field: search TextField (expands)
-    - iii. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
-    - - icon_size: 36
-    - - tooltip: self.user_email
-    - c. Set Row alignment to SPACE_BETWEEN
-    - d. Store in top_bar variable
+- **Phase 2: Create Top Bar**:
+  - 1. Instantiate ft.Container with padding=20
+  - 2. Create Row content with three elements:
+    - a. IconButton: hamburger menu (ft.Icons.MENU)
+    - a. on_click: self.toggle_menu
+    - b. visible: True (always shown)
+    - b. self.search_field: search TextField (expands)
+    - c. IconButton: account circle (ft.Icons.ACCOUNT_CIRCLE)
+    - a. icon_size: 36
+    - b. tooltip: self.user_email
+  - 3. Set Row alignment to SPACE_BETWEEN
+  - 4. Store in top_bar variable
 
-  - 3. **Create Tab Navigation**:
-    - a. Instantiate ft.Container with padding=10
-    - b. Create Row content with three tab buttons:
-    - i. ElevatedButton: "YOUR FOLDERS"
-    - - on_click: folder_navigator.reset_to_root()
-    - ii. ElevatedButton: "PASTE LINKS"
-    - - on_click: paste_links_manager.load_paste_links_view()
-    - iii. ElevatedButton: "SHARED DRIVES"
-    - - on_click: folder_navigator.load_shared_drives()
-    - c. Set Row spacing=10, alignment=CENTER
-    - d. Store in tabs variable
+- **Phase 3: Create Tab Navigation**:
+  - 1. Instantiate ft.Container with padding=10
+  - 2. Create Row content with three tab buttons:
+    - a. ElevatedButton: "YOUR FOLDERS"
+    - a. on_click: folder_navigator.reset_to_root()
+    - b. ElevatedButton: "PASTE LINKS"
+    - b. on_click: paste_links_manager.load_paste_links_view()
+    - c. ElevatedButton: "SHARED DRIVES"
+    - a. on_click: folder_navigator.load_shared_drives()
+  - 3. Set Row spacing=10, alignment=CENTER
+  - 4. Store in tabs variable
 
-  - 4. **Create Main Content Area**:
-    - a. Instantiate ft.Column with three components:
-    - i. top_bar: search and account controls
-    - ii. tabs: view switching buttons
-    - iii. Container with folder_list (expand=True)
-    - b. Set Column expand=True to fill vertical space
-    - c. Store in main_content variable
+- **Phase 4: Create Main Content Area**:
+  - 1. Instantiate ft.Column with three components:
+    - a. top_bar: search and account controls
+    - b. tabs: view switching buttons
+    - c. Container with folder_list (expand=True)
+  - 2. Set Column expand=True to fill vertical space
+  - 3. Store in main_content variable
 
-  - 5. **Assemble Final Layout**:
-    - a. Create ft.Row with three components:
-    - i. self.sidebar_container: navigation sidebar
-    - ii. ft.VerticalDivider(width=1): separator line
-    - iii. main_content: main display area
-    - b. Set Row expand=True to fill available space
-    - c. Return assembled Row component
+- **Assemble Final Layout**:
+  - 1. Create ft.Row with three components:
+    - a. self.sidebar_container: navigation sidebar
+    - b. ft.VerticalDivider(width=1): separator line
+    - c. main_content: main display area
+  - 2. Set Row expand=True to fill available space
+  - 3. Return assembled Row component
 
 ## Interactions
 

@@ -9,7 +9,7 @@ title: "show_notifications_dialog"
 ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-0%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 1103
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 1127
 :::
 
 Show a dialog listing recent notifications for the current student.
@@ -20,7 +20,7 @@ Displays a scrollable list of alerts/messages and allows marking them as read.
 
 ## Algorithm
 
-- 1. Fetch notifications for current email.
+  - 1. Fetch notifications for current email.
   - 2. Render list:
     - a. Highlight unread items.
     - b. Click to mark read.

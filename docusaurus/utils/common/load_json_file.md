@@ -39,33 +39,33 @@ when errors occur.
 
 ## Algorithm
 
-- 1. **Convert Path** (if needed):
-- a. Check if filepath is string type
-- b. If string, convert to Path object
-- c. Ensures consistent path handling
+  - 1. **Convert Path** (if needed):
+    - a. Check if filepath is string type
+    - b. If string, convert to Path object
+    - c. Ensures consistent path handling
 
-- 2. **Check File Existence**:
-- a. Call filepath.exists() to verify file present
-- b. If file doesn't exist, skip to step 5
+  - 2. **Check File Existence**:
+    - a. Call filepath.exists() to verify file present
+    - b. If file doesn't exist, skip to step 5
 
-- 3. **Try File Reading and Parsing**:
-- a. Enter try block for error handling
-- b. Open file with UTF-8 encoding
-- c. Use context manager (with) for automatic closing
-- d. Call json.load(f) to parse JSON content
-- e. Return parsed data immediately on success
+  - 3. **Try File Reading and Parsing**:
+    - a. Enter try block for error handling
+    - b. Open file with UTF-8 encoding
+    - c. Use context manager (with) for automatic closing
+    - d. Call json.load(f) to parse JSON content
+    - e. Return parsed data immediately on success
 
-- 4. **Handle Errors**:
-- a. Catch any exception (IOError, JSONDecodeError, etc.)
-- b. Pass silently (no error logging)
-- c. Fall through to default return
+  - 4. **Handle Errors**:
+    - a. Catch any exception (IOError, JSONDecodeError, etc.)
+    - b. Pass silently (no error logging)
+    - c. Fall through to default return
 
-- 5. **Return Default**:
-- a. If default parameter is not None:
-  - i. Return provided default value
-- b. If default is None:
-  - i. Return empty list []
-- c. Provides safe fallback for missing/invalid files
+  - 5. **Return Default**:
+    - a. If default parameter is not None:
+    - i. Return provided default value
+    - b. If default is None:
+    - i. Return empty list []
+    - c. Provides safe fallback for missing/invalid files
 
 ## Interactions
 

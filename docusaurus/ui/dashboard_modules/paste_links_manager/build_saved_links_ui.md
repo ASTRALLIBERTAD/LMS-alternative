@@ -27,7 +27,7 @@ empty state message if no saved links.
 
 ## Algorithm
 
-- 1. **Load Saved Links**:
+  - 1. **Load Saved Links**:
     - a. Call self.load_saved_links()
     - b. Returns list of saved link dicts
 

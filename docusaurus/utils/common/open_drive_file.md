@@ -35,13 +35,13 @@ for Drive file links.
 
 ## Algorithm
 
-- 1. **Construct URL**:
-- a. Build URL string: f"https://drive.google.com/file/d/&#123;file_id&#125;/view"
-- b. URL format: Drive file viewer endpoint
+  - 1. **Construct URL**:
+    - a. Build URL string: f"https://drive.google.com/file/d/&#123;file_id&#125;/view"
+    - b. URL format: Drive file viewer endpoint
 
-- 2. **Open Browser**:
-- a. Call open_url() with constructed URL
-- b. Browser opens to Drive file viewer
+  - 2. **Open Browser**:
+    - a. Call open_url() with constructed URL
+    - b. Browser opens to Drive file viewer
 
 ## Interactions
 

@@ -9,7 +9,7 @@ title: "poll"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`firebase_mobile_login.py`](./firebase_mobile_login.py) | **Line:** 1287
+**File:** [`firebase_mobile_login.py`](./firebase_mobile_login.py) | **Line:** 1297
 :::
 
 Handle polling timeout when authentication takes too long.
@@ -25,7 +25,7 @@ without receiving OAuth tokens. Allows user to retry login.
 
 ## Algorithm
 
-- 1. **Stop Polling**:
+  - 1. **Stop Polling**:
     - a. Set self.polling = False
     - b. Ensures polling loop exits (if not already exited)
     - c. Prevents further callback server checks

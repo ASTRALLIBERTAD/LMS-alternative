@@ -42,7 +42,7 @@ Exception: Any exception during OAuth URL construction or browser
 
 ## Algorithm
 
-- 1. **Generate Session ID**:
+  - 1. **Generate Session ID**:
     - a. Call secrets.token_urlsafe(16)
     - b. Generates 16-byte random token, base64url-encoded
     - c. Store in self.session_id (used as OAuth state parameter)

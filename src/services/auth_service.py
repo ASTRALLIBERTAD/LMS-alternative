@@ -52,19 +52,19 @@ class GoogleAuth:
         client_secret (str or None): OAuth client secret from credentials file.
 
     Algorithm:
-        **Initialization Flow**:
+        **Initialization Flow**
             1. Set file paths for credentials and token storage
             2. Load client_id and client_secret from credentials JSON
             3. Restore existing session from token.pickle if available
         
-        **Desktop Authentication**:
+        **Desktop Authentication**
             1. Launch local server on port 8550
             2. Open browser for user consent
             3. Receive authorization code via callback
             4. Exchange code for tokens
             5. Persist credentials to token.pickle
         
-        **Token-Based Authentication**:
+        **Token-Based Authentication**
             1. Validate incoming token structure
             2. Create Credentials object from token data
             3. Refresh if expired
@@ -129,10 +129,10 @@ class GoogleAuth:
         
         self.client_id = None
         self.client_secret = None
-        self._load_client_info()
-        self._load_credentials()
+        self.load_client_info()
+        self.load_credentials()
 
-    def _load_client_info(self):
+    def load_client_info(self):
         """Load OAuth client credentials from configuration file.
 
         Reads the OAuth client secrets JSON file, extracts the client_id and
@@ -144,34 +144,34 @@ class GoogleAuth:
                 Both None if file doesn't exist or parsing fails.
 
         Algorithm:
-            1. **Check File Existence**:
-               1. Check if self.credentials_file exists
-               2. If not, return early (no error, silent failure)
-            
-            2. **Try Loading File**:
-               1. Enter try block for error handling
-               2. Open credentials_file in read mode
-               3. Parse JSON content with json.load()
-               4. Store in data variable
+            **Phase 1: Check File Existence**
+                1. Check if self.credentials_file exists
+                2. If not, return early (no error, silent failure)
 
-            3. **Extract Configuration Section**:
-               1. Try to get 'web' section: data.get('web')
-               2. If 'web' is None, try 'installed': data.get('installed')
-               3. Store result in config variable
-               4. Supports both application types
-            
-            4. **Extract Client Credentials**:
-               1. If config found (not None):
-                  a. Extract client_id: config.get('client_id')
-                  b. Store in self.client_id
-                  c. Extract client_secret: config.get('client_secret')
-                  d. Store in self.client_secret
-                  e. Print success message with filename
-            
-            5. **Handle Errors**:
-               1. Catch any Exception during file read/parse
-               2. Print error message to console
-               3. Client_id and client_secret remain None
+            **Phase 2: Try Loading File**
+                1. Enter try block for error handling
+                2. Open credentials_file in read mode
+                3. Parse JSON content with json.load()
+                4. Store in data variable
+
+            **Phase 3: Extract Configuration Section**
+                1. Try to get 'web' section: data.get('web')
+                2. If 'web' is None, try 'installed': data.get('installed')
+                3. Store result in config variable
+                4. Supports both application types
+
+            **Phase 4: Extract Client Credentials**
+                1. If config found (not None):
+                    a. Extract client_id: config.get('client_id')
+                    b. Store in self.client_id
+                    c. Extract client_secret: config.get('client_secret')
+                    d. Store in self.client_secret
+                    e. Print success message with filename
+
+            **Phase 5: Handle Errors**
+                1. Catch any Exception during file read/parse
+                2. Print error message to console
+                3. Client_id and client_secret remain None
 
         Interactions:
             - **os.path.exists()**: Checks file existence
@@ -216,7 +216,7 @@ class GoogleAuth:
         except Exception as e:
             print(f"Error loading client info: {e}")
 
-    def _load_credentials(self):
+    def load_credentials(self):
         """Load saved OAuth credentials from pickle file.
 
         Attempts to restore a previous authentication session by unpickling
@@ -228,22 +228,22 @@ class GoogleAuth:
                 Remains None if file doesn't exist or unpickling fails.
 
         Algorithm:
-            1. **Check File Existence**:
-               a. Check if self.token_file exists
-               b. If not, return early (no saved session)
-            
-            2. **Try Loading Credentials**:
-               a. Enter try block for error handling
-               b. Open token_file in binary read mode ('rb')
-               c. Use context manager for automatic closing
-               d. Call pickle.load(token) to deserialize
-               e. Store result in self.creds
-               f. Print success message
-            
-            3. **Handle Errors**:
-               a. Catch any Exception during unpickling
-               b. Print warning message with error details
-               c. Set self.creds = None (invalid session)
+            **Phase 1: Check File Existence**
+                1. Check if self.token_file exists
+                2. If not, return early (no saved session)
+
+            **Phase 2: Try Loading Credentials**
+                1. Enter try block for error handling
+                2. Open token_file in binary read mode ('rb')
+                3. Use context manager for automatic closing
+                4. Call pickle.load(token) to deserialize
+                5. Store result in self.creds
+                6. Print success message
+
+            **Phase 3: Handle Errors**
+                1. Catch any Exception during unpickling
+                2. Print warning message with error details
+                3. Set self.creds = None (invalid session)
 
         Interactions:
             - **os.path.exists()**: Checks file existence
@@ -280,9 +280,19 @@ class GoogleAuth:
             - Prints success message when credentials restored
             - Credentials validated later by is_authenticated()
         """
-        pass
+        if not os.path.exists(self.token_file):
+            return
+            
+        try:
+            with open(self.token_file, 'rb') as token:
+                self.creds = pickle.load(token)
+            print("✓ Loaded existing credentials from token.pickle")
+        except Exception as e:
+            print(f"⚠ Error loading token: {e}")
+            self.creds = None
+    
 
-    def _save_credentials(self):
+    def save_credentials(self):
         """Persist current OAuth credentials to pickle file.
 
         Serializes the credentials object to token.pickle for session
@@ -293,18 +303,18 @@ class GoogleAuth:
             None: Writes to token.pickle file as side effect.
 
         Algorithm:
-            1. **Try Saving Credentials**:
-               a. Enter try block for error handling
-               b. Open self.token_file in binary write mode ('wb')
-               c. Use context manager for automatic closing
-               d. Call pickle.dump(self.creds, token)
-               e. Serializes credentials object to file
-               f. Print success message
-            
-            2. **Handle Errors**:
-               a. Catch any Exception during pickling
-               b. Print error message with exception details
-               c. File may not be created if error occurs
+            **Phase 1: Try Saving Credentials**
+                1. Enter try block for error handling
+                2. Open self.token_file in binary write mode ('wb')
+                3. Use context manager for automatic closing
+                4. Call pickle.dump(self.creds, token)
+                5. Serializes credentials object to file
+                6. Print success message
+
+            **Phase 2: Handle Errors**
+                1. Catch any Exception during pickling
+                2. Print error message with exception details
+                3. File may not be created if error occurs
 
         Interactions:
             - **pickle.dump()**: Serializes credentials object
@@ -365,42 +375,46 @@ class GoogleAuth:
                 Must have valid web.json with OAuth client configuration.
 
         Algorithm:
-            1. **Verify Credentials File**:
-               a. Check if self.credentials_file exists
-               b. If not, raise FileNotFoundError with path
 
-            2. **Import OAuth Flow**:
-               a. Import InstalledAppFlow from google_auth_oauthlib.flow
-               b. Lazy import (only when needed)
-            
-            3. **Start OAuth Flow**:
-               a. Print status message: "Starting desktop OAuth flow..."
-               b. Create flow: InstalledAppFlow.from_client_secrets_file()
-                  i. Pass self.credentials_file (web.json path)
-                  ii. Pass SCOPES (Drive API scope)
-               c. Flow configured with client credentials
-            
-            4. **Run Local Server**:
-               a. Call flow.run_local_server(port=8550)
-               b. Starts HTTP server on localhost:8550
-               c. Opens default browser to OAuth consent URL
-               d. User sees Google sign-in and consent screen
-               e. User authorizes application
-               f. Browser redirects to localhost:8550/oauth_callback
-               g. Server receives authorization code
-               h. Flow exchanges code for tokens
-               i. Returns Credentials object with tokens
-            
-            5. **Store Credentials**:
-               a. Assign returned credentials to self.creds
-               b. Contains access_token and refresh_token
-            
-            6. **Save to Pickle**:
-               a. Call self._save_credentials()
-               b. Persists session to token.pickle
-            
-            7. **Log Success**:
-               a. Print success message: "✓ Desktop login successful"
+            **Phase 1: Verify Credentials File**
+                1. Check if self.credentials_file exists
+                2. If not, raise FileNotFoundError with path
+
+
+            **Phase 2: Import OAuth Flow**
+                1. Import InstalledAppFlow from google_auth_oauthlib.flow
+                2. Lazy import (only when needed)
+
+
+            **Phase 3: Start OAuth Flow**
+                1. Print status message: "Starting desktop OAuth flow..."
+                2. Create flow: InstalledAppFlow.from_client_secrets_file()
+                3. Pass self.credentials_file (web.json path)
+                    a. Pass SCOPES (Drive API scope)
+                4. Flow configured with client credentials
+
+
+            **Phase 4: Run Local Server**
+                1. Call flow.run_local_server(port=8550)
+                2. Starts HTTP server on localhost:8550
+                3. Opens default browser to OAuth consent URL
+                4. User sees Google sign-in and consent screen
+                5. User authorizes application
+                6. Browser redirects to localhost:8550/oauth_callback
+                7. Server receives authorization code
+                8. Flow exchanges code for tokens
+                9. Returns Credentials object with tokens
+
+            **Phase 5: Store Credentials**
+                1. Assign returned credentials to self.creds
+                2. Contains access_token and refresh_token
+
+            **Phase 6: Save to Pickle**
+                1. Call self._save_credentials()
+                2. Persists session to token.pickle
+
+            **Phase 7: Log Success**
+                1. Print success message: "✓ Desktop login successful"
 
         Interactions:
             - **os.path.exists()**: Verifies credentials file
@@ -471,59 +485,60 @@ class GoogleAuth:
                 False if token invalid, missing required fields, or validation failed.
 
         Algorithm:
-            1. **Validate Input**:
-               a. Print status: "Bridging OAuth token to Google credentials"
-               b. Print token_data type for debugging
-               c. Check if token_data is dictionary type
-               d. If not dict, print error and return False
-            
-            2. **Extract Access Token** (required):
-               a. Get access_token from token_data
-               b. If not present, print error and return False
-               c. Access token is required minimum
-            
-            3. **Extract Optional Fields**:
-               a. Get refresh_token (may be None)
-               b. Get client_id (use from token_data or self.client_id)
-               c. Get client_secret (use from token_data or self.client_secret)
-               d. Get scope (from token_data or default to SCOPES)
-            
-            4. **Process Scope**:
-               a. If scope is string:
-                  i. Split by whitespace to create list
-                  ii. If empty, use default SCOPES
-               b. If scope is already list, use as-is
-            
-            5. **Log Token Status**:
-               a. Call _log_token_status() with extracted values
-               b. Prints presence of each component for debugging
-            
-            6. **Create Credentials Object**:
-               a. Instantiate google.oauth2.credentials.Credentials with:
-                  i. token=access_token
-                  ii. refresh_token=refresh_token (may be None)
-                  iii. token_uri="https://oauth2.googleapis.com/token"
-                  iv. client_id=client_id
-                  v. client_secret=client_secret
-                  vi. scopes=scope (as list)
-               b. Store in self.creds
-            
-            7. **Validate and Refresh**:
-               a. Call _validate_and_refresh_credentials()
-               b. Checks if credentials valid
-               c. Attempts refresh if expired and refresh_token present
-               d. If validation fails, return False
-            
-            8. **Save Credentials**:
-               a. Call _save_credentials()
-               b. Persists to token.pickle
-               c. Return True (success)
-            
-            9. **Handle Errors**:
-               a. Catch any Exception
-               b. Import traceback for detailed error info
-               c. Print error message and full traceback
-               d. Return False (failure)
+            **Phase 1: Validate Input**
+                1. Print status: "Bridging OAuth token to Google credentials"
+                2. Print token_data type for debugging
+                3. Check if token_data is dictionary type
+                4. If not dict, print error and return False
+
+            **Phase 2: Extract Access Token(required)**
+                1. Get access_token from token_data
+                2. If not present, print error and return False
+                3. Access token is required minimum
+
+            **Phase 3: Extract Optional Fields**
+                1. Get refresh_token (may be None)
+                2. Get client_id (use from token_data or self.client_id)
+                3. Get client_secret (use from token_data or self.client_secret)
+                4. Get scope (from token_data or default to SCOPES)
+
+            **Phase 4: Process Scope**
+                1. If scope is string:
+                2. Split by whitespace to create list
+                    a. If empty, use default SCOPES
+                3. If scope is already list, use as-is
+
+            **Phase 5: Log Token Status**
+                1. Call _log_token_status() with extracted values
+                2. Prints presence of each component for debugging
+
+            **Phase 6: Create Credentials Object**
+                1. Instantiate google.oauth2.credentials.Credentials with:
+                2. token=access_token
+                    a. refresh_token=refresh_token (may be None)
+                    b. token_uri="https://oauth2.googleapis.com/token"
+                    c. client_id=client_id
+                3. client_secret=client_secret
+                    a. scopes=scope (as list)
+                4. Store in self.creds
+
+            **Phase 7: Validate and Refresh**
+                1. Call _validate_and_refresh_credentials()
+                2. Checks if credentials valid
+                3. Attempts refresh if expired and refresh_token present
+                4. If validation fails, return False
+
+            **Phase 8: Save Credentials**
+                1. Call _save_credentials()
+                2. Persists to token.pickle
+                3. Return True (success)
+
+            **Phase 9: Handle Errors**
+                1. Catch any Exception
+                2. Import traceback for detailed error info
+                3. Print error message and full traceback
+                4. Return False (failure)
+
 
         Interactions:
             - **google.oauth2.credentials.Credentials**: Creates credentials object
@@ -615,7 +630,7 @@ class GoogleAuth:
             print(f"Traceback:\n{traceback.format_exc()}")
             return False
 
-    def _log_token_status(self, access_token, refresh_token, client_id, client_secret, scope):
+    def log_token_status(self, access_token, refresh_token, client_id, client_secret, scope):
         """Log OAuth token components for debugging authentication issues.
 
         Prints the presence/absence of each token component to console for
@@ -633,12 +648,12 @@ class GoogleAuth:
             None: Outputs debug information to console.
 
         Algorithm:
-            1. **Log Token Components**:
-               a. Print "Access token: present" (don't print actual value)
-               b. Print refresh_token status: "present" or "missing"
-               c. Print client_id status: "present" or "missing"
-               d. Print client_secret status: "present" or "missing"
-               e. Print scopes: join list or print string directly
+            **Phase 1: Log Token Components**
+                1. Print "Access token: present" (don't print actual value)
+                2. Print refresh_token status: "present" or "missing"
+                3. Print client_id status: "present" or "missing"
+                4. Print client_secret status: "present" or "missing"
+                5. Print scopes: join list or print string directly
 
         Interactions:
             - **Console output**: Prints to stdout
@@ -672,7 +687,7 @@ class GoogleAuth:
         print(f"Client ID: {'present' if client_id else 'missing'}")
         print(f"Client secret: {'present' if client_secret else 'missing'}")
         print(f"Scopes: {', '.join(scope) if isinstance(scope, list) else scope}")
-    def _validate_and_refresh_credentials(self):
+    def validate_and_refresh_credentials(self):
         """Validate OAuth credentials and refresh if expired.
 
         Checks if current credentials are valid and attempts to refresh them
@@ -684,31 +699,34 @@ class GoogleAuth:
                 False if credentials invalid and cannot be refreshed.
 
         Algorithm:
-            1. **Check Validity**:
-               a. If self.creds.valid is True:
-                  i. Print "Credentials are valid"
-                  ii. Return True immediately
-            
-            2. **Check Refresh Possibility**:
-               a. If not self.creds.expired OR not self.creds.refresh_token:
-                  i. Credentials either not expired or no refresh token
-                  ii. Print "Credentials not valid and cannot be refreshed"
-                  iii. Return False
-            
-            3. **Attempt Refresh**:
-               a. Print "Attempting to refresh expired token..."
-               b. Enter try block for error handling
-               c. Call self.creds.refresh(Request())
-                  i. Creates HTTP request to token endpoint
-                  ii. Exchanges refresh_token for new access_token
-                  iii. Updates self.creds with new tokens
-               d. Print "Token refreshed successfully"
-               e. Return True
-            
-            4. **Handle Refresh Errors**:
-               a. Catch any Exception during refresh
-               b. Print error message with exception details
-               c. Return False (refresh failed)
+            **Phase 1: Check Validity**
+                1. If self.creds.valid is True:
+                2. Print "Credentials are valid"
+                    a. Return True immediately
+
+
+            **Phase 2: Check Refresh Possibility**
+                1. If not self.creds.expired OR not self.creds.refresh_token:
+                2. Credentials either not expired or no refresh token
+                    a. Print "Credentials not valid and cannot be refreshed"
+                    b. Return False
+
+
+            **Phase 3: Attempt Refresh**
+                1. Print "Attempting to refresh expired token..."
+                2. Enter try block for error handling
+                3. Call self.creds.refresh(Request())
+                4. Creates HTTP request to token endpoint
+                    a. Exchanges refresh_token for new access_token
+                    b. Updates self.creds with new tokens
+                5. Print "Token refreshed successfully"
+                6. Return True
+
+
+            **Phase 4: Handle Refresh Errors**
+                1. Catch any Exception during refresh
+                2. Print error message with exception details
+                3. Return False (refresh failed)
 
         Interactions:
             - **google.auth.transport.requests.Request**: HTTP transport
@@ -776,37 +794,43 @@ class GoogleAuth:
                 or refresh operation failed.
 
         Algorithm:
-            1. **Check Credentials Exist**:
-               a. If self.creds is None:
-                  i. No authentication performed yet
-                  ii. Return False immediately
-            
-            2. **Check Not Expired**:
-               a. If not self.creds.expired:
-                  i. Credentials still valid (not expired)
-                  ii. Return self.creds.valid (should be True)
-            
-            3. **Check Refresh Token**:
-               a. If not self.creds.refresh_token:
-                  i. Credentials expired but no refresh token
-                  ii. Print message: "Credentials expired and no refresh token available"
-                  iii. Return False (cannot refresh)
-            
-            4. **Attempt Refresh**:
-               a. Enter try block for error handling
-               b. Print "→ Refreshing expired credentials..."
-               c. Call self.creds.refresh(Request())
-                  i. Exchanges refresh_token for new access_token
-                  ii. Updates self.creds with new tokens
-               d. Call self._save_credentials()
-                  i. Persists refreshed tokens to pickle
-               e. Print "✓ Credentials refreshed"
-               f. Return True (refresh successful)
-            
-            5. **Handle Refresh Errors**:
-               a. Catch any Exception during refresh
-               b. Print error message with exception details
-               c. Return False (refresh failed)
+
+            **Phase 1: Check Credentials Exist**
+                1. If self.creds is None:
+                2. No authentication performed yet
+                    a. Return False immediately
+
+
+            **Phase 2: Check Not Expired**
+                1. If not self.creds.expired:
+                2. Credentials still valid (not expired)
+                    a. Return self.creds.valid (should be True)
+
+
+            **Phase 3: Check Refresh Token**
+                1. If not self.creds.refresh_token:
+                2. Credentials expired but no refresh token
+                    a. Print message: "Credentials expired and no refresh token available"
+                    b. Return False (cannot refresh)
+
+
+            **Phase 4: Attempt Refresh**
+                1. Enter try block for error handling
+                2. Print "→ Refreshing expired credentials..."
+                3. Call self.creds.refresh(Request())
+                4. Exchanges refresh_token for new access_token
+                    a. Updates self.creds with new tokens
+                5. Call self._save_credentials()
+                6. Persists refreshed tokens to pickle
+                7. Print "✓ Credentials refreshed"
+                8. Return True (refresh successful)
+
+
+            **Phase 5: Handle Refresh Errors**
+                1. Catch any Exception during refresh
+                2. Print error message with exception details
+                3. Return False (refresh failed)
+
 
         Interactions:
             - **google.auth.transport.requests.Request**: HTTP transport
@@ -883,22 +907,22 @@ class GoogleAuth:
             None: Clears self.creds and removes token file as side effects.
 
         Algorithm:
-            1. **Log Action**:
-               a. Print "Logging out..." to console
-            
-            2. **Clear Credentials**:
-               a. Set self.creds = None
-               b. Removes credentials from memory
-            
-            3. **Delete Token File**:
-               a. Check if self.token_file exists
-               b. If exists:
-                  i. Enter try block for error handling
-                  ii. Call os.remove(self.token_file)
-                  iii. Print "Token file removed"
-               c. If exception:
-                  i. Print error message with details
-                  ii. File may be locked or permission denied
+            **Phase 1: Log Action**
+                1. Print "Logging out..." to console
+
+            **Phase 2: Clear Credentials**
+                1. Set self.creds = None
+                2. Removes credentials from memory
+
+            **Phase 3: Delete Token File**
+                1. Check if self.token_file exists
+                2. If exists:
+                3. Enter try block for error handling
+                    a. Call os.remove(self.token_file)
+                    b. Print "Token file removed"
+                4. If exception:
+                5. Print error message with details
+                    a. File may be locked or permission denied
 
         Interactions:
             - **os.path.exists()**: Checks file existence
@@ -960,27 +984,27 @@ class GoogleAuth:
                 or None if not authenticated or service creation failed.
 
         Algorithm:
-            1. **Check Authentication**:
-               a. Call self.is_authenticated()
-               b. If False:
-                  i. Print "Cannot get service - not authenticated"
-                  ii. Return None immediately
-            
-            2. **Try Service Creation**:
-               a. Enter try block for error handling
-               b. Call build('drive', 'v3', credentials=self.creds)
-                  i. 'drive': Google Drive API
-                  ii. 'v3': API version 3
-                  iii. credentials: OAuth credentials object
-               c. Returns Resource object for API calls
-               d. Store in service variable
-               e. Print "Google Drive service created"
-               f. Return service object
-            
-            3. **Handle Errors**:
-               a. Catch any Exception during service creation
-               b. Print error message with exception details
-               c. Return None (service creation failed)
+            **Phase 1: Check Authentication**
+                1. Call self.is_authenticated()
+                2. If False:
+                3. Print "Cannot get service - not authenticated"
+                    a. Return None immediately
+
+            **Phase 2: Try Service Creation**
+                1. Enter try block for error handling
+                2. Call build('drive', 'v3', credentials=self.creds)
+                3. 'drive': Google Drive API
+                    a. 'v3': API version 3
+                    b. credentials: OAuth credentials object
+                4. Returns Resource object for API calls
+                5. Store in service variable
+                6. Print "Google Drive service created"
+                7. Return service object
+
+            **Phase 3: Handle Errors**
+                1. Catch any Exception during service creation
+                2. Print error message with exception details
+                3. Return None (service creation failed)
 
         Interactions:
             - **is_authenticated()**: Validates and refreshes credentials
@@ -1048,32 +1072,32 @@ class GoogleAuth:
                 Returns empty dict {} if not authenticated or API call fails.
 
         Algorithm:
-            1. **Try Getting User Info**:
-               a. Enter try block for error handling
-               b. Call self.get_service() to get Drive service
-               c. If service is None:
-                  i. Not authenticated
-                  ii. Return empty dict {}
-            
-            2. **Make API Call**:
-               a. Call service.about().get(fields="user").execute()
-                  i. about(): Endpoint for account info
-                  ii. get(): Retrieve information
-                  iii. fields="user": Request only user fields
-                  iv. execute(): Perform API request
-               b. Store response in about variable
-            
-            3. **Extract User Data**:
-               a. Get 'user' field from response: about.get('user', {})
-               b. Store in user variable
-               c. Extract email: user.get('emailAddress', 'unknown')
-               d. Print success message with email
-               e. Return user dictionary
-            
-            4. **Handle Errors**:
-               a. Catch any Exception during API call
-               b. Print error message with exception details
-               c. Return empty dict {} (API call failed)
+            **Phase 1: Try Getting User Info**
+                1. Enter try block for error handling
+                2. Call self.get_service() to get Drive service
+                3. If service is None:
+                4. Not authenticated
+                    a. Return empty dict {}
+
+            **Phase 2: Make API Call**
+                1. Call service.about().get(fields="user").execute()
+                2. about(): Endpoint for account info
+                    a. get(): Retrieve information
+                    b. fields="user": Request only user fields
+                    c. execute(): Perform API request
+                3. Store response in about variable
+
+            **Phase 3: Extract User Data**
+                1. Get 'user' field from response: about.get('user', {})
+                2. Store in user variable
+                3. Extract email: user.get('emailAddress', 'unknown')
+                4. Print success message with email
+                5. Return user dictionary
+
+            **Phase 4: Handle Errors**
+                1. Catch any Exception during API call
+                2. Print error message with exception details
+                3. Return empty dict {} (API call failed)
 
         Interactions:
             - **get_service()**: Gets authenticated Drive service

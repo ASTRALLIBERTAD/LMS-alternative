@@ -29,7 +29,7 @@ Drive links. Creates empty list if file doesn't exist or on errors.
 
 ## Algorithm
 
-- 1. **Check File Existence**:
+  - 1. **Check File Existence**:
     - a. Check if SAVED_LINKS_FILE exists
     - b. If not exists, return empty list []
 

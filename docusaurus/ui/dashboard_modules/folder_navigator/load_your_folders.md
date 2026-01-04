@@ -25,7 +25,7 @@ any previous view and history.
 
 ## Algorithm
 
-- 1. **Set View Context**:
+  - 1. **Set View Context**:
     - a. Set dash.current_view = "your_folders"
     - b. Set dash.current_folder_id = "root"
     - c. Set dash.current_folder_name = "My Drive"

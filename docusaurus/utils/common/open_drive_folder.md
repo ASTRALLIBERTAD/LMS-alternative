@@ -35,13 +35,13 @@ for Drive folder links.
 
 ## Algorithm
 
-- 1. **Construct URL**:
-- a. Build URL string: f"https://drive.google.com/drive/folders/&#123;folder_id&#125;"
-- b. URL format: Drive folder listing endpoint
+  - 1. **Construct URL**:
+    - a. Build URL string: f"https://drive.google.com/drive/folders/&#123;folder_id&#125;"
+    - b. URL format: Drive folder listing endpoint
 
-- 2. **Open Browser**:
-- a. Call open_url() with constructed URL
-- b. Browser opens to Drive folder view
+  - 2. **Open Browser**:
+    - a. Call open_url() with constructed URL
+    - b. Browser opens to Drive folder view
 
 ## Interactions
 

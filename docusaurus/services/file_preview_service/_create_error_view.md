@@ -29,7 +29,7 @@ Provides fallback browser option if Drive file.
 
 ## Algorithm
 
-- 1. **Build Error Display**:
+  - 1. **Build Error Display**:
     - a. RED ERROR icon (size 48)
     - b. Error message text (RED, center-aligned)
 

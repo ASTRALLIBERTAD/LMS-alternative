@@ -30,7 +30,7 @@ Ensures a dedicated folder exists for the given subject to organize files.
 
 ## Algorithm
 
-- 1. Check if Drive Service and LMS Root are configured.
+  - 1. Check if Drive Service and LMS Root are configured.
   - 2. Check `subject_folders_cache` for existing ID.
   - 3. If cached, verify validity (optional) and return.
   - 4. If not cached:

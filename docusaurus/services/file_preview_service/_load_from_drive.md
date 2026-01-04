@@ -31,7 +31,7 @@ preview based on MIME type. Handles download progress and errors.
 
 ## Algorithm
 
-- 1. **Try Loading File**:
+  - 1. **Try Loading File**:
     - a. Enter try block for error handling
 
   - 2. **Get File Metadata**:

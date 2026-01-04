@@ -9,7 +9,7 @@ title: "display_assignments"
 ![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1088
+**File:** [`todo_view.py`](./todo_view.py) | **Line:** 1146
 :::
 
 Render the list of assignments based on current mode and filters.
@@ -24,7 +24,7 @@ manager method based on whether the user is in teacher or student mode.
 
 ## Algorithm
 
-- 1. **Clear Assignment Display**:
+  - 1. **Clear Assignment Display**:
     - a. Access self.assignment_column.controls
     - b. Call clear() to remove all existing cards
 

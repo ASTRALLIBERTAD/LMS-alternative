@@ -36,14 +36,14 @@ after browser launch.
 
 ## Algorithm
 
-- 1. **Import Module**:
-- a. Import webbrowser from standard library
+  - 1. **Import Module**:
+    - a. Import webbrowser from standard library
 
-- 2. **Open Browser**:
-- a. Call webbrowser.open(url)
-- b. System selects default browser
-- c. Browser launches with URL
-- d. Function returns immediately (non-blocking)
+  - 2. **Open Browser**:
+    - a. Call webbrowser.open(url)
+    - b. System selects default browser
+    - c. Browser launches with URL
+    - d. Function returns immediately (non-blocking)
 
 ## Interactions
 

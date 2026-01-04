@@ -9,7 +9,7 @@ title: "get_submission_count"
 ![Completeness](https://img.shields.io/badge/Docs-40%25-red)
 
 :::info Source
-**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 873
+**File:** [`assignment_manager.py`](./assignment_manager.py) | **Line:** 897
 :::
 
 Count total submissions for an assignment.
