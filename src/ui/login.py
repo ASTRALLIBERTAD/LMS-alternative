@@ -65,13 +65,13 @@ class LoginBase(ft.Column):
         - **ft.ElevatedButton**: Login action button with event handling
         - **ft.Icon, ft.Container**: UI components for layout and branding
 
-    Algorithm (High-Level Workflow):
-        **Phase 1: Initialization**
+    Algorithm :
+        **Phase 1: Initialization**:
             1. Call parent ft.Column constructor with centered layout settings
             2. Store references to page, auth service, and success callback
             3. Call _build_ui() to construct UI component tree
         
-        **Phase 2: UI Construction** (_build_ui)
+        **Phase 2: UI Construction (_build_ui)**:
             1. Detect platform name for display
             2. Add header components (icon, title, subtitle, platform info)
             3. Create status text element for messages
@@ -79,18 +79,18 @@ class LoginBase(ft.Column):
             5. Add security notice text
             6. Append all components to self.controls
         
-        **Phase 3: User Interaction** (handle_login - abstract)
+        **Phase 3: User Interaction (handle_login - abstract)**:
             1. User clicks login button
             2. Subclass implementation handles platform-specific OAuth
             3. Authentication process executes
             4. Success or error handler invoked based on result
         
-        **Phase 4: Success Handling** (handle_success)
+        **Phase 4: Success Handling (handle_success)**:
             1. Update status to "Login successful!" (green)
             2. Check if on_success callback exists
             3. If callback exists, invoke it (typically navigates to dashboard)
         
-        **Phase 5: Error Handling** (handle_error)
+        **Phase 5: Error Handling (handle_error)**:
             1. Extract error message from exception
             2. Update status with error description (red)
             3. Re-enable login button for retry
@@ -169,25 +169,25 @@ class LoginBase(ft.Column):
                 Signature: () -> None. Defaults to None (no action).
 
         Algorithm:
-            1. **Initialize Parent Column**:
-               a. Call super().__init__() with layout configuration
-               b. Set controls to empty list (populated by _build_ui)
-               c. Set alignment to MainAxisAlignment.CENTER (vertical centering)
-               d. Set horizontal_alignment to CrossAxisAlignment.CENTER
-               e. Set expand=True to fill available vertical space
-               f. Set spacing=20 for consistent gaps between components
+            **Phase 1: Initialize Parent Column**:
+                1. Call super().__init__() with layout configuration
+                2. Set controls to empty list (populated by _build_ui)
+                3. Set alignment to MainAxisAlignment.CENTER (vertical centering)
+                4. Set horizontal_alignment to CrossAxisAlignment.CENTER
+                5. Set expand=True to fill available vertical space
+                6. Set spacing=20 for consistent gaps between components
             
-            2. **Store Service References**:
-               a. Assign page parameter to self.page
-               b. Assign auth_service to self.auth
-               c. Assign on_success callback to self.on_success
+            **Phase 2: Store Service References**:
+                1. Assign page parameter to self.page
+                2. Assign auth_service to self.auth
+                3. Assign on_success callback to self.on_success
             
-            3. **Build User Interface**:
-               a. Call self._build_ui()
-               b. Constructs all UI components (logo, title, button, etc.)
-               c. Populates self.controls with component tree
-               d. Stores references to status_text and login_button
-               e. Component now ready for rendering
+            **Phase 3: Build User Interface**:
+                1. Call self._build_ui()
+                2. Constructs all UI components (logo, title, button, etc.)
+                3. Populates self.controls with component tree
+                4. Stores references to status_text and login_button
+                5. Component now ready for rendering
 
         Interactions:
             - **ft.Column**: Parent class constructor for layout configuration
@@ -255,63 +255,63 @@ class LoginBase(ft.Column):
                 instance attributes for dynamic updates.
 
         Algorithm:
-            1. **Detect Platform**:
-               a. Call _get_platform_name() to get human-readable platform name
-               b. Store result in platform_name variable
-               c. Used for display text (e.g., "Platform: Windows")
+            **Phase 1: Detect Platform**:
+                1. Call _get_platform_name() to get human-readable platform name
+                2. Store result in platform_name variable
+                3. Use result for display text (e.g., "Platform: Windows")
             
-            2. **Add Header Components**:
-               a. Add 50px vertical spacing Container at top
-               b. Add cloud icon (ft.Icons.CLOUD_CIRCLE):
-                  - Size: 100px
-                  - Color: BLUE_600 (brand blue)
-               c. Add title text "Learning Management System":
-                  - Size: 32px (large, prominent)
-                  - Weight: BOLD
-                  - Alignment: CENTER
-               d. Add subtitle text "Access your learning materials anywhere":
-                  - Size: 16px (medium)
-                  - Color: GREY_700 (subtle)
-                  - Alignment: CENTER
-               e. Add 10px vertical spacing Container
-               f. Add platform indicator text:
-                  - Format: "Platform: {platform_name}"
-                  - Size: 12px (small)
-                  - Color: GREY_600 (very subtle)
-                  - Alignment: CENTER
-               g. Add 20px vertical spacing Container
+            **Phase 2: Add Header Components**:
+                1. Add 50px vertical spacing Container at top
+                2. Add cloud icon (ft.Icons.CLOUD_CIRCLE):
+                    a. Size: 100px
+                    b. Color: BLUE_600 (brand blue)
+                3. Add title text "Learning Management System":
+                    a. Size: 32px (large, prominent)
+                    b. Weight: BOLD
+                    c. Alignment: CENTER
+                4. Add subtitle text "Access your learning materials anywhere":
+                    a. Size: 16px (medium)
+                    b. Color: GREY_700 (subtle)
+                    c. Alignment: CENTER
+                5. Add 10px vertical spacing Container
+                6. Add platform indicator text:
+                    a. Format: "Platform: {platform_name}"
+                    b. Size: 12px (small)
+                    c. Color: GREY_600 (very subtle)
+                    d. Alignment: CENTER
+                7. Add 20px vertical spacing Container
             
-            3. **Create Status Text**:
-               a. Instantiate ft.Text with initial message
-               b. Set text: "Please log in to continue"
-               c. Set color: GREY_700 (neutral, informative)
-               d. Set text_align: CENTER
-               e. Store reference in self.status_text
-               f. Append to self.controls
+            **Phase 3: Create Status Text**:
+                1. Instantiate ft.Text with initial message
+                2. Set text: "Please log in to continue"
+                3. Set color: GREY_700 (neutral, informative)
+                4. Set text_align: CENTER
+                5. Store reference in self.status_text
+                6. Append to self.controls
             
-            4. **Create Login Button**:
-               a. Instantiate ft.ElevatedButton with configuration:
-                  - text: "Login with Google"
-                  - icon: ft.Icons.LOGIN (sign-in icon)
-                  - on_click: self.handle_login (delegated to subclass)
-               b. Define button style:
-                  - bgcolor: BLUE_600 (Google blue theme)
-                  - color: WHITE (text color)
-                  - padding: symmetric(horizontal=30, vertical=15)
-               c. Set height to 50px (prominent, touch-friendly)
-               d. Store reference in self.login_button
-               e. Add 10px spacing Container before button
-               f. Append button to self.controls
+            **Phase 4: Create Login Button**:
+                1. Instantiate ft.ElevatedButton with configuration:
+                    a. text: "Login with Google"
+                    b. icon: ft.Icons.LOGIN (sign-in icon)
+                    c. on_click: self.handle_login (delegated to subclass)
+                2. Define button style:
+                    a. bgcolor: BLUE_600 (Google blue theme)
+                    b. color: WHITE (text color)
+                    c. padding: symmetric(horizontal=30, vertical=15)
+                3. Set height to 50px (prominent, touch-friendly)
+                4. Store reference in self.login_button
+                5. Add 10px spacing Container before button
+                6. Append button to self.controls
             
-            5. **Add Security Notice**:
-               a. Add 20px vertical spacing Container
-               b. Add security text:
-                  - Content: "Secure authentication via Google OAuth 2.0"
-                  - Size: 12px (small, informational)
-                  - Color: GREY_500 (very subtle)
-                  - Alignment: CENTER
-                  - Italic: True (distinguishes from other text)
-               c. Append to self.controls
+            **Phase 5: Add Security Notice**:
+                1. Add 20px vertical spacing Container
+                2. Add security text:
+                    a. Content: "Secure authentication via Google OAuth 2.0"
+                    b. Size: 12px (small, informational)
+                    c. Color: GREY_500 (very subtle)
+                    d. Alignment: CENTER
+                    e. Italic: True (distinguishes from other text)
+                3. Append to self.controls
 
         Interactions:
             - **_get_platform_name()**: Retrieves platform name for display
@@ -394,24 +394,24 @@ class LoginBase(ft.Column):
                 representation of platform enum for unknown platforms.
 
         Algorithm:
-            1. **Define Platform Mapping**:
-               a. Create dictionary mapping ft.PagePlatform enums to strings
-               b. Mappings:
-                  - WINDOWS -> "Windows"
-                  - LINUX -> "Linux"
-                  - MACOS -> "macOS"
-                  - ANDROID -> "Android"
-                  - IOS -> "iOS"
-               c. Store in platform_map variable
+            **Phase 1: Define Platform Mapping**:
+                1. Create dictionary mapping ft.PagePlatform enums to strings
+                2. Define mappings:
+                    a. WINDOWS -> "Windows"
+                    b. LINUX -> "Linux"
+                    c. MACOS -> "macOS"
+                    d. ANDROID -> "Android"
+                    e. IOS -> "iOS"
+                3. Store mappings in platform_map variable
             
-            2. **Lookup Current Platform**:
-               a. Access self.page.platform (Flet PagePlatform enum)
-               b. Use dict.get() with platform_map
-               c. If platform in map: return mapped string
-               d. If platform unknown: return str(self.page.platform)
+            **Phase 2: Lookup Current Platform**:
+                1. Access self.page.platform (Flet PagePlatform enum)
+                2. Use dict.get() with platform_map
+                3. If platform exists in map, return mapped string
+                4. If platform is unknown, return str(self.page.platform)
             
-            3. **Return Result**:
-               a. Return human-readable platform name string
+            **Phase 3: Return Result**:
+                1. Return human-readable platform name string
 
         Interactions:
             - **ft.Page**: Reads platform property for device detection
@@ -479,28 +479,28 @@ class LoginBase(ft.Column):
             None: Updates UI state and triggers page refresh as side effect.
 
         Algorithm:
-            1. **Update Status Text**:
-               a. Access self.status_text.value property
-               b. Assign message parameter to value
-               c. Text content updated in component state
+            **Phase 1: Update Status Text**:
+                1. Access self.status_text.value property
+                2. Assign message parameter to value
+                3. Update text content in component state
             
-            2. **Update Text Color**:
-               a. Access self.status_text.color property
-               b. Assign color parameter to color
-               c. Color updated in component state
+            **Phase 2: Update Text Color**:
+                1. Access self.status_text.color property
+                2. Assign color parameter to color
+                3. Update color in component state
             
-            3. **Update Button State** (if disable_button provided):
-               a. Check if disable_button parameter is not None
-               b. If not None:
-                  i. Access self.login_button.disabled property
-                  ii. Assign disable_button value to disabled
-                  iii. Button state updated (True=disabled, False=enabled)
-               c. If None: button state unchanged
+            **Phase 3: Update Button State (if disable_button provided)**:
+                1. Check if disable_button parameter is not None
+                2. If not None:
+                    a. Access self.login_button.disabled property
+                    b. Assign disable_button value to disabled
+                    c. Update button state (True=disabled, False=enabled)
+                3. If None: button state remains unchanged
             
-            4. **Refresh UI**:
-               a. Call self.page.update()
-               b. Flet re-renders affected components
-               c. User sees updated message, color, and button state
+            **Phase 4: Refresh UI**:
+                1. Call self.page.update()
+                2. Trigger Flet to re-render affected components
+                3. Display updated message, color, and button state to user
 
         Interactions:
             - **ft.Text**: Modifies value and color properties
@@ -567,21 +567,21 @@ class LoginBase(ft.Column):
             None: Updates UI and invokes callback as side effects.
 
         Algorithm:
-            1. **Update Status Display**:
-               a. Call update_status() with success message
-               b. Message: "Login successful!"
-               c. Color: ft.Colors.GREEN_600 (success color)
-               d. Button state: not changed (remains in current state)
+            **Phase 1: Update Status Display**:
+                1. Call update_status() with success message
+                2. Set message to "Login successful!"
+                3. Set color to ft.Colors.GREEN_600 (success color)
+                4. Leave button state unchanged (remains in current state)
             
-            2. **Invoke Success Callback**:
-               a. Check if self.on_success is not None
-               b. If callback exists:
-                  i. Call self.on_success()
-                  ii. Callback typically navigates to dashboard
-                  iii. May perform additional setup (load user data, etc.)
-               c. If callback is None:
-                  i. No action taken
-                  ii. UI shows success message only
+            **Phase 2: Invoke Success Callback**:
+                1. Check if self.on_success is not None
+                2. If callback exists:
+                    a. Call self.on_success()
+                    b. Typically navigates to dashboard
+                    c. May perform additional setup (e.g., load user data)
+                3. If callback is None:
+                    a. Take no action
+                    b. UI displays success message only
 
         Interactions:
             - **update_status()**: Shows success message to user
@@ -639,27 +639,27 @@ class LoginBase(ft.Column):
             None: Updates UI, logs error, and re-enables button as side effects.
 
         Algorithm:
-            1. **Extract Error Message**:
-               a. Convert error to string: str(error)
-               b. Store in error_msg variable
-               c. Full message preserved for logging
+            **Phase 1: Extract Error Message**:
+                1. Convert error to string using str(error)
+                2. Store the result in error_msg variable
+                3. Preserve the full message for logging purposes
             
-            2. **Update UI with Error**:
-               a. Truncate error_msg to first 50 characters
-               b. Append "..." if truncated
-               c. Format message: "{context} failed: {error_msg[:50]}..."
-               d. Call update_status() with:
-                  i. Formatted error message
-                  ii. Color: ft.Colors.RED_600 (error indication)
-                  iii. disable_button: False (re-enable for retry)
-               e. User sees error message and enabled button
+            **Phase 2: Update UI with Error**:
+                1. Truncate error_msg to the first 50 characters
+                2. Append "..." if the message is truncated
+                3. Format the message as "{context} failed: {error_msg[:50]}..."
+                4. Call update_status() with:
+                    a. Formatted error message
+                    b. Color set to ft.Colors.RED_600 (error indication)
+                    c. disable_button set to False (re-enable for retry)
+                5. Display the error message and enable the button for the user
             
-            3. **Log Detailed Error**:
-               a. Format console message: "{context} error: {error}"
-               b. Get full stack trace: traceback.format_exc()
-               c. Print formatted message with full traceback
-               d. Includes exception type, message, and call stack
-               e. Available in console for debugging
+            **Phase 3: Log Detailed Error**:
+                1. Format a console message as "{context} error: {error}"
+                2. Retrieve the full stack trace using traceback.format_exc()
+                3. Print the formatted message along with the full traceback
+                4. Include exception type, message, and call stack in the log
+                5. Ensure the log is available in the console for debugging
 
         Interactions:
             - **update_status()**: Shows error message to user
@@ -724,11 +724,11 @@ class LoginBase(ft.Column):
                 Message: "Subclasses must implement handle_login"
 
         Algorithm:
-            1. **Raise NotImplementedError**:
-               a. Create NotImplementedError with descriptive message
-               b. Message: "Subclasses must implement handle_login"
-               c. Raise exception to signal abstract method
-               d. Prevents instantiation of LoginBase directly
+            **Phase 1: Raise NotImplementedError**:
+                1. Create NotImplementedError with descriptive message
+                2. Message: "Subclasses must implement handle_login"
+                3. Raise exception to signal abstract method
+                4. Prevents instantiation of LoginBase directly
 
         Interactions:
             - **Subclass implementations**: Must override this method
@@ -802,19 +802,19 @@ class LoginView(LoginBase):
         - **ft.Page**: Platform detection and browser launching
         - **urllib.parse**: URL encoding for OAuth parameters
 
-    Algorithm (High-Level Workflow):
-        **Phase 1: Initialization**
+    Algorithm:
+        **Phase 1: Initialization**:
             1. Store OAuth provider reference
             2. Call parent LoginBase.__init__() to build UI
             3. Component ready for rendering
         
-        **Phase 2: Login Initiation** (handle_login)
+        **Phase 2: Login Initiation (handle_login)**:
             1. Detect platform type (desktop vs mobile)
             2. Check if platform in [WINDOWS, LINUX, MACOS]
             3. If desktop: call _handle_desktop_login()
             4. If mobile: call _handle_mobile_login()
         
-        **Phase 3: Desktop Authentication** (_handle_desktop_login)
+        **Phase 3: Desktop Authentication (_handle_desktop_login)**:
             1. Update status to "Opening browser for authentication..."
             2. Disable login button
             3. Call auth.login_desktop() - starts local server, opens browser
@@ -824,7 +824,7 @@ class LoginView(LoginBase):
             7. If not authenticated: show error message
             8. On exception: call handle_error()
         
-        **Phase 4: Mobile Authentication** (_handle_mobile_login)
+        **Phase 4: Mobile Authentication (_handle_mobile_login)**:
             1. Update status to "Opening browser..."
             2. Disable login button
             3. Build OAuth URL with authorization code flow parameters
@@ -916,15 +916,15 @@ class LoginView(LoginBase):
                 successful authentication. Signature: () -> None. Defaults to None.
 
         Algorithm:
-            1. **Store OAuth Provider**:
-               a. Assign provider parameter to self.provider
-               b. Makes provider available to authentication methods
+            **Phase 1: Store OAuth Provider**:
+                1. Assign provider parameter to self.provider
+                2. Makes provider available to authentication methods
             
-            2. **Initialize Parent Class**:
-               a. Call super().__init__() with page, auth_service, on_success
-               b. Parent constructs UI components
-               c. Parent stores page, auth, and callback references
-               d. Component ready for rendering
+            **Phase 2: Initialize Parent Class**:
+                1. Call super().__init__() with page, auth_service, on_success
+                2. Parent constructs UI components
+                3. Parent stores page, auth, and callback references
+                4. Component ready for rendering
 
         Interactions:
             - **LoginBase.__init__()**: Parent class initialization
@@ -968,7 +968,7 @@ class LoginView(LoginBase):
 
         Detects the current platform and routes to the appropriate OAuth
         authentication method. Desktop platforms use local server callback,
-        mobile platforms use external browser redirect.
+        mobile platforms use external browser with redirect.
 
         Args:
             e (ft.ControlEvent): Flet control event from login button click.
@@ -978,21 +978,21 @@ class LoginView(LoginBase):
             None: Delegates to platform-specific authentication methods.
 
         Algorithm:
-            1. **Platform Detection**:
-               a. Define desktop platforms list:
-                  i. ft.PagePlatform.WINDOWS
-                  ii. ft.PagePlatform.LINUX
-                  iii. ft.PagePlatform.MACOS
-               b. Check if self.page.platform in desktop platforms list
-               c. Store result in is_desktop boolean
+            **Phase 1: Platform Detection**:
+                1. Define desktop platforms list:
+                    a. ft.PagePlatform.WINDOWS
+                    b. ft.PagePlatform.LINUX
+                    c. ft.PagePlatform.MACOS
+                2. Check if self.page.platform in desktop platforms list
+                3. Store result in is_desktop boolean
             
-            2. **Route to Appropriate Handler**:
-               a. If is_desktop is True:
-                  i. Call self._handle_desktop_login()
-                  ii. Uses local HTTP server for OAuth callback
-               b. If is_desktop is False (mobile):
-                  i. Call self._handle_mobile_login()
-                  ii. Uses external browser with redirect URL
+            **Phase 2: Route to Appropriate Handler**:
+                1. If is_desktop is True:
+                    a. Call self._handle_desktop_login()
+                    b. Uses local HTTP server for OAuth callback
+                2. If is_desktop is False (mobile):
+                    a. Call self._handle_mobile_login()
+                    b. Uses external browser with redirect URL
 
         Interactions:
             - **ft.Page.platform**: Reads platform enum for detection
@@ -1049,44 +1049,44 @@ class LoginView(LoginBase):
             None: Updates UI and invokes callbacks based on authentication result.
 
         Algorithm:
-            1. **Update UI for Processing**:
-               a. Call update_status() with message
-               b. Message: "Opening browser for authentication..."
-               c. Color: default (blue)
-               d. disable_button: True (prevents double-click)
+            **Phase 1: Update UI for Processing**:
+                1. Call update_status() with message
+                2. Message: "Opening browser for authentication..."
+                3. Color: default (blue)
+                4. disable_button: True (prevents double-click)
             
-            2. **Try Desktop Authentication**:
-               a. Enter try block for error handling
-               b. Call self.auth.login_desktop()
-               c. Auth service performs:
-                  i. Start local HTTP server on available port
-                  ii. Build OAuth URL with redirect to localhost
-                  iii. Open system browser to OAuth URL
-                  iv. Wait for user to authenticate
-                  v. Receive callback with authorization code
-                  vi. Exchange code for access token
-                  vii. Store credentials in auth service
-               d. login_desktop() method blocks until complete or timeout
+            **Phase 2: Try Desktop Authentication**:
+                1. Enter try block for error handling
+                2. Call self.auth.login_desktop()
+                3. Auth service performs:
+                   a. Start local HTTP server on available port
+                   b. Build OAuth URL with redirect to localhost
+                   c. Open system browser to OAuth URL
+                   d. Wait for user to authenticate
+                   e. Receive callback with authorization code
+                   f. Exchange code for access token
+                   g. Store credentials in auth service
+                4. login_desktop() method blocks until complete or timeout
             
-            3. **Check Authentication Result**:
-               a. Call self.auth.is_authenticated()
-               b. Returns True if credentials valid and stored
-               c. If True (authenticated):
-                  i. Call self.handle_success()
-                  ii. Shows success message (green)
-                  iii. Invokes on_success callback
-                  iv. Typically navigates to dashboard
-               d. If False (not authenticated):
-                  i. Call update_status() with error message
-                  ii. Message: "Login completed but authentication failed"
-                  iii. Color: RED_600 (error indication)
-                  iv. disable_button: False (re-enable for retry)
+            **Phase 3: Check Authentication Result**:
+                1. Call self.auth.is_authenticated()
+                2. Returns True if credentials valid and stored
+                3. If True (authenticated):
+                   a. Call self.handle_success()
+                   b. Shows success message (green)
+                   c. Invokes on_success callback
+                   d. Typically navigates to dashboard
+                4. If False (not authenticated):
+                   a. Call update_status() with error message
+                   b. Message: "Login completed but authentication failed"
+                   c. Color: RED_600 (error indication)
+                   d. disable_button: False (re-enable for retry)
             
-            4. **Handle Exceptions**:
-               a. Catch any Exception during authentication
-               b. Examples: NetworkError, TimeoutError, ValueError
-               c. Call self.handle_error(ex, "Desktop login")
-               d. handle_error displays user message and logs details
+            **Phase 4: Handle Exceptions**:
+                1. Catch any Exception during authentication
+                2. Examples: NetworkError, TimeoutError, ValueError
+                3. Call self.handle_error(ex, "Desktop login")
+                4. handle_error displays user message and logs details
 
         Interactions:
             - **update_status()**: Shows progress and results
@@ -1160,66 +1160,66 @@ class LoginView(LoginBase):
             None: Opens browser and updates UI. Token handling occurs externally.
 
         Algorithm:
-            1. **Import URL Encoding Module**:
-               a. Import urllib.parse for URL parameter encoding
-               b. Used to safely encode OAuth parameters
+            **Phase 1: Import URL Encoding Module**:
+                1. Import urllib.parse for URL parameter encoding
+                2. Used to safely encode OAuth parameters
             
-            2. **Update UI for Processing**:
-               a. Call update_status() with progress message
-               b. Message: "Opening browser..."
-               c. Color: default (blue)
-               d. disable_button: True (prevents double-click)
+            **Phase 2: Update UI for Processing**:
+                1. Call update_status() with progress message
+                2. Message: "Opening browser..."
+                3. Color: default (blue)
+                4. disable_button: True (prevents double-click)
             
-            3. **Try Browser Launch**:
-               a. Enter try block for error handling
-               
-            4. **Build OAuth URL**:
-               a. Set auth_url to Google OAuth endpoint:
-                  "https://accounts.google.com/o/oauth2/v2/auth"
-               b. Create params dictionary with OAuth parameters:
-                  i. client_id: self.provider.client_id
-                     (application identifier from Google Console)
-                  ii. redirect_uri: self.provider.redirect_url
-                      (where Google sends user after auth)
-                  iii. response_type: 'code'
-                       (authorization code flow, not implicit)
-                  iv. scope: ' '.join(self.provider.scopes)
-                      (space-separated list of requested permissions)
-                  v. access_type: 'offline'
-                     (request refresh token for long-term access)
-                  vi. prompt: 'consent'
-                      (force consent screen for consistent UX)
-               c. URL-encode parameters: urllib.parse.urlencode(params)
-               d. Build complete URL: f"{auth_url}?{encoded_params}"
-               e. Store in oauth_url variable
+            **Phase 3: Try Browser Launch**:
+                1. Enter try block for error handling
+                
+            **Phase 4: Build OAuth URL**:
+                1. Set auth_url to Google OAuth endpoint:
+                   "https://accounts.google.com/o/oauth2/v2/auth"
+                2. Create params dictionary with OAuth parameters:
+                   a. client_id: self.provider.client_id
+                      (application identifier from Google Console)
+                   b. redirect_uri: self.provider.redirect_url
+                       (where Google sends user after auth)
+                   c. response_type: 'code'
+                        (authorization code flow, not implicit)
+                   d. scope: ' '.join(self.provider.scopes)
+                       (space-separated list of requested permissions)
+                   e. access_type: 'offline'
+                      (request refresh token for long-term access)
+                   f. prompt: 'consent'
+                       (force consent screen for consistent UX)
+                3. URL-encode parameters: urllib.parse.urlencode(params)
+                4. Build complete URL: f"{auth_url}?{encoded_params}"
+                5. Store in oauth_url variable
             
-            5. **Launch External Browser**:
-               a. Call self.page.launch_url(oauth_url)
-               b. Opens system browser to OAuth URL
-               c. Non-blocking operation (returns immediately)
-               d. User sees Google sign-in page in browser
+            **Phase 5: Launch External Browser**:
+                1. Call self.page.launch_url(oauth_url)
+                2. Opens system browser to OAuth URL
+                3. Non-blocking operation (returns immediately)
+                4. User sees Google sign-in page in browser
             
-            6. **Update UI with Instructions**:
-               a. Call update_status() with instruction message
-               b. Message: "Complete sign-in in browser, then return to app"
-               c. Color: BLUE_600 (informational)
-               d. disable_button: False (re-enable button)
-               e. User can retry if browser doesn't open
+            **Phase 6: Update UI with Instructions**:
+                1. Call update_status() with instruction message
+                2. Message: "Complete sign-in in browser, then return to app"
+                3. Color: BLUE_600 (informational)
+                4. disable_button: False (re-enable button)
+                5. User can retry if browser doesn't open
             
-            7. **Show Snackbar Notification**:
-               a. Create SnackBar with content text
-               b. Content: "Browser opening... Complete sign-in, then return here."
-               c. Add action button: "OK"
-               d. Assign to self.page.snack_bar
-               e. Set snack_bar.open = True
-               f. Call self.page.update() to display snackbar
-               g. Provides additional visual feedback
+            **Phase 7: Show Snackbar Notification**:
+                1. Create SnackBar with content text
+                2. Content: "Browser opening... Complete sign-in, then return here."
+                3. Add action button: "OK"
+                4. Assign to self.page.snack_bar
+                5. Set snack_bar.open = True
+                6. Call self.page.update() to display snackbar
+                7. Provides additional visual feedback
             
-            8. **Handle Exceptions**:
-               a. Catch any Exception during browser launch
-               b. Examples: URLError, OSError
-               c. Call self.handle_error(ex, "Browser launch")
-               d. Shows error message and re-enables button
+            **Phase 8: Handle Exceptions**:
+                1. Catch any Exception during browser launch
+                2. Examples: URLError, OSError
+                3. Call self.handle_error(ex, "Browser launch")
+                4. Shows error message and re-enables button
 
         Interactions:
             - **urllib.parse.urlencode()**: Encodes OAuth parameters
