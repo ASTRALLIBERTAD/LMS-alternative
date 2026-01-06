@@ -139,7 +139,7 @@ flet main.py
 
 ## 📁 Project Structure
 
-```
+```bash
 capstone/
 ├── src/
 │   ├──main.py              # Application entry point
