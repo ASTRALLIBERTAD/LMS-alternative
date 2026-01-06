@@ -6,7 +6,7 @@ title: "TodoView"
 
 # 📦 TodoView
 
-![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
+![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
 **File:** [`todo_view.py`](./todo_view.py) | **Line:** 26
@@ -78,6 +78,76 @@ concerns like overlays, snackbars, and navigation.
 - **`form_container`** (ft.Container or None): Container wrapping assignment creation form, visible only in teacher mode.
 - **`manage_students_btn`** (ft.ElevatedButton or None): Button opening student management dialog, visible only in teacher mode.
 
+## Algorithm
+
+- **Phase 1: Initialization**:
+  - 1. Store page, callback, and Drive service references
+  - 2. Create data directory (lms_data) if not exists
+  - 3. Import and instantiate manager classes:
+    - a. DataManager for persistence
+    - b. StorageManager for Drive operations
+    - c. AssignmentManager for assignment logic
+    - d. StudentManager for student management
+    - e. SubmissionManager for submission handling
+  - 4. Load persistent data:
+    - a. assignments from data_manager
+    - b. students from data_manager
+    - c. submissions from data_manager
+    - d. saved_links from JSON file
+  - 5. Optionally initialize NotificationService
+  - 6. Set default state: teacher mode, no student selected
+  - 7. Initialize all UI components via _init_ui_components()
+
+- **Phase 2: UI Component Initialization** (_init_ui_components)
+  - 1. Create input fields (title, description, max_score)
+  - 2. Create dropdowns (subject, target, filter, student)
+  - 3. Create pickers (date, time, file)
+  - 4. Create display texts (folder, attachment, deadline)
+  - 5. Create layout containers (assignment_column, form_container)
+  - 6. Create controls (mode_switch, mode_label, buttons)
+  - 7. Store all components as instance attributes
+
+- **Phase 3: View Rendering** (get_view)
+  - 1. Display current assignments via display_assignments()
+  - 2. Build assignment creation form (teacher mode only)
+  - 3. Create header with back button, icon, title
+  - 4. Build mode switcher row with settings button
+  - 5. Add student selector row (student mode only)
+  - 6. Add form container (teacher mode only)
+  - 7. Build assignment list section with filter
+  - 8. Assemble complete layout in Column
+  - 9. Return root Column control
+
+- **Phase 4: Mode Switching** (switch_mode)
+  - 1. Toggle current_mode based on switch value
+  - 2. Update mode_label text and emoji
+  - 3. Show/hide student selector row
+  - 4. Show/hide form container
+  - 5. Show/hide manage students button
+  - 6. Refresh assignment display
+  - 7. Update page
+
+- **Phase 5: Assignment Display** (display_assignments)
+  - 1. Clear assignment_column controls
+  - 2. Check current_mode
+  - 3. If teacher: delegate to assignment_manager.display_teacher_view()
+  - 4. If student: delegate to assignment_manager.display_student_view()
+  - 5. Update page to render changes
+
+- **Phase 6: Data Interaction**
+  - 1. User creates/edits/deletes assignment
+  - 2. Manager updates in-memory list
+  - 3. DataManager saves to JSON file
+  - 4. UI refreshes to show changes
+
+- **Phase 7: File/Folder Selection**
+  - 1. User clicks file/folder picker button
+  - 2. Picker dialog opens
+  - 3. User selects file/folder
+  - 4. Callback updates selected_* attributes
+  - 5. Display text updates to show selection
+  - 6. Page updates to render changes
+
 ## Interactions
 
 - **DataManager**: Loads/saves assignments, students, submissions
@@ -88,68 +158,6 @@ concerns like overlays, snackbars, and navigation.
 - **DriveService**: Provides Drive API operations (if available)
 - **NotificationService**: Manages notifications (if available)
 - **ft.Page**: Updates UI and manages overlays/dialogs
-- Algorithm (High-Level Workflow):
-- *Phase 1: Initialization**
-- 1. Store page, callback, and Drive service references
-- 2. Create data directory (lms_data) if not exists
-- 3. Import and instantiate manager classes:
-- DataManager for persistence
-- StorageManager for Drive operations
-- AssignmentManager for assignment logic
-- StudentManager for student management
-- SubmissionManager for submission handling
-- 4. Load persistent data:
-- assignments from data_manager
-- students from data_manager
-- submissions from data_manager
-- saved_links from JSON file
-- 5. Optionally initialize NotificationService
-- 6. Set default state: teacher mode, no student selected
-- 7. Initialize all UI components via _init_ui_components()
-- *Phase 2: UI Component Initialization** (_init_ui_components)
-- 1. Create input fields (title, description, max_score)
-- 2. Create dropdowns (subject, target, filter, student)
-- 3. Create pickers (date, time, file)
-- 4. Create display texts (folder, attachment, deadline)
-- 5. Create layout containers (assignment_column, form_container)
-- 6. Create controls (mode_switch, mode_label, buttons)
-- 7. Store all components as instance attributes
-- *Phase 3: View Rendering** (get_view)
-- 1. Display current assignments via display_assignments()
-- 2. Build assignment creation form (teacher mode only)
-- 3. Create header with back button, icon, title
-- 4. Build mode switcher row with settings button
-- 5. Add student selector row (student mode only)
-- 6. Add form container (teacher mode only)
-- 7. Build assignment list section with filter
-- 8. Assemble complete layout in Column
-- 9. Return root Column control
-- *Phase 4: Mode Switching** (switch_mode)
-- 1. Toggle current_mode based on switch value
-- 2. Update mode_label text and emoji
-- 3. Show/hide student selector row
-- 4. Show/hide form container
-- 5. Show/hide manage students button
-- 6. Refresh assignment display
-- 7. Update page
-- *Phase 5: Assignment Display** (display_assignments)
-- 1. Clear assignment_column controls
-- 2. Check current_mode
-- 3. If teacher: delegate to assignment_manager.display_teacher_view()
-- 4. If student: delegate to assignment_manager.display_student_view()
-- 5. Update page to render changes
-- *Phase 6: Data Interaction**
-- 1. User creates/edits/deletes assignment
-- 2. Manager updates in-memory list
-- 3. DataManager saves to JSON file
-- 4. UI refreshes to show changes
-- *Phase 7: File/Folder Selection**
-- 1. User clicks file/folder picker button
-- 2. Picker dialog opens
-- 3. User selects file/folder
-- 4. Callback updates selected_* attributes
-- 5. Display text updates to show selection
-- 6. Page updates to render changes
 
 ## Example
 

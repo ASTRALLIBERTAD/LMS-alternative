@@ -90,40 +90,42 @@ def format_algorithm(text):
 # Sample input for testing
 SAMPLE_INPUT = """
 Algorithm:
-            1. **Check Depth Limit**:
-               a. If current_depth >= max_depth:
-                  i. Return None (depth limit reached)
+            1. **Update Mode State**:
+               a. Check self.mode_switch.value (True/False)
+               b. If True:
+                  i. Set self.current_mode = "student"
+               c. If False:
+                  i. Set self.current_mode = "teacher"
             
-            2. **Build Query**:
-               a. Format: "'{folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false"
-               b. Filters: in folder, is folder type, not trashed
+            2. **Configure Student Mode (if student)**:
+               a. Set mode_label.value = "👨‍🎓 Student View"
+               b. Set student_selector_row.visible = True
+                  - Shows student dropdown
+               c. If form_container exists:
+                  i. Set form_container.visible = False
+                  ii. Hides assignment creation form
+               d. If manage_students_btn exists:
+                  i. Set manage_students_btn.visible = False
+                  ii. Hides student management button
             
-            3. **Execute Query**:
-               a. Call _execute_file_list_query() with:
-                  i. query: folder filter
-                  ii. page_size: 100
-                  iii. fields: 'files(id, name)' (minimal)
-                  iv. order_by: 'name' (alphabetical)
-               b. Returns result or None
+            3. **Configure Teacher Mode (else teacher)**:
+               a. Set mode_label.value = "👨‍🏫 Teacher View"
+               b. Set student_selector_row.visible = False
+                  - Hides student dropdown
+               c. If form_container exists:
+                  i. Set form_container.visible = True
+                  ii. Shows assignment creation form
+               d. If manage_students_btn exists:
+                  i. Set manage_students_btn.visible = True
+                  ii. Shows student management button
             
-            4. **Extract Folders**:
-               a. If result is dict:
-                  i. Get folders: result.get('files', [])
-               b. If result is None:
-                  i. folders = [] (empty list)
+            4. **Refresh Assignment Display**:
+               a. Call self.display_assignments()
+               b. Updates assignment list for current mode
             
-            5. **Recurse for Children**:
-               a. For each folder in folders:
-                  i. Recursively call get_folder_tree() with:
-                      - folder_id: folder['id']
-                      - max_depth: max_depth (unchanged)
-                      - current_depth: current_depth + 1
-                  ii. Store result in folder['children']
-                  iii. Will be list or None
-            
-            6. **Return Tree**:
-               a. Return folders list with populated children
-
+            5. **Update Page**:
+               a. Call self.page.update()
+               b. Renders all visibility changes
 
 """
 

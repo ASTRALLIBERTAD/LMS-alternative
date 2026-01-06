@@ -27,24 +27,24 @@ they're on the correct device/platform.
 
 ## Algorithm
 
-  - 1. **Define Platform Mapping**:
-    - a. Create dictionary mapping ft.PagePlatform enums to strings
-    - b. Mappings:
-    - - WINDOWS -> "Windows"
-    - - LINUX -> "Linux"
-    - - MACOS -> "macOS"
-    - - ANDROID -> "Android"
-    - - IOS -> "iOS"
-    - c. Store in platform_map variable
+- **Phase 1: Define Platform Mapping**:
+  - 1. Create dictionary mapping ft.PagePlatform enums to strings
+  - 2. Define mappings:
+    - a. WINDOWS -> "Windows"
+    - b. LINUX -> "Linux"
+    - c. MACOS -> "macOS"
+    - d. ANDROID -> "Android"
+    - e. IOS -> "iOS"
+  - 3. Store mappings in platform_map variable
 
-  - 2. **Lookup Current Platform**:
-    - a. Access self.page.platform (Flet PagePlatform enum)
-    - b. Use dict.get() with platform_map
-    - c. If platform in map: return mapped string
-    - d. If platform unknown: return str(self.page.platform)
+- **Phase 2: Lookup Current Platform**:
+  - 1. Access self.page.platform (Flet PagePlatform enum)
+  - 2. Use dict.get() with platform_map
+  - 3. If platform exists in map, return mapped string
+  - 4. If platform is unknown, return str(self.page.platform)
 
-  - 3. **Return Result**:
-    - a. Return human-readable platform name string
+- **Phase 3: Return Result**:
+  - 1. Return human-readable platform name string
 
 ## Interactions
 

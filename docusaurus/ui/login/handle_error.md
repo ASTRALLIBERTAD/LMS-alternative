@@ -31,27 +31,27 @@ long error messages for UI display.
 
 ## Algorithm
 
-  - 1. **Extract Error Message**:
-    - a. Convert error to string: str(error)
-    - b. Store in error_msg variable
-    - c. Full message preserved for logging
+- **Phase 1: Extract Error Message**:
+  - 1. Convert error to string using str(error)
+  - 2. Store the result in error_msg variable
+  - 3. Preserve the full message for logging purposes
 
-  - 2. **Update UI with Error**:
-    - a. Truncate error_msg to first 50 characters
-    - b. Append "..." if truncated
-    - c. Format message: "&#123;context&#125; failed: &#123;error_msg[:50]&#125;..."
-    - d. Call update_status() with:
-    - i. Formatted error message
-    - ii. Color: ft.Colors.RED_600 (error indication)
-    - iii. disable_button: False (re-enable for retry)
-    - e. User sees error message and enabled button
+- **Phase 2: Update UI with Error**:
+  - 1. Truncate error_msg to the first 50 characters
+  - 2. Append "..." if the message is truncated
+  - 3. Format the message as "&#123;context&#125; failed: &#123;error_msg[:50]&#125;..."
+  - 4. Call update_status() with:
+    - a. Formatted error message
+    - b. Color set to ft.Colors.RED_600 (error indication)
+    - c. disable_button set to False (re-enable for retry)
+  - 5. Display the error message and enable the button for the user
 
-  - 3. **Log Detailed Error**:
-    - a. Format console message: "&#123;context&#125; error: &#123;error&#125;"
-    - b. Get full stack trace: traceback.format_exc()
-    - c. Print formatted message with full traceback
-    - d. Includes exception type, message, and call stack
-    - e. Available in console for debugging
+- **Phase 3: Log Detailed Error**:
+  - 1. Format a console message as "&#123;context&#125; error: &#123;error&#125;"
+  - 2. Retrieve the full stack trace using traceback.format_exc()
+  - 3. Print the formatted message along with the full traceback
+  - 4. Include exception type, message, and call stack in the log
+  - 5. Ensure the log is available in the console for debugging
 
 ## Interactions
 

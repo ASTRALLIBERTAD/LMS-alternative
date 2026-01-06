@@ -25,21 +25,21 @@ implementations after successful OAuth token retrieval and validation.
 
 ## Algorithm
 
-  - 1. **Update Status Display**:
-    - a. Call update_status() with success message
-    - b. Message: "Login successful!"
-    - c. Color: ft.Colors.GREEN_600 (success color)
-    - d. Button state: not changed (remains in current state)
+- **Phase 1: Update Status Display**:
+  - 1. Call update_status() with success message
+  - 2. Set message to "Login successful!"
+  - 3. Set color to ft.Colors.GREEN_600 (success color)
+  - 4. Leave button state unchanged (remains in current state)
 
-  - 2. **Invoke Success Callback**:
-    - a. Check if self.on_success is not None
-    - b. If callback exists:
-    - i. Call self.on_success()
-    - ii. Callback typically navigates to dashboard
-    - iii. May perform additional setup (load user data, etc.)
-    - c. If callback is None:
-    - i. No action taken
-    - ii. UI shows success message only
+- **Phase 2: Invoke Success Callback**:
+  - 1. Check if self.on_success is not None
+  - 2. If callback exists:
+    - a. Call self.on_success()
+    - b. Typically navigates to dashboard
+    - c. May perform additional setup (e.g., load user data)
+  - 3. If callback is None:
+    - a. Take no action
+    - b. UI displays success message only
 
 ## Interactions
 

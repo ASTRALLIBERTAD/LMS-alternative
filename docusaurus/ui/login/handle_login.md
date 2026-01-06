@@ -16,7 +16,7 @@ Handle login button click with platform-specific authentication flow.
 
 Detects the current platform and routes to the appropriate OAuth
 authentication method. Desktop platforms use local server callback,
-mobile platforms use external browser redirect.
+mobile platforms use external browser with redirect.
 
 ## Parameters
 
@@ -29,21 +29,21 @@ mobile platforms use external browser redirect.
 
 ## Algorithm
 
-  - 1. **Platform Detection**:
-    - a. Define desktop platforms list:
-    - i. ft.PagePlatform.WINDOWS
-    - ii. ft.PagePlatform.LINUX
-    - iii. ft.PagePlatform.MACOS
-    - b. Check if self.page.platform in desktop platforms list
-    - c. Store result in is_desktop boolean
+- **Phase 1: Platform Detection**:
+  - 1. Define desktop platforms list:
+    - a. ft.PagePlatform.WINDOWS
+    - b. ft.PagePlatform.LINUX
+    - c. ft.PagePlatform.MACOS
+  - 2. Check if self.page.platform in desktop platforms list
+  - 3. Store result in is_desktop boolean
 
-  - 2. **Route to Appropriate Handler**:
-    - a. If is_desktop is True:
-    - i. Call self._handle_desktop_login()
-    - ii. Uses local HTTP server for OAuth callback
-    - b. If is_desktop is False (mobile):
-    - i. Call self._handle_mobile_login()
-    - ii. Uses external browser with redirect URL
+- **Phase 2: Route to Appropriate Handler**:
+  - 1. If is_desktop is True:
+    - a. Call self._handle_desktop_login()
+    - b. Uses local HTTP server for OAuth callback
+  - 2. If is_desktop is False (mobile):
+    - a. Call self._handle_mobile_login()
+    - b. Uses external browser with redirect URL
 
 ## Interactions
 

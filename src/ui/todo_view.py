@@ -132,26 +132,26 @@ class TodoView:
         - **NotificationService**: Manages notifications (if available)
         - **ft.Page**: Updates UI and manages overlays/dialogs
 
-    Algorithm (High-Level Workflow):
-        **Phase 1: Initialization**
+    Algorithm:
+        **Phase 1: Initialization**:
             1. Store page, callback, and Drive service references
             2. Create data directory (lms_data) if not exists
             3. Import and instantiate manager classes:
-               - DataManager for persistence
-               - StorageManager for Drive operations
-               - AssignmentManager for assignment logic
-               - StudentManager for student management
-               - SubmissionManager for submission handling
+                a. DataManager for persistence
+                b. StorageManager for Drive operations
+                c. AssignmentManager for assignment logic
+                d. StudentManager for student management
+                e. SubmissionManager for submission handling
             4. Load persistent data:
-               - assignments from data_manager
-               - students from data_manager
-               - submissions from data_manager
-               - saved_links from JSON file
+                a. assignments from data_manager
+                b. students from data_manager
+                c. submissions from data_manager
+                d. saved_links from JSON file
             5. Optionally initialize NotificationService
             6. Set default state: teacher mode, no student selected
             7. Initialize all UI components via _init_ui_components()
         
-        **Phase 2: UI Component Initialization** (_init_ui_components)
+        **Phase 2: UI Component Initialization (_init_ui_components)**:
             1. Create input fields (title, description, max_score)
             2. Create dropdowns (subject, target, filter, student)
             3. Create pickers (date, time, file)
@@ -160,7 +160,7 @@ class TodoView:
             6. Create controls (mode_switch, mode_label, buttons)
             7. Store all components as instance attributes
         
-        **Phase 3: View Rendering** (get_view)
+        **Phase 3: View Rendering (get_view)**:
             1. Display current assignments via display_assignments()
             2. Build assignment creation form (teacher mode only)
             3. Create header with back button, icon, title
@@ -170,8 +170,8 @@ class TodoView:
             7. Build assignment list section with filter
             8. Assemble complete layout in Column
             9. Return root Column control
-        
-        **Phase 4: Mode Switching** (switch_mode)
+
+        **Phase 4: Mode Switching (switch_mode)**:
             1. Toggle current_mode based on switch value
             2. Update mode_label text and emoji
             3. Show/hide student selector row
@@ -179,21 +179,21 @@ class TodoView:
             5. Show/hide manage students button
             6. Refresh assignment display
             7. Update page
-        
-        **Phase 5: Assignment Display** (display_assignments)
+
+        **Phase 5: Assignment Display (display_assignments)**:
             1. Clear assignment_column controls
             2. Check current_mode
             3. If teacher: delegate to assignment_manager.display_teacher_view()
             4. If student: delegate to assignment_manager.display_student_view()
             5. Update page to render changes
         
-        **Phase 6: Data Interaction**
+        **Phase 6: Data Interaction**:
             1. User creates/edits/deletes assignment
             2. Manager updates in-memory list
             3. DataManager saves to JSON file
             4. UI refreshes to show changes
         
-        **Phase 7: File/Folder Selection**
+        **Phase 7: File/Folder Selection**:
             1. User clicks file/folder picker button
             2. Picker dialog opens
             3. User selects file/folder
@@ -282,61 +282,69 @@ class TodoView:
                 disabled or degraded. Defaults to None.
 
         Algorithm:
-            1. **Store Core References**:
-               a. Assign page to self.page
-               b. Assign on_back to self.on_back
-               c. Assign drive_service to self.drive_service
-            
-            2. **Setup Data Directory**:
-               a. Create Path object: Path("lms_data")
-               b. Store in self.data_dir
-               c. Call mkdir(exist_ok=True) to create if needed
-               d. Directory contains JSON files for persistence
-            
-            3. **Import Manager Classes**:
-               a. Import DataManager from ui.todo_modules.data_manager
-               b. Import StorageManager from ui.todo_modules.storage_manager
-               c. Import AssignmentManager from ui.todo_modules.assignment_manager
-               d. Import StudentManager from ui.todo_modules.student_manager
-               e. Import SubmissionManager from ui.todo_modules.submission_manager
-            
-            4. **Instantiate Managers**:
-               a. Create DataManager(data_dir, drive_service)
-               b. Create StorageManager(self, drive_service)
-               c. Create AssignmentManager(self)
-               d. Create StudentManager(self)
-               e. Create SubmissionManager(self)
-               f. Each manager stores reference to TodoView (self)
-            
-            5. **Load Persistent Data**:
-               a. Call data_manager.load_assignments() -> list
-               b. Store in self.assignments
-               c. Call data_manager.load_students() -> list
-               d. Store in self.students
-               e. Call data_manager.load_submissions() -> list
-               f. Store in self.submissions
-               g. Call self.load_saved_links() -> list
-               h. Store in self.saved_links
-            
-            6. **Initialize Notification Service** (optional):
-               a. Try to import NotificationService
-               b. If successful:
-                  i. Instantiate NotificationService(data_dir)
-                  ii. Store in self.notification_service
-               c. If ImportError:
-                  i. Set self.notification_service = None
-                  ii. Feature gracefully disabled
-            
-            7. **Set Initial State**:
-               a. Set self.current_mode = "teacher"
-               b. Set self.current_student_email = None
-               c. Default view is teacher mode with no student selected
-            
-            8. **Initialize UI Components**:
-               a. Call self._init_ui_components()
-               b. Creates all input fields, dropdowns, pickers, etc.
-               c. Stores components as instance attributes
-               d. Components ready for get_view() to assemble
+
+            **Phase 1: Store Core References**   
+                1. Assign page to self.page      
+                2. Assign on_back to self.on_back
+                3. Assign drive_service to self.drive_service
+
+
+            **Phase 2: Setup Data Directory**
+                1. Create Path object: Path("lms_data")
+                2. Store in self.data_dir
+                3. Call mkdir(exist_ok=True) to create if needed
+                4. Directory contains JSON files for persistence
+
+
+            **Phase 3: Import Manager Classes**
+                1. Import DataManager from ui.todo_modules.data_manager
+                2. Import StorageManager from ui.todo_modules.storage_manager
+                3. Import AssignmentManager from ui.todo_modules.assignment_manager
+                4. Import StudentManager from ui.todo_modules.student_manager
+                5. Import SubmissionManager from ui.todo_modules.submission_manager
+
+
+            **Phase 4: Instantiate Managers**
+                1. Create DataManager(data_dir, drive_service)
+                2. Create StorageManager(self, drive_service)
+                3. Create AssignmentManager(self)
+                4. Create StudentManager(self)
+                5. Create SubmissionManager(self)
+                6. Each manager stores reference to TodoView (self)
+
+
+            **Phase 5: Load Persistent Data**
+                1. Call data_manager.load_assignments() -> list
+                2. Store in self.assignments
+                3. Call data_manager.load_students() -> list
+                4. Store in self.students
+                5. Call data_manager.load_submissions() -> list
+                6. Store in self.submissions
+                7. Call self.load_saved_links() -> list
+                8. Store in self.saved_links
+
+
+            **Phase 6: Initialize Notification Service (optional)**
+                1. Try to import NotificationService
+                2. If successful:
+                3. Instantiate NotificationService(data_dir)
+                    a. Store in self.notification_service
+                4. If ImportError:
+                5. Set self.notification_service = None
+                    a. Feature gracefully disabled
+
+
+            **Phase 7: Set Initial State**
+                1. Set self.current_mode = "teacher"
+                2. Set self.current_student_email = None
+                3. Default view is teacher mode with no student selected
+
+
+            **Phase 8: Initialize UI Components**
+                1. Call self._init_ui_components()
+                2. Creates all input fields, dropdowns, pickers, etc.
+                3. Stores components as instance attributes
+                4. Components ready for get_view() to assemble
 
         Interactions:
             - **Path.mkdir()**: Creates data directory
@@ -477,91 +485,101 @@ class TodoView:
             None: Creates and stores UI components as instance attributes.
 
         Algorithm:
-            1. **Create Input Fields**:
-               a. Create assignment_title TextField (hint: "Assignment Title")
-               b. Create assignment_description TextField:
-                  - Multiline: True
-                  - Min lines: 3, max lines: 5
-                  - Hint: "Description/Instructions"
-               c. Create max_score_field TextField:
-                  - Width: 150px
-                  - Keyboard type: NUMBER
-                  - Input filter: NumbersOnlyInputFilter
-            
-            2. **Create Dropdown Selectors**:
-               a. Create subject_dropdown with options:
-                  - Mathematics, Science, English, History
-                  - Computer Science, Arts, Physical Education, Other
-                  - Width: 200px
-               b. Create target_dropdown with options:
-                  - "all" -> "All Students"
-                  - "bridging" -> "Bridging Only"
-                  - "regular" -> "Regular Only"
-                  - Default value: "all", width: 200px
-               c. Create filter_dropdown with options:
-                  - All, Active, Completed, Overdue
-                  - Default: "All", width: 150px
-                  - on_change: lambda e: display_assignments()
-               d. Create student_dropdown:
-                  - Width: 250px
-                  - on_change: on_student_selected
-                  - Populated by student_manager
-            
-            3. **Initialize Drive Folder Selection**:
-               a. Set selected_drive_folder_id = None
-               b. Create drive_folder_label Text:
-                  - Value: "No folder selected"
-                  - Size: 12px, italic: True
-            
-            4. **Initialize File Attachment**:
-               a. Create attachment_text Text:
-                  - Value: "No file attached"
-                  - Size: 12px, italic: True
-               b. Create selected_attachment dict:
-                  - Keys: "path", "name"
-                  - Initial values: None
-            
-            5. **Initialize Deadline Selection**:
-               a. Set selected_date_value = None
-               b. Set selected_time_value = None
-               c. Create selected_deadline_display Text:
-                  - Value: "No deadline selected"
-                  - Size: 12px, italic: True
-               d. Create date_picker DatePicker:
-                  - on_change: on_date_selected
-               e. Create time_picker TimePicker:
-                  - on_change: on_time_selected
-            
-            6. **Create Layout Containers**:
-               a. Create assignment_column Column:
-                  - Scroll: "auto", expand: True
-                  - Spacing: 10px
-                  - Will hold assignment cards
-            
-            7. **Create Mode Controls**:
-               a. Create mode_switch Switch:
-                  - Value: False (teacher mode)
-                  - on_change: switch_mode
-               b. Create mode_label Text:
-                  - Value: "👨‍🏫 Teacher View"
-                  - Size: 16px, weight: BOLD
-            
-            8. **Create Action Buttons**:
-               a. Create settings_btn ElevatedButton:
-                  - Text: "Storage"
-                  - Icon: SETTINGS
-                  - on_click: storage_manager.show_storage_settings
-            
-            9. **Create Student Selector Row**:
-               a. Create student_selector_row Row:
-                  - Contains: Text("Viewing as:"), student_dropdown
-                  - Visible: False (only in student mode)
-               b. Call student_manager.update_student_dropdown():
-                  - Populates dropdown with student emails
-            
-            10. **Initialize Containers** (created later in get_view):
-                a. Set form_container = None (created in get_view)
-                b. Set manage_students_btn = None (created in get_view)
+
+            **Phase 1: Create Input Fields**
+                1. Create assignment_title TextField (hint: "Assignment Title")
+                2. Create assignment_description TextField:
+                    - Multiline: True
+                    - Min lines: 3, max lines: 5
+                    - Hint: "Description/Instructions"
+                3. Create max_score_field TextField:
+                    - Width: 150px
+                    - Keyboard type: NUMBER
+                    - Input filter: NumbersOnlyInputFilter
+
+
+            **Phase 2: Create Dropdown Selectors**
+                1. Create subject_dropdown with options:
+                    - Mathematics, Science, English, History
+                    - Computer Science, Arts, Physical Education, Other
+                    - Width: 200px
+                2. Create target_dropdown with options:
+                    - "all" -> "All Students"
+                    - "bridging" -> "Bridging Only"
+                    - "regular" -> "Regular Only"
+                    - Default value: "all", width: 200px
+                3. Create filter_dropdown with options:
+                    - All, Active, Completed, Overdue
+                    - Default: "All", width: 150px
+                    - on_change: lambda e: display_assignments()
+                4. Create student_dropdown:
+                    - Width: 250px
+                    - on_change: on_student_selected
+                    - Populated by student_manager
+
+
+            **Phase 3: Initialize Drive Folder Selection**
+                1. Set selected_drive_folder_id = None
+                2. Create drive_folder_label Text:
+                    - Value: "No folder selected"
+                    - Size: 12px, italic: True
+
+
+            **Phase 4: Initialize File Attachment**
+                1. Create attachment_text Text:
+                    - Value: "No file attached"
+                    - Size: 12px, italic: True
+                2. Create selected_attachment dict:
+                    - Keys: "path", "name"
+                    - Initial values: None
+
+
+            **Phase 5: Initialize Deadline Selection**
+                1. Set selected_date_value = None
+                2. Set selected_time_value = None
+                3. Create selected_deadline_display Text:
+                    - Value: "No deadline selected"
+                    - Size: 12px, italic: True
+                4. Create date_picker DatePicker:
+                    - on_change: on_date_selected
+                5. Create time_picker TimePicker:
+                    - on_change: on_time_selected
+
+
+            **Phase 6: Create Layout Containers**
+                1. Create assignment_column Column:
+                    - Scroll: "auto", expand: True
+                    - Spacing: 10px
+                    - Will hold assignment cards
+
+
+            **Phase 7: Create Mode Controls**
+                1. Create mode_switch Switch:
+                    - Value: False (teacher mode)
+                    - on_change: switch_mode
+                2. Create mode_label Text:
+                    - Value: "👨‍🏫 Teacher View"
+                    - Size: 16px, weight: BOLD
+
+
+            **Phase 8: Create Action Buttons**
+                1. Create settings_btn ElevatedButton:
+                    - Text: "Storage"
+                    - Icon: SETTINGS
+                    - on_click: storage_manager.show_storage_settings
+
+
+            **Phase 9: Create Student Selector Row**
+                1. Create student_selector_row Row:
+                    - Contains: Text("Viewing as:"), student_dropdown
+                    - Visible: False (only in student mode)
+                2. Call student_manager.update_student_dropdown():
+                    - Populates dropdown with student emails
+
+
+            **Phase 10: Initialize Containers (created later in get_view)**
+                1. Set form_container = None (created in get_view)
+                2. Set manage_students_btn = None (created in get_view)
 
         Interactions:
             - **ft.TextField, ft.Dropdown, ft.DatePicker, etc.**: UI component creation
@@ -718,24 +736,30 @@ class TodoView:
                 Returns empty list if file doesn't exist or can't be parsed.
 
         Algorithm:
-            1. **Check File Existence**:
-               a. Check if SAVED_LINKS_FILE ("saved_links.json") exists
-               b. Use os.path.exists() for file check
-            
-            2. **Load File** (if exists):
-               a. Try to open file with UTF-8 encoding
-               b. Parse JSON content with json.load()
-               c. Extract "links" key from data dictionary
-               d. Return links list
-            
-            3. **Handle Errors**:
-               a. If any exception occurs (IOError, JSONDecodeError):
-                  i. Catch exception silently
-                  ii. Continue to return empty list
-            
-            4. **Return Default**:
-               a. If file doesn't exist or error occurs:
-                  i. Return empty list []
+
+            **Phase 1: Check File Existence**
+                1. Check if SAVED_LINKS_FILE ("saved_links.json") exists
+                2. Use os.path.exists() for file check
+
+
+            **Phase 2: Load File (if exists)**
+                1. Try to open file with UTF-8 encoding
+                2. Parse JSON content with json.load()
+                3. Extract "links" key from data dictionary
+                4. Return links list
+
+
+            **Phase 3: Handle Errors**
+                1. If any exception occurs (IOError, JSONDecodeError):
+                2. Catch exception silently
+                    a. Continue to return empty list
+
+
+            **Phase 4: Return Default**
+                1. If file doesn't exist or error occurs:
+                2. Return empty list []
+
+
 
         Interactions:
             - **os.path.exists()**: Checks file existence
@@ -794,27 +818,30 @@ class TodoView:
                 or "Linked Folder" if resolution fails.
 
         Algorithm:
-            1. **Check Saved Links Cache**:
-               a. Iterate through self.saved_links list
-               b. For each link dictionary:
-                  i. Check if link.get("id") == folder_id
-                  ii. If match found:
-                      - Return link.get("name", folder_id)
-                      - Exits function immediately
-            
-            2. **Query Drive API** (if service available):
-               a. Check if self.drive_service is not None
-               b. If Drive service exists:
-                  i. Try to call drive_service.get_file_info(folder_id)
-                  ii. If info returned:
-                      - Extract name: info.get('name', 'Linked Folder')
-                      - Return folder name
-                  iii. If exception occurs:
-                       - Pass silently, continue to fallback
-            
-            3. **Return Fallback**:
-               a. If no match in saved links and no Drive service:
-                  i. Return "Linked Folder" as default name
+
+            **Phase 1: Check Saved Links Cache**
+                1. Iterate through self.saved_links list
+                2. For each link dictionary:
+                3. Check if link.get("id") == folder_id
+                    a. If match found:
+                        - Return link.get("name", folder_id)
+                        - Exits function immediately
+
+
+            **Phase 2: Query Drive API (if service available)**
+                1. Check if self.drive_service is not None
+                2. If Drive service exists:
+                3. Try to call drive_service.get_file_info(folder_id)
+                    a. If info returned:
+                        - Extract name: info.get('name', 'Linked Folder')
+                        - Return folder name
+                    b. If exception occurs:
+                        - Pass silently, continue to fallback
+
+
+            **Phase 3: Return Fallback**
+                1. If no match in saved links and no Drive service:
+                2. Return "Linked Folder" as default name
 
         Interactions:
             - **saved_links**: Searches in-memory link cache
@@ -879,27 +906,31 @@ class TodoView:
             None: Updates state and UI as side effects.
 
         Algorithm:
-            1. **Store Selected Date**:
-               a. Access self.date_picker.value (datetime.date object)
-               b. Assign to self.selected_date_value
-            
-            2. **Update Display**:
-               a. Call self.update_deadline_display()
-               b. Updates selected_deadline_display text with new date
-            
-            3. **Close Date Picker**:
-               a. Call self.page.close(self.date_picker)
-               b. Removes date picker from page overlay
-            
-            4. **Open Time Picker**:
-               a. Call self.page.open(self.time_picker)
-               b. Adds time picker to page overlay
-               c. User continues deadline selection with time
-            
-            5. **Refresh UI**:
-               a. Call self.page.update()
-               b. Renders all changes
 
+            **Phase 1: Check Saved Links Cache**
+                1. Iterate through self.saved_links list
+                2. For each link dictionary:
+                3. Check if link.get("id") == folder_id
+                    a. If match found:
+                        - Return link.get("name", folder_id)
+                        - Exits function immediately
+
+
+            **Phase 2: Query Drive API (if service available)**
+                1. Check if self.drive_service is not None
+                2. If Drive service exists:
+                3. Try to call drive_service.get_file_info(folder_id)
+                    a. If info returned:
+                        - Extract name: info.get('name', 'Linked Folder')
+                        - Return folder name
+                    b. If exception occurs:
+                        - Pass silently, continue to fallback
+
+
+            **Phase 3: Return Fallback**
+                1. If no match in saved links and no Drive service:
+                2. Return "Linked Folder" as default name
+                
         Interactions:
             - **ft.DatePicker**: Reads selected value
             - **update_deadline_display()**: Updates display text
@@ -946,21 +977,26 @@ class TodoView:
             None: Updates state and UI as side effects.
 
         Algorithm:
-            1. **Store Selected Time**:
-               a. Access self.time_picker.value (datetime.time object)
-               b. Assign to self.selected_time_value
-            
-            2. **Update Display**:
-               a. Call self.update_deadline_display()
-               b. Updates selected_deadline_display with date and time
-            
-            3. **Close Time Picker**:
-               a. Call self.page.close(self.time_picker)
-               b. Removes time picker from page overlay
-            
-            4. **Refresh UI**:
-               a. Call self.page.update()
-               b. Renders all changes
+
+            **Phase 1: Store Selected Time**
+                1. Access self.time_picker.value (datetime.time object)
+                2. Assign to self.selected_time_value
+
+
+            **Phase 2: Update Display**
+                1. Call self.update_deadline_display()
+                2. Updates selected_deadline_display with date and time
+
+
+            **Phase 3: Close Time Picker**
+                1. Call self.page.close(self.time_picker)
+                2. Removes time picker from page overlay
+
+
+            **Phase 4: Refresh UI**
+                1. Call self.page.update()
+                2. Renders all changes
+
 
         Interactions:
             - **ft.TimePicker**: Reads selected value
@@ -1000,22 +1036,22 @@ class TodoView:
             None: Updates selected_deadline_display.value as side effect.
 
         Algorithm:
-            1. **Check Both Values Available**:
-               a. If selected_date_value AND selected_time_value:
-                  i. Format: "Deadline: {date} at {time}"
-                  ii. Update selected_deadline_display.value
-                  iii. Complete deadline shown
-            
-            2. **Check Only Date Available**:
-               a. Elif selected_date_value only:
-                  i. Format: "Deadline: {date}"
-                  ii. Update selected_deadline_display.value
-                  iii. Time not yet selected
-            
-            3. **No Selection**:
-               a. Else (neither selected):
-                  i. Set value: "No deadline selected"
-                  ii. Default state
+            **Phase 1: Check Both Values Available**
+                1. If selected_date_value AND selected_time_value:
+                   a. Format: "Deadline: {date} at {time}"
+                   b. Update selected_deadline_display.value
+                   c. Complete deadline shown
+
+            **Phase 2: Check Only Date Available**:
+                1. Elif selected_date_value only:
+                   a. Format: "Deadline: {date}"
+                   b. Update selected_deadline_display.value
+                   c. Time not yet selected
+
+            **Phase 3: No Selection**:
+                1. Else (neither selected):
+                   a. Set value: "No deadline selected"
+                   b. Default state
 
         Interactions:
             - **selected_date_value**: Reads date attribute
@@ -1074,33 +1110,39 @@ class TodoView:
             None: Updates selected_attachment dict and UI as side effects.
 
         Algorithm:
-            1. **Define Result Callback**:
-               a. Define inner function on_result(e: FilePickerResultEvent)
-               b. Callback executes when user selects file
-               c. Implementation:
-                  i. Check if e.files is not empty
-                  ii. If files selected:
-                      - Store e.files[0].path in selected_attachment["path"]
-                      - Store e.files[0].name in selected_attachment["name"]
-                      - Update attachment_text.value = "📎 {filename}"
-                      - Call page.update() to render changes
-            
-            2. **Create File Picker**:
-               a. Instantiate ft.FilePicker(on_result=on_result)
-               b. File picker configured with result callback
-            
-            3. **Add to Page Overlay**:
-               a. Append file_picker to page.overlay list
-               b. Makes picker available for display
-            
-            4. **Update Page**:
-               a. Call page.update() to register picker
-            
-            5. **Show File Picker**:
-               a. Call file_picker.pick_files()
-               b. Opens system file selection dialog
-               c. User selects file
-               d. on_result callback executes with selection
+
+            **Phase 1: Define Result Callback**
+                1. Define inner function on_result(e: FilePickerResultEvent)
+                2. Callback executes when user selects file
+                3. Implementation:
+                4. Check if e.files is not empty
+                    a. If files selected:
+                        - Store e.files[0].path in selected_attachment["path"]
+                        - Store e.files[0].name in selected_attachment["name"]
+                        - Update attachment_text.value = " {filename}"
+                        - Call page.update() to render changes
+
+
+            **Phase 2: Create File Picker**
+                1. Instantiate ft.FilePicker(on_result=on_result)
+                2. File picker configured with result callback
+
+
+            **Phase 3: Add to Page Overlay**
+                1. Append file_picker to page.overlay list
+                2. Makes picker available for display
+
+
+            **Phase 4: Update Page**
+                1. Call page.update() to register picker
+
+
+            **Phase 5: Show File Picker**
+                1. Call file_picker.pick_files()
+                2. Opens system file selection dialog
+                3. User selects file
+                4. on_result callback executes with selection
+
 
         Interactions:
             - **ft.FilePicker**: Creates and displays file selection dialog
@@ -1152,21 +1194,24 @@ class TodoView:
             None: Updates assignment_column.controls and page as side effects.
 
         Algorithm:
-            1. **Clear Assignment Display**:
-               a. Access self.assignment_column.controls
-               b. Call clear() to remove all existing cards
-            
-            2. **Check Current Mode**:
-               a. If self.current_mode == "teacher":
-                  i. Call assignment_manager.display_teacher_view()
-                  ii. Manager shows all assignments with edit/delete
-               b. Else (student mode):
-                  i. Call assignment_manager.display_student_view()
-                  ii. Manager shows assigned assignments with submit buttons
-            
-            3. **Refresh UI**:
-               a. Call self.page.update()
-               b. Renders updated assignment_column
+
+            **Phase 1: Clear Assignment Display**
+                1. Access self.assignment_column.controls   
+                2. Call clear() to remove all existing cards
+
+
+            **Phase 2: Check Current Mode**
+                1. If self.current_mode == "teacher":
+                2. Call assignment_manager.display_teacher_view()
+                    a. Manager shows all assignments with edit/delete
+                3. Else (student mode):
+                4. Call assignment_manager.display_student_view()
+                    a. Manager shows assigned assignments with submit buttons
+
+
+            **Phase 3: Refresh UI**
+                1. Call self.page.update()
+                2. Renders updated assignment_column
 
         Interactions:
             - **assignment_column**: Clears controls list
@@ -1223,42 +1268,48 @@ class TodoView:
             None: Updates mode, UI visibility, and display as side effects.
 
         Algorithm:
-            1. **Update Mode State**:
-               a. Check self.mode_switch.value (True/False)
-               b. If True:
-                  i. Set self.current_mode = "student"
-               c. If False:
-                  i. Set self.current_mode = "teacher"
-            
-            2. **Configure Student Mode** (if student):
-               a. Set mode_label.value = "👨‍🎓 Student View"
-               b. Set student_selector_row.visible = True
-                  - Shows student dropdown
-               c. If form_container exists:
-                  i. Set form_container.visible = False
-                  ii. Hides assignment creation form
-               d. If manage_students_btn exists:
-                  i. Set manage_students_btn.visible = False
-                  ii. Hides student management button
-            
-            3. **Configure Teacher Mode** (else teacher):
-               a. Set mode_label.value = "👨‍🏫 Teacher View"
-               b. Set student_selector_row.visible = False
-                  - Hides student dropdown
-               c. If form_container exists:
-                  i. Set form_container.visible = True
-                  ii. Shows assignment creation form
-               d. If manage_students_btn exists:
-                  i. Set manage_students_btn.visible = True
-                  ii. Shows student management button
-            
-            4. **Refresh Assignment Display**:
-               a. Call self.display_assignments()
-               b. Updates assignment list for current mode
-            
-            5. **Update Page**:
-               a. Call self.page.update()
-               b. Renders all visibility changes
+
+            **Phase 1: Update Mode State**
+                1. Check self.mode_switch.value (True/False)
+                2. If True:
+                3. Set self.current_mode = "student"
+                4. If False:
+                5. Set self.current_mode = "teacher"
+
+
+            **Phase 2: Configure Student Mode (if student)**
+                1. Set mode_label.value = "👨‍🎓 Student View"
+                2. Set student_selector_row.visible = True
+                    - Shows student dropdown
+                3. If form_container exists:
+                4. Set form_container.visible = False
+                    a. Hides assignment creation form
+                5. If manage_students_btn exists:
+                6. Set manage_students_btn.visible = False
+                    a. Hides student management button
+
+
+            **Phase 3: Configure Teacher Mode (else teacher)**
+                1. Set mode_label.value = "👨‍🏫 Teacher View"
+                2. Set student_selector_row.visible = False
+                    - Hides student dropdown
+                3. If form_container exists:
+                4. Set form_container.visible = True
+                    a. Shows assignment creation form
+                5. If manage_students_btn exists:
+                6. Set manage_students_btn.visible = True
+                    a. Shows student management button
+
+
+            **Phase 4: Refresh Assignment Display**
+                1. Call self.display_assignments()
+                2. Updates assignment list for current mode
+
+
+            **Phase 5: Update Page**
+                1. Call self.page.update()
+                2. Renders all visibility changes
+
 
         Interactions:
             - **mode_switch**: Reads toggle value

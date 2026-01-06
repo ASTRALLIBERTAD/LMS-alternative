@@ -26,44 +26,44 @@ callback with authorization code.
 
 ## Algorithm
 
-  - 1. **Update UI for Processing**:
-    - a. Call update_status() with message
-    - b. Message: "Opening browser for authentication..."
-    - c. Color: default (blue)
-    - d. disable_button: True (prevents double-click)
+- **Phase 1: Update UI for Processing**:
+  - 1. Call update_status() with message
+  - 2. Message: "Opening browser for authentication..."
+  - 3. Color: default (blue)
+  - 4. disable_button: True (prevents double-click)
 
-  - 2. **Try Desktop Authentication**:
-    - a. Enter try block for error handling
-    - b. Call self.auth.login_desktop()
-    - c. Auth service performs:
-    - i. Start local HTTP server on available port
-    - ii. Build OAuth URL with redirect to localhost
-    - iii. Open system browser to OAuth URL
-    - iv. Wait for user to authenticate
-    - v. Receive callback with authorization code
-    - vi. Exchange code for access token
-    - vii. Store credentials in auth service
-    - d. login_desktop() method blocks until complete or timeout
+- **Phase 2: Try Desktop Authentication**:
+  - 1. Enter try block for error handling
+  - 2. Call self.auth.login_desktop()
+  - 3. Auth service performs:
+    - a. Start local HTTP server on available port
+    - b. Build OAuth URL with redirect to localhost
+    - c. Open system browser to OAuth URL
+    - d. Wait for user to authenticate
+    - e. Receive callback with authorization code
+    - f. Exchange code for access token
+    - g. Store credentials in auth service
+  - 4. login_desktop() method blocks until complete or timeout
 
-  - 3. **Check Authentication Result**:
-    - a. Call self.auth.is_authenticated()
-    - b. Returns True if credentials valid and stored
-    - c. If True (authenticated):
-    - i. Call self.handle_success()
-    - ii. Shows success message (green)
-    - iii. Invokes on_success callback
-    - iv. Typically navigates to dashboard
-    - d. If False (not authenticated):
-    - i. Call update_status() with error message
-    - ii. Message: "Login completed but authentication failed"
-    - iii. Color: RED_600 (error indication)
-    - iv. disable_button: False (re-enable for retry)
+- **Phase 3: Check Authentication Result**:
+  - 1. Call self.auth.is_authenticated()
+  - 2. Returns True if credentials valid and stored
+  - 3. If True (authenticated):
+    - a. Call self.handle_success()
+    - b. Shows success message (green)
+    - c. Invokes on_success callback
+    - d. Typically navigates to dashboard
+  - 4. If False (not authenticated):
+    - a. Call update_status() with error message
+    - b. Message: "Login completed but authentication failed"
+    - c. Color: RED_600 (error indication)
+    - d. disable_button: False (re-enable for retry)
 
-  - 4. **Handle Exceptions**:
-    - a. Catch any Exception during authentication
-    - b. Examples: NetworkError, TimeoutError, ValueError
-    - c. Call self.handle_error(ex, "Desktop login")
-    - d. handle_error displays user message and logs details
+- **Phase 4: Handle Exceptions**:
+  - 1. Catch any Exception during authentication
+  - 2. Examples: NetworkError, TimeoutError, ValueError
+  - 3. Call self.handle_error(ex, "Desktop login")
+  - 4. handle_error displays user message and logs details
 
 ## Interactions
 

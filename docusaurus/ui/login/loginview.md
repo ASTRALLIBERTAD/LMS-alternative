@@ -6,7 +6,7 @@ title: "LoginView"
 
 # 📦 LoginView
 
-![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
+![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
 **File:** [`login.py`](./login.py) | **Line:** 772
@@ -38,6 +38,40 @@ an external browser with redirect-based authentication.
 - **`status_text`** (ft.Text): Inherited from LoginBase. Status display.
 - **`login_button`** (ft.ElevatedButton): Inherited from LoginBase. Login button.
 
+## Algorithm
+
+- **Phase 1: Initialization**:
+  - 1. Store OAuth provider reference
+  - 2. Call parent LoginBase.__init__() to build UI
+  - 3. Component ready for rendering
+
+- **Phase 2: Login Initiation (handle_login)**:
+  - 1. Detect platform type (desktop vs mobile)
+  - 2. Check if platform in [WINDOWS, LINUX, MACOS]
+  - 3. If desktop: call _handle_desktop_login()
+  - 4. If mobile: call _handle_mobile_login()
+
+- **Phase 3: Desktop Authentication (_handle_desktop_login)**:
+  - 1. Update status to "Opening browser for authentication..."
+  - 2. Disable login button
+  - 3. Call auth.login_desktop() - starts local server, opens browser
+  - 4. Wait for user to complete OAuth in browser
+  - 5. Check auth.is_authenticated()
+  - 6. If authenticated: call handle_success()
+  - 7. If not authenticated: show error message
+  - 8. On exception: call handle_error()
+
+- **Phase 4: Mobile Authentication (_handle_mobile_login)**:
+  - 1. Update status to "Opening browser..."
+  - 2. Disable login button
+  - 3. Build OAuth URL with authorization code flow parameters
+  - 4. Include client_id, redirect_uri, scopes, access_type, prompt
+  - 5. Launch external browser with OAuth URL
+  - 6. Update status with instruction to return to app
+  - 7. Show snackbar notification about browser opening
+  - 8. User completes auth in browser (handled externally)
+  - 9. On exception: call handle_error()
+
 ## Interactions
 
 - **LoginBase**: Parent class providing UI framework and common methods
@@ -45,35 +79,6 @@ an external browser with redirect-based authentication.
 - **GoogleAuth**: Handles token storage and authentication validation
 - **ft.Page**: Platform detection and browser launching
 - **urllib.parse**: URL encoding for OAuth parameters
-- Algorithm (High-Level Workflow):
-- *Phase 1: Initialization**
-- 1. Store OAuth provider reference
-- 2. Call parent LoginBase.__init__() to build UI
-- 3. Component ready for rendering
-- *Phase 2: Login Initiation** (handle_login)
-- 1. Detect platform type (desktop vs mobile)
-- 2. Check if platform in [WINDOWS, LINUX, MACOS]
-- 3. If desktop: call _handle_desktop_login()
-- 4. If mobile: call _handle_mobile_login()
-- *Phase 3: Desktop Authentication** (_handle_desktop_login)
-- 1. Update status to "Opening browser for authentication..."
-- 2. Disable login button
-- 3. Call auth.login_desktop() - starts local server, opens browser
-- 4. Wait for user to complete OAuth in browser
-- 5. Check auth.is_authenticated()
-- 6. If authenticated: call handle_success()
-- 7. If not authenticated: show error message
-- 8. On exception: call handle_error()
-- *Phase 4: Mobile Authentication** (_handle_mobile_login)
-- 1. Update status to "Opening browser..."
-- 2. Disable login button
-- 3. Build OAuth URL with authorization code flow parameters
-- 4. Include client_id, redirect_uri, scopes, access_type, prompt
-- 5. Launch external browser with OAuth URL
-- 6. Update status with instruction to return to app
-- 7. Show snackbar notification about browser opening
-- 8. User completes auth in browser (handled externally)
-- 9. On exception: call handle_error()
 
 ## Example
 

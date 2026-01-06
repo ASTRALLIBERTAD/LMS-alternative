@@ -6,7 +6,7 @@ title: "LoginBase"
 
 # 📦 LoginBase
 
-![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
+![Has Examples](https://img.shields.io/badge/Examples-✓-green) ![Has Algorithm](https://img.shields.io/badge/Algorithm-✓-blue) ![Completeness](https://img.shields.io/badge/Docs-20%25-red)
 
 :::info Source
 **File:** [`login.py`](./login.py) | **Line:** 22
@@ -41,6 +41,38 @@ authentication process and provides callbacks for success and error scenarios.
 - **`status_text`** (ft.Text): UI text element displaying current authentication status and messages to user. Color changes dynamically to indicate state (blue=info, green=success, red=error, grey=neutral).
 - **`login_button`** (ft.ElevatedButton): Primary action button for initiating authentication flow. Disabled during authentication process, re-enabled on completion or error. Styled with Google brand colors.
 
+## Algorithm
+
+- **Phase 1: Initialization**:
+  - 1. Call parent ft.Column constructor with centered layout settings
+  - 2. Store references to page, auth service, and success callback
+  - 3. Call _build_ui() to construct UI component tree
+
+- **Phase 2: UI Construction (_build_ui)**:
+  - 1. Detect platform name for display
+  - 2. Add header components (icon, title, subtitle, platform info)
+  - 3. Create status text element for messages
+  - 4. Create login button with click handler
+  - 5. Add security notice text
+  - 6. Append all components to self.controls
+
+- **Phase 3: User Interaction (handle_login - abstract)**:
+  - 1. User clicks login button
+  - 2. Subclass implementation handles platform-specific OAuth
+  - 3. Authentication process executes
+  - 4. Success or error handler invoked based on result
+
+- **Phase 4: Success Handling (handle_success)**:
+  - 1. Update status to "Login successful!" (green)
+  - 2. Check if on_success callback exists
+  - 3. If callback exists, invoke it (typically navigates to dashboard)
+
+- **Phase 5: Error Handling (handle_error)**:
+  - 1. Extract error message from exception
+  - 2. Update status with error description (red)
+  - 3. Re-enable login button for retry
+  - 4. Log full error details to console for debugging
+
 ## Interactions
 
 - **ft.Column**: Parent class providing vertical layout container
@@ -49,32 +81,6 @@ authentication process and provides callbacks for success and error scenarios.
 - **ft.Text**: Status message display with dynamic color
 - **ft.ElevatedButton**: Login action button with event handling
 - **ft.Icon, ft.Container**: UI components for layout and branding
-- Algorithm (High-Level Workflow):
-- *Phase 1: Initialization**
-- 1. Call parent ft.Column constructor with centered layout settings
-- 2. Store references to page, auth service, and success callback
-- 3. Call _build_ui() to construct UI component tree
-- *Phase 2: UI Construction** (_build_ui)
-- 1. Detect platform name for display
-- 2. Add header components (icon, title, subtitle, platform info)
-- 3. Create status text element for messages
-- 4. Create login button with click handler
-- 5. Add security notice text
-- 6. Append all components to self.controls
-- *Phase 3: User Interaction** (handle_login - abstract)
-- 1. User clicks login button
-- 2. Subclass implementation handles platform-specific OAuth
-- 3. Authentication process executes
-- 4. Success or error handler invoked based on result
-- *Phase 4: Success Handling** (handle_success)
-- 1. Update status to "Login successful!" (green)
-- 2. Check if on_success callback exists
-- 3. If callback exists, invoke it (typically navigates to dashboard)
-- *Phase 5: Error Handling** (handle_error)
-- 1. Extract error message from exception
-- 2. Update status with error description (red)
-- 3. Re-enable login button for retry
-- 4. Log full error details to console for debugging
 
 ## Example
 

@@ -32,28 +32,28 @@ flow to provide real-time feedback.
 
 ## Algorithm
 
-  - 1. **Update Status Text**:
-    - a. Access self.status_text.value property
-    - b. Assign message parameter to value
-    - c. Text content updated in component state
+- **Phase 1: Update Status Text**:
+  - 1. Access self.status_text.value property
+  - 2. Assign message parameter to value
+  - 3. Update text content in component state
 
-  - 2. **Update Text Color**:
-    - a. Access self.status_text.color property
-    - b. Assign color parameter to color
-    - c. Color updated in component state
+- **Phase 2: Update Text Color**:
+  - 1. Access self.status_text.color property
+  - 2. Assign color parameter to color
+  - 3. Update color in component state
 
-  - 3. **Update Button State** (if disable_button provided):
-    - a. Check if disable_button parameter is not None
-    - b. If not None:
-    - i. Access self.login_button.disabled property
-    - ii. Assign disable_button value to disabled
-    - iii. Button state updated (True=disabled, False=enabled)
-    - c. If None: button state unchanged
+- **Phase 3: Update Button State (if disable_button provided)**:
+  - 1. Check if disable_button parameter is not None
+  - 2. If not None:
+    - a. Access self.login_button.disabled property
+    - b. Assign disable_button value to disabled
+    - c. Update button state (True=disabled, False=enabled)
+  - 3. If None: button state remains unchanged
 
-  - 4. **Refresh UI**:
-    - a. Call self.page.update()
-    - b. Flet re-renders affected components
-    - c. User sees updated message, color, and button state
+- **Phase 4: Refresh UI**:
+  - 1. Call self.page.update()
+  - 2. Trigger Flet to re-render affected components
+  - 3. Display updated message, color, and button state to user
 
 ## Interactions
 

@@ -28,63 +28,63 @@ consistent spacing and styling.
 
 ## Algorithm
 
-  - 1. **Detect Platform**:
-    - a. Call _get_platform_name() to get human-readable platform name
-    - b. Store result in platform_name variable
-    - c. Used for display text (e.g., "Platform: Windows")
+- **Phase 1: Detect Platform**:
+  - 1. Call _get_platform_name() to get human-readable platform name
+  - 2. Store result in platform_name variable
+  - 3. Use result for display text (e.g., "Platform: Windows")
 
-  - 2. **Add Header Components**:
-    - a. Add 50px vertical spacing Container at top
-    - b. Add cloud icon (ft.Icons.CLOUD_CIRCLE):
-    - - Size: 100px
-    - - Color: BLUE_600 (brand blue)
-    - c. Add title text "Learning Management System":
-    - - Size: 32px (large, prominent)
-    - - Weight: BOLD
-    - - Alignment: CENTER
-    - d. Add subtitle text "Access your learning materials anywhere":
-    - - Size: 16px (medium)
-    - - Color: GREY_700 (subtle)
-    - - Alignment: CENTER
-    - e. Add 10px vertical spacing Container
-    - f. Add platform indicator text:
-    - - Format: "Platform: &#123;platform_name&#125;"
-    - - Size: 12px (small)
-    - - Color: GREY_600 (very subtle)
-    - - Alignment: CENTER
-    - g. Add 20px vertical spacing Container
+- **Phase 2: Add Header Components**:
+  - 1. Add 50px vertical spacing Container at top
+  - 2. Add cloud icon (ft.Icons.CLOUD_CIRCLE):
+    - a. Size: 100px
+    - b. Color: BLUE_600 (brand blue)
+  - 3. Add title text "Learning Management System":
+    - a. Size: 32px (large, prominent)
+    - b. Weight: BOLD
+    - c. Alignment: CENTER
+  - 4. Add subtitle text "Access your learning materials anywhere":
+    - a. Size: 16px (medium)
+    - b. Color: GREY_700 (subtle)
+    - c. Alignment: CENTER
+  - 5. Add 10px vertical spacing Container
+  - 6. Add platform indicator text:
+    - a. Format: "Platform: &#123;platform_name&#125;"
+    - b. Size: 12px (small)
+    - c. Color: GREY_600 (very subtle)
+    - d. Alignment: CENTER
+  - 7. Add 20px vertical spacing Container
 
-  - 3. **Create Status Text**:
-    - a. Instantiate ft.Text with initial message
-    - b. Set text: "Please log in to continue"
-    - c. Set color: GREY_700 (neutral, informative)
-    - d. Set text_align: CENTER
-    - e. Store reference in self.status_text
-    - f. Append to self.controls
+- **Phase 3: Create Status Text**:
+  - 1. Instantiate ft.Text with initial message
+  - 2. Set text: "Please log in to continue"
+  - 3. Set color: GREY_700 (neutral, informative)
+  - 4. Set text_align: CENTER
+  - 5. Store reference in self.status_text
+  - 6. Append to self.controls
 
-  - 4. **Create Login Button**:
-    - a. Instantiate ft.ElevatedButton with configuration:
-    - - text: "Login with Google"
-    - - icon: ft.Icons.LOGIN (sign-in icon)
-    - - on_click: self.handle_login (delegated to subclass)
-    - b. Define button style:
-    - - bgcolor: BLUE_600 (Google blue theme)
-    - - color: WHITE (text color)
-    - - padding: symmetric(horizontal=30, vertical=15)
-    - c. Set height to 50px (prominent, touch-friendly)
-    - d. Store reference in self.login_button
-    - e. Add 10px spacing Container before button
-    - f. Append button to self.controls
+- **Phase 4: Create Login Button**:
+  - 1. Instantiate ft.ElevatedButton with configuration:
+    - a. text: "Login with Google"
+    - b. icon: ft.Icons.LOGIN (sign-in icon)
+    - c. on_click: self.handle_login (delegated to subclass)
+  - 2. Define button style:
+    - a. bgcolor: BLUE_600 (Google blue theme)
+    - b. color: WHITE (text color)
+    - c. padding: symmetric(horizontal=30, vertical=15)
+  - 3. Set height to 50px (prominent, touch-friendly)
+  - 4. Store reference in self.login_button
+  - 5. Add 10px spacing Container before button
+  - 6. Append button to self.controls
 
-  - 5. **Add Security Notice**:
-    - a. Add 20px vertical spacing Container
-    - b. Add security text:
-    - - Content: "Secure authentication via Google OAuth 2.0"
-    - - Size: 12px (small, informational)
-    - - Color: GREY_500 (very subtle)
-    - - Alignment: CENTER
-    - - Italic: True (distinguishes from other text)
-    - c. Append to self.controls
+- **Phase 5: Add Security Notice**:
+  - 1. Add 20px vertical spacing Container
+  - 2. Add security text:
+    - a. Content: "Secure authentication via Google OAuth 2.0"
+    - b. Size: 12px (small, informational)
+    - c. Color: GREY_500 (very subtle)
+    - d. Alignment: CENTER
+    - e. Italic: True (distinguishes from other text)
+  - 3. Append to self.controls
 
 ## Interactions
 

@@ -26,15 +26,15 @@ and delegating UI construction to the parent LoginBase class.
 
 ## Algorithm
 
-  - 1. **Store OAuth Provider**:
-    - a. Assign provider parameter to self.provider
-    - b. Makes provider available to authentication methods
+- **Phase 1: Store OAuth Provider**:
+  - 1. Assign provider parameter to self.provider
+  - 2. Makes provider available to authentication methods
 
-  - 2. **Initialize Parent Class**:
-    - a. Call super().__init__() with page, auth_service, on_success
-    - b. Parent constructs UI components
-    - c. Parent stores page, auth, and callback references
-    - d. Component ready for rendering
+- **Phase 2: Initialize Parent Class**:
+  - 1. Call super().__init__() with page, auth_service, on_success
+  - 2. Parent constructs UI components
+  - 3. Parent stores page, auth, and callback references
+  - 4. Component ready for rendering
 
 ## Interactions
 
